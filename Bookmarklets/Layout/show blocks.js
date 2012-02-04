@@ -1,0 +1,1 @@
+(function(){var newSS; newSS=document.createElement("link"); newSS.rel="stylesheet"; newSS.type="text/css"; newSS.href = "http://www.cs.hmc.edu/~jruderma/block-structure.css"; document.getElementsByTagName("head")[0].appendChild(newSS); })();

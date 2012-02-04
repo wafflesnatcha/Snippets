@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DROPDOWN MENU</title>
+
+<script type="text/javascript">
+var sfHover = function () {
+	var sfEls = document.getElementById("nav").getElementsByTagName("LI");
+	var overFn = function () {
+		this.className += " sfhover";
+	}
+	var outFn = function () {
+		this.className = this.className.replace(new RegExp(" sfhover\\b"), "");
+	}
+	for (var i = 0; i < sfEls.length; i++) {
+		sfEls[i].onmouseover = overFn
+		sfEls[i].onmouseout = outFn
+	}
+}
+try {
+	window.attachEvent("onload", sfHover);
+} catch(e) {
+	try {
+		window.onload = sfHover
+	} catch(e) {}
+}
+</script>
+
+<style type="text/css">
+#nav, #nav ul {
+    float: left;
+    width: 300px;            /* Width of entire menu; use this equation: (# of top level links) * (Lines Labeled [A])    */
+    list-style: none;        /* 'none' means the list will have no bullets */
+    font-weight: bold;
+    padding: 0;
+    border: none;
+    margin: 0;
+    text-align: left;
+}
+#nav a, #nav a:visited {
+    color: #000000;
+    display: block;
+    width: 93px;            /* [A] Width of each Top Link */
+    text-decoration: none;
+    padding: 3px;
+}
+#nav a:hover {
+    color: #000000;          /* font-color of links when hovering */
+}
+#nav a.parent span {
+float: right;
+font-size: 85%;	
+}
+#nav li {
+    float: left;
+    padding: 0;
+    width: 100px;            /* [A] Width of each top Links */
+}
+
+
+/** Second Tier Menu */
+#nav li ul {
+    background: #cccccc;     /* background of sub-menus */
+    text-align: left;
+    float: left;
+    position: absolute;
+    left: -999em;            /* Do Not Change - This makes links that aren't active exist at -999em x-value (off the page) */
+    height: auto;
+    width: 100px;            /* [B] Width of submenus */
+    font-weight: normal;
+    margin-left: 0px;        /* horizontal location of second-tier menu in relation to top menu */
+}
+#nav li li {
+    border-bottom: solid 0px;
+    width: 100px;            /* [B] Width of each item in a submenu */
+}
+#nav li ul a {
+    text-align: left;
+    padding-left: 4px;
+    padding-right: 4px;
+    width: 100px;            /* [B] Width of link in each item in a submenu */
+}
+
+
+/** Third-tier Menu */
+#nav li ul ul {
+    margin-left: 100px;      /* [B] The horizontal location of menu in relation to second-tier menu */
+    margin-top: -29px;       /* The vertical location of menu in relation to second-tier menu */
+}
+
+
+
+#nav li:hover ul ul, #nav li:hover ul ul ul, #nav li.sfhover ul ul, #nav li.sfhover ul ul ul {
+    left: -999em;
+}
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul {
+    left: auto;
+}
+#nav li:hover, #nav li.sfhover {
+    background: #deaa3c;
+}
+</style>
+
+</head>
+<body>
+
+<!--
+<ul> tag starts a bulleted list
+<li> tag creates each bullet
+if you put a <ul> tag inside of a <li></li> tag, then it will create a second tier menu
+I've put in some sample links, just follow the scheme to create new menus and such
+-->
+
+<ul id="nav">
+  <li><a href="#">Link 1</a>
+    <ul>
+      <li><a href="#" class="parent">Link 1.A <span>&#x25BA;</span></a> <!-- Put class="parent" on links with submenus -->
+        <ul>
+          <li><a href="#">Link 1.A.1</a></li>
+          <li><a href="#">Link 1.A.2</a></li>
+          <li><a href="#">Link 1.A.3</a></li>
+          <li><a href="#">Link 1.A.4</a></li>
+          <li><a href="#">Link 1.A.5</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Link 1.B</a></li>
+      <li><a href="#">Link 1.C</a></li>
+      <li><a href="#">Link 1.D</a></li>
+    </ul>
+  </li>
+  <li><a href="#">Link 2</a>
+    <ul>
+      <li><a href="#">Link 2.A</a></li>
+      <li><a href="#">Link 2.B</a></li>
+      <li><a href="#">Link 2.C</a></li>
+      <li><a href="#">Link 2.D</a></li>
+      <li><a href="#">Link 2.E</a></li>
+      <li><a href="#">Link 2.F</a></li>
+      <li><a href="#">Link 2.G</a></li>
+    </ul>
+  </li>
+  <li><a href="#">Link 3</a>
+    <ul>
+      <li><a href="#">Link 3.A</a></li>
+      <li><a href="#">Link 3.B</a></li>
+      <li><a href="#" class="parent">Link 3.C <span>&#x25BA;</span></a>
+        <ul>
+          <li><a href="#">Link 3.C.1</a></li>
+          <li><a href="#">Link 3.C.2</a></li>
+          <li><a href="#">Link 3.C.3</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Link 3.D</a></li>
+    </ul>
+  </li>
+</ul>
+
+
+</body>
+</html>

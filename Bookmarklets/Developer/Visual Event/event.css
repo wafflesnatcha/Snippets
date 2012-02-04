@@ -1,0 +1,713 @@
+
+#EventLoading .Event_header {
+	font-size: 13px;
+}
+
+#EventLoading div {
+	text-align: center;
+}
+
+#EventLoading a {
+	color: #ccc;
+	text-decoration: none;
+}
+
+#EventLoading a:hover {
+	text-decoration: underline;
+}
+
+#Event_display {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 55000;
+}
+
+#Event_tooltip_display {
+	position: absolute;
+	display: none;
+	background-image: url('../images/opacity.png');
+	color: white;
+	width: 680px;
+	z-index: 55003;
+	text-align: left;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	padding: 5px;
+	font-size: 12px;
+}
+
+#Event_inner {
+	top: 5px;
+	left: 5px;
+	width: 660px;
+	padding: 10px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #1f1f1f;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#Event_canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 55001;
+}
+
+#Event_trigger {
+	color: #3090FF;
+	cursor: pointer;
+}
+
+#Event_trigger:hover {
+	text-decoration: underline;
+}
+
+#Event_tooltip_display i {
+	padding-left: 40px;
+}
+
+
+
+/*
+click
+dblclick
+keydown
+keypress
+keyup
+mousedown
+mousemove
+mouseout
+mouseover
+mouseup
+ */
+
+div.Event_info_click, div.Event_info_dblclick, div.Event_info_keydown, div.Event_info_keypress,
+ 	div.Event_info_keyup, div.Event_info_mousedown, div.Event_info_mousemove,
+	div.Event_info_mouseout, div.Event_info_mouseover, div.Event_info_mouseup,
+	div.Event_info_change, div.Event_info_focus, div.Event_info_blur,
+	div.Event_info_select, div.Event_info_submit, div.Event_info_load, div.Event_info_unload, 
+	div.Event_info_custom
+{
+	float: left;
+	width: 15px;
+	height: 15px;
+	z-index: 55002;
+}
+
+div.Event_bg_blue {
+	background-image: url('../images/bg_mouse.png');
+}
+
+div.Event_bg_red {
+	background-image: url('../images/bg_ui.png');
+}
+
+div.Event_bg_yellow {
+	background-image: url('../images/bg_html.png');
+}
+
+div.Event_bg_green {
+	background-image: url('../images/bg_mouse_html.png');
+}
+
+div.Event_bg_purple {
+	background-image: url('../images/bg_mouse_ui.png');
+}
+
+div.Event_bg_orange {
+	background-image: url('../images/bg_html_ui.png');
+}
+
+div.Event_bg_black {
+	background-image: url('../images/bg_mouse_html_ui.png');
+}
+
+
+
+div.Event_info_click {
+	background-image: url('../images/click.png');
+}
+
+div.Event_info_dblclick {
+	background-image: url('../images/dblclick.png');
+}
+
+div.Event_info_keydown {
+	background-image: url('../images/keydown.png');
+}
+
+div.Event_info_keypress {
+	background-image: url('../images/keypress.png');
+}
+
+div.Event_info_keyup {
+	background-image: url('../images/keyup.png');
+}
+
+div.Event_info_mousedown {
+	background-image: url('../images/mousedown.png');
+}
+
+div.Event_info_mousemove {
+	background-image: url('../images/mousemove.png');
+}
+
+div.Event_info_mouseout {
+	background-image: url('../images/mouseout.png');
+}
+
+div.Event_info_mouseover {
+	background-image: url('../images/mouseover.png');
+}
+
+div.Event_info_mouseup {
+	background-image: url('../images/mouseup.png');
+}
+
+div.Event_info_change {
+	background-image: url('../images/change.png');
+}
+
+div.Event_info_focus {
+	background-image: url('../images/focus.png');
+}
+
+div.Event_info_blur {
+	background-image: url('../images/blur.png');
+}
+
+div.Event_info_select {
+	background-image: url('../images/select.png');
+}
+
+div.Event_info_submit {
+	background-image: url('../images/submit.png');
+}
+
+div.Event_info_load {
+	background-image: url('../images/load.png');
+}
+
+div.Event_info_unload {
+	background-image: url('../images/unload.png');
+}
+
+div.Event_info_custom {
+	background-image: url('../images/custom.png');
+}
+/**
+ * SyntaxHighlighter
+ * http://alexgorbatchev.com/
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
+ *
+ * @version
+ * 2.1.364 (October 15 2009)
+ * 
+ * @copyright
+ * Copyright (C) 2004-2009 Alex Gorbatchev.
+ *
+ * @license
+ * This file is part of SyntaxHighlighter.
+ * 
+ * SyntaxHighlighter is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * SyntaxHighlighter is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with SyntaxHighlighter.  If not, see <http://www.gnu.org/copyleft/lesser.html>.
+ */
+.visevent_syntaxhighlighter,
+.visevent_syntaxhighlighter div,
+.visevent_syntaxhighlighter code,
+.visevent_syntaxhighlighter table,
+.visevent_syntaxhighlighter table td,
+.visevent_syntaxhighlighter table tr,
+.visevent_syntaxhighlighter table tbody
+{
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	outline: 0 !important;
+	background: none !important;
+	text-align: left !important;
+	float: none !important;
+	vertical-align: baseline !important;
+	position: static !important;
+	left: auto !important;
+	top: auto !important;
+	right: auto !important;
+	bottom: auto !important;
+	height: auto !important;
+	width: auto !important;
+	line-height: 1.1em !important;
+	font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 1em !important;
+	min-height: inherit !important; /* For IE8, FF & WebKit */
+	min-height: auto !important; /* For IE7 */
+}
+
+.visevent_syntaxhighlighter
+{
+	width: 99% !important; /* 99% fixes IE8 horizontal scrollbar */
+	margin: 1em 0 1em 0 !important;
+	padding: 1px !important; /* adds a little border on top and bottom */
+	position: relative !important;
+}
+
+.visevent_syntaxhighlighter .bold 
+{
+	font-weight: bold !important;
+}
+
+.visevent_syntaxhighlighter .italic 
+{
+	font-style: italic !important;
+}
+
+.visevent_syntaxhighlighter .line
+{
+}
+
+.visevent_syntaxhighlighter .no-wrap .line .content
+{
+	white-space: pre !important;
+}
+
+.visevent_syntaxhighlighter .line table 
+{
+	border-collapse: collapse !important;
+}
+
+.visevent_syntaxhighlighter .line td
+{
+	vertical-align: top !important;
+}
+
+.visevent_syntaxhighlighter .line .number
+{
+	width: 3em !important;
+}
+
+.visevent_syntaxhighlighter .line .number code
+{
+	width: 2.7em !important;
+	padding-right: .3em !important;
+	text-align: right !important;
+	display: block !important;
+}
+
+.visevent_syntaxhighlighter .line .content
+{
+	padding-left: .5em !important;
+}
+
+.visevent_syntaxhighlighter .line .spaces
+{
+}
+
+/* Disable border and margin on the lines when no gutter option is set */
+.visevent_syntaxhighlighter.nogutter .line .content
+{
+	border-left: none !important;
+}
+
+.visevent_syntaxhighlighter .bar
+{
+	display: none !important;
+}
+
+.visevent_syntaxhighlighter .bar.show 
+{
+	display: block !important;
+}
+
+.visevent_syntaxhighlighter.collapsed .bar
+{
+	display: block !important;
+}
+
+/* Adjust some properties when collapsed */
+
+.visevent_syntaxhighlighter.collapsed .lines
+{
+	display: none !important;
+}
+
+.visevent_syntaxhighlighter .lines.no-wrap
+{
+	overflow: auto !important;
+	overflow-y: hidden !important;
+}
+
+/* Styles for the toolbar */
+
+.visevent_syntaxhighlighter .toolbar
+{
+	position: absolute !important;
+	right: 0px !important;
+	top: 0px !important;
+	font-size: 1px !important;
+	padding: 8px 8px 8px 0 !important; /* in px because images don't scale with ems */
+}
+
+.visevent_syntaxhighlighter.collapsed .toolbar
+{
+	font-size: 80% !important;
+	padding: .2em 0 .5em .5em !important;
+	position: static !important;
+}
+
+.visevent_syntaxhighlighter .toolbar a.item,
+.visevent_syntaxhighlighter .toolbar .item
+{
+	display: block !important;
+	float: left !important;
+	margin-left: 8px !important;
+	background-repeat: no-repeat !important;
+	overflow: hidden !important;
+	text-indent: -5000px !important;
+}
+
+.visevent_syntaxhighlighter.collapsed .toolbar .item
+{
+	display: none !important;
+}
+
+.visevent_syntaxhighlighter.collapsed .toolbar .item.expandSource
+{
+	background-image: url(../images/magnifier.png) !important;
+	display: inline !important;
+	text-indent: 0 !important;
+	width: auto !important;
+	float: none !important;
+	height: 16px !important;
+	padding-left: 20px !important;
+}
+
+.visevent_syntaxhighlighter .toolbar .item.viewSource
+{
+	background-image: url(../images/page_white_code.png) !important;
+}
+
+.visevent_syntaxhighlighter .toolbar .item.printSource
+{
+	background-image: url(../images/printer.png) !important;
+}
+
+.visevent_syntaxhighlighter .toolbar .item.copyToClipboard
+{
+	text-indent: 0 !important;
+	background: none !important;
+	overflow: visible !important;
+}
+
+.visevent_syntaxhighlighter .toolbar .item.about
+{
+	background-image: url(../images/help.png) !important;
+}
+
+/** 
+ * Print view.
+ * Colors are based on the default theme without background.
+ */
+
+.visevent_syntaxhighlighter.printing,
+.visevent_syntaxhighlighter.printing .line.alt1 .content,
+.visevent_syntaxhighlighter.printing .line.alt2 .content,
+.visevent_syntaxhighlighter.printing .line.highlighted .number,
+.visevent_syntaxhighlighter.printing .line.highlighted.alt1 .content,
+.visevent_syntaxhighlighter.printing .line.highlighted.alt2 .content,
+{
+	background: none !important;
+}
+
+/* Gutter line numbers */
+.visevent_syntaxhighlighter.printing .line .number
+{
+	color: #bbb !important;
+}
+
+/* Add border to the lines */
+.visevent_syntaxhighlighter.printing .line .content
+{
+	color: #000 !important;
+}
+
+/* Toolbar when visible */
+.visevent_syntaxhighlighter.printing .toolbar
+{
+	display: none !important;
+}
+
+.visevent_syntaxhighlighter.printing a
+{
+	text-decoration: none !important;
+}
+
+.visevent_syntaxhighlighter.printing .plain,
+.visevent_syntaxhighlighter.printing .plain a
+{ 
+	color: #000 !important;
+}
+
+.visevent_syntaxhighlighter.printing .comments,
+.visevent_syntaxhighlighter.printing .comments a
+{ 
+	color: #008200 !important;
+}
+
+.visevent_syntaxhighlighter.printing .string,
+.visevent_syntaxhighlighter.printing .string a
+{
+	color: blue !important; 
+}
+
+.visevent_syntaxhighlighter.printing .keyword
+{ 
+	color: #069 !important; 
+	font-weight: bold !important; 
+}
+
+.visevent_syntaxhighlighter.printing .preprocessor 
+{ 
+	color: gray !important; 
+}
+
+.visevent_syntaxhighlighter.printing .variable 
+{ 
+	color: #a70 !important; 
+}
+
+.visevent_syntaxhighlighter.printing .value
+{ 
+	color: #090 !important; 
+}
+
+.visevent_syntaxhighlighter.printing .functions
+{ 
+	color: #ff1493 !important; 
+}
+
+.visevent_syntaxhighlighter.printing .constants
+{ 
+	color: #0066CC !important; 
+}
+
+.visevent_syntaxhighlighter.printing .script
+{
+	font-weight: bold !important;
+}
+
+.visevent_syntaxhighlighter.printing .color1,
+.visevent_syntaxhighlighter.printing .color1 a
+{ 
+	color: #808080 !important; 
+}
+
+.visevent_syntaxhighlighter.printing .color2,
+.visevent_syntaxhighlighter.printing .color2 a
+{ 
+	color: #ff1493 !important; 
+}
+
+.visevent_syntaxhighlighter.printing .color3,
+.visevent_syntaxhighlighter.printing .color3 a
+{ 
+	color: red !important; 
+}
+/**
+ * SyntaxHighlighter
+ * http://alexgorbatchev.com/
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/wiki/SyntaxHighlighter:Donate
+ *
+ * @version
+ * 2.1.364 (October 15 2009)
+ * 
+ * @copyright
+ * Copyright (C) 2004-2009 Alex Gorbatchev.
+ *
+ * @license
+ * This file is part of SyntaxHighlighter.
+ * 
+ * SyntaxHighlighter is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * SyntaxHighlighter is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with SyntaxHighlighter.  If not, see <http://www.gnu.org/copyleft/lesser.html>.
+ */
+/************************************
+ * Default Syntax Highlighter theme.
+ * 
+ * Interface elements.
+ ************************************/
+
+.visevent_syntaxhighlighter
+{
+	background-color: #1F1F1F !important;
+}
+
+/* Highlighed line number */
+.visevent_syntaxhighlighter .line.highlighted .number
+{
+	color: white !important;
+}
+
+/* Highlighed line */
+.visevent_syntaxhighlighter .line.highlighted.alt1,
+.visevent_syntaxhighlighter .line.highlighted.alt2
+{
+	background-color: #e0e0e0 !important;
+}
+
+/* Gutter line numbers */
+.visevent_syntaxhighlighter .line .number
+{
+	color: #afafaf !important;
+}
+
+/* Add border to the lines */
+.visevent_syntaxhighlighter .alt1 .content
+{
+	border-left: 3px solid #383838 !important;
+	color: white !important;
+}
+
+.visevent_syntaxhighlighter .alt2 .content
+{
+	border-left: 3px solid #2f2f2f !important;
+	color: white !important;
+}
+
+.visevent_syntaxhighlighter.printing .line .content 
+{
+	border: 0 !important;
+}
+
+/* First line */
+.visevent_syntaxhighlighter .line.alt1
+{
+	background-color: #282828 !important;
+}
+
+/* Second line */
+.visevent_syntaxhighlighter .line.alt2
+{
+	background-color: #222 !important;
+}
+
+.visevent_syntaxhighlighter .toolbar
+{
+	background-color: #3f3f3f !important;
+	border: #4f4f4f solid 1px !important;
+}
+
+.visevent_syntaxhighlighter .toolbar a
+{
+	color: #a0a0a0 !important;
+}
+
+.visevent_syntaxhighlighter .toolbar a:hover
+{
+	color: red !important;
+}
+
+/************************************
+ * Actual syntax highlighter colors.
+ ************************************/
+.visevent_syntaxhighlighter .plain,
+.visevent_syntaxhighlighter .plain a
+{ 
+	color: white !important;
+}
+
+.visevent_syntaxhighlighter .comments,
+.visevent_syntaxhighlighter .comments a
+{ 
+	color: #008200 !important;
+}
+
+.visevent_syntaxhighlighter .string,
+.visevent_syntaxhighlighter .string a
+{
+	color: #F090FF !important; 
+}
+
+.visevent_syntaxhighlighter .keyword
+{ 
+	color: #3090FF !important; 
+	font-weight: bold !important; 
+}
+
+.visevent_syntaxhighlighter .preprocessor 
+{ 
+	color: gray !important; 
+}
+
+.visevent_syntaxhighlighter .variable 
+{ 
+	color: #a70 !important; 
+}
+
+.visevent_syntaxhighlighter .value
+{ 
+	color: #090 !important; 
+}
+
+.visevent_syntaxhighlighter .functions
+{ 
+	color: #ff1493 !important; 
+}
+
+.visevent_syntaxhighlighter .constants
+{ 
+	color: #0066CC !important; 
+}
+
+.visevent_syntaxhighlighter .script
+{ 
+	background-color: yellow !important;
+}
+
+.visevent_syntaxhighlighter .color1,
+.visevent_syntaxhighlighter .color1 a
+{ 
+	color: #808080 !important; 
+}
+
+.visevent_syntaxhighlighter .color2,
+.visevent_syntaxhighlighter .color2 a
+{ 
+	color: #ff1493 !important; 
+}
+
+.visevent_syntaxhighlighter .color3,
+.visevent_syntaxhighlighter .color3 a
+{ 
+	color: red !important; 
+}

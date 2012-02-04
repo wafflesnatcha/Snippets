@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>untitled</title>
+<!-- What -->
+<script type="text/javascript">
+window.addEventListener("MozOrientation", handleOrientation, true);
+function handleOrientation(orientData) {
+
+	var x = orientData.x;
+	var y = orientData.y;
+	var z = orientData.z;
+
+	document.getElementById("output").innerHTML+="<b>X:</b> " + x + " <b>Y:</b> " + y + " <b>Z:</b> " + z + "<br />";
+
+}
+</script>
+
+</head>
+<body>
+
+<div id="output">
+
+</div>
+
+</body>
+</html>

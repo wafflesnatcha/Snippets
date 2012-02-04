@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<title>Key Code Lookup</title>
+	<style type="text/css">textarea{font-family:monospace;}</style>
+</head>
+<body>
+	<textarea rows="15" cols="50" id="keydata"></textarea>
+
+<script type="text/javascript">
+document.addEventListener("keydown", function(e) {
+	if(e.target == document.getElementById("keydata"))
+		return;
+		
+	try {
+		e.preventDefault();
+		e.stopPropagation();
+	} catch (err) {}
+
+	var data = [
+		"altGraphKey",
+		"altKey",
+		"charCode",
+		"ctrlKey",
+		"keyCode",
+		"keyIdentifier",
+		"keyLocation",
+		"metaKey",
+		"shiftKey"
+	];
+	
+	var output = [];
+
+	for(var i=0; i<data.length; i++) {
+		output.push(data[i] + " : " + e[data[i]]);
+	}
+	output.push("ASCII : " + String.fromCharCode(e.keyCode? e.keyCode : e.which? e.which : e.charCode));
+	
+	document.getElementById("keydata").value = output.join('\n');
+}, false);
+</script>
+
+</body>
+</html>

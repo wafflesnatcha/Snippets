@@ -1,0 +1,22 @@
+
+* { font-size: 16px; }
+
+/* Good for user interfaces */
+.ui {
+	font-family: "Lucida Grande", "Lucida Sans", "Segoe UI", "DejaVu Sans Condensed", Tahoma, Arial, sans-serif;
+}
+
+/* Monospaced */
+pre, code, tt {
+	font-family: "DejaVu Sans Mono", Menlo, Consolas, "Droid Sans Mono", "BitstreamVera Sans Mono", Monaco, "Courier New", monospace;
+}
+
+/* Headers */
+header, h1, h2, h3, h4, h5, h6 {
+	font-family: Corbel, Calibri, "Century Gothic", Arial, sans-serif;
+}
+
+/* Blockquotes */
+blockquote {
+	font-family: "Georgia", "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
+}

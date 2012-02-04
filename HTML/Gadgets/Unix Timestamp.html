@@ -1,0 +1,15 @@
+<script type="text/javascript">
+var unixTimestampConvert = function(el, e) {
+	var tD=new Date(parseInt(el.value)*1000);
+	document.getElementById('unixtimestamp_gmt').value = tD.toGMTString();
+	document.getElementById('unixtimestamp_locale').value = tD.toLocaleString();
+}
+</script>
+<div style="margin: 10px 0 0;width: 100%;">
+	<label for="unixtimestamp" style="float:left;padding:0 4px 0 0;">Timestamp:</label>
+	<input style="width:210px;" id="unixtimestamp" type="text" onkeyup="unixTimestampConvert(this, event)">
+</div>
+<div>
+	<input style="display:block;width:98%;margin:2px 0 0;" id="unixtimestamp_gmt" type="text">
+	<input style="display:block;width:98%;margin:2px 0 0;" id="unixtimestamp_locale" type="text">
+</div>

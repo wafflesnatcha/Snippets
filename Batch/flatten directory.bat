@@ -1,0 +1,1 @@
+FOR /D %i IN ("source\*") DO robocopy "%i" "destination" /MOV

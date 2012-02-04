@@ -1,0 +1,34 @@
+<!--
+     Any copyright is dedicated to the Public Domain.
+     http://creativecommons.org/licenses/publicdomain/
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:svg="http://www.w3.org/2000/svg">
+<body style="background:#ccc; font-size:30px;">
+  <style>
+    p { width:300px; border:1px solid black; display:inline-block; margin:1em; }
+    iframe { width:300px; height:300px; border:none; }
+    b { outline:1px dotted blue; }
+  </style>
+  <p class="target" style="background:lime;">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+    ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+  <iframe class="target" src="http://mozilla.org"/>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing
+    <b class="target">elit, sed do eiusmod tempor incididunt
+    ut labore et dolore magna aliqua.</b> Ut enim ad minim veniam.</p>
+
+  <style>.target { mask: url(#m1); }</style>
+  <svg:svg height="0">
+    <svg:mask id="m1" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+      <svg:linearGradient id="g" gradientUnits="objectBoundingBox" x2="0" y2="1">
+        <svg:stop stop-color="white" offset="0"/>
+        <svg:stop stop-color="white" stop-opacity="0" offset="1"/>
+      </svg:linearGradient>
+      <svg:circle cx="0.25" cy="0.25" r="0.25" id="circle" fill="white"/>
+
+      <svg:rect x="0.5" y="0.2" width="0.5" height="0.8" fill="url(#g)"/>
+    </svg:mask>
+  </svg:svg>
+</body>
+</html>
