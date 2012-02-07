@@ -6,7 +6,7 @@ Element.Frame = function(content) {
 		style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:10000'].join(";"),
 		children: [{
 			tag: 'div',
-			style: ['padding:10px 20px', 'margin:0', 'position:absolute', 'background:#222', 'background:rgba(34,34,34,.95)', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:inset 0 0 2px #111, 0 1px 2px 0 rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
+			style: ['padding:10px 20px', 'margin:0', 'position:absolute', 'background:#222', 'background:rgba(34,34,34,.95)', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:inset 0 0 2px #111, 0 1px 2px rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
 			children: [{
 				tag: 'iframe',
 				id: id + '-frame',
@@ -46,7 +46,7 @@ Element.Frame = function(content) {
 		href: 'javascript:void(0)',
 		text: 'X',
 		title: 'Close',
-		style: ['background:#333', 'border:2px solid #6a6a6a', 'border-radius:50%', 'box-shadow:0 -12px 14px -10px #1f1f1f inset,0 0 2px #333', 'color:#ddd', 'font:bold 12px/19px Verdana,sans-serif', 'height:22px', 'margin:0', 'padding:0', 'opacity:1', 'position:absolute', 'top:-14px', 'left:-14px', 'text-align:center', 'text-decoration:none', 'text-shadow:0 -1px 0 #000', 'width:22px', 'z-index:1000'].join(";")
+		style: ['background:#d1d1d1', 'border:2px solid #eee', 'border-radius:50%', 'box-shadow:inset 0 0 1px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.5)', 'color:#222', 'font:bold 12px/22px Verdana,sans-serif', 'height:22px', 'margin:0', 'padding:0', 'opacity:1', 'position:absolute', 'top:-14px', 'left:-14px', 'text-align:center', 'text-decoration:none', 'width:22px', 'z-index:1000'].join(";")
 	});
 	close_button.element.addEventListener("click", function() {
 		El.remove.apply(El);
@@ -68,10 +68,12 @@ Element.Frame = function(content) {
 		this.width(frameDocument.width);
 	}
 
+
 	// Center frame after window resizes
 	window.addEventListener("resize", function(e) {
 		contentEl.center();
 	}, false);
+
 
 	this.center();
 	return this;
