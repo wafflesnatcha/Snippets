@@ -102,7 +102,7 @@
 
 	};
 
-	Element.Frame = function(content) {
+	Element.Frame = function (content) {
 		var id = 'frame-' + (new Date).getTime();
 		this.El = new Element({
 			tag: 'div',
@@ -133,13 +133,13 @@
 		for (var prop in this.El) this[prop] = this.El[prop];
 		this.element = frameDocument.body;
 
-		this.center = function() {
+		this.center = function () {
 			contentEl.center.apply(contentEl, arguments);
 		};
-		this.height = function() {
+		this.height = function () {
 			contentEl.height.apply(contentEl, arguments);
 		};
-		this.width = function() {
+		this.width = function () {
 			contentEl.width.apply(contentEl, arguments);
 		};
 
@@ -150,34 +150,32 @@
 			href: 'javascript:void(0)',
 			text: 'X',
 			title: 'Close',
-			style: ['background:#d1d1d1', 'border:2px solid #eee', 'border-radius:50%', 'box-shadow:inset 0 0 1px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.5)', 'color:#222', 'font:bold 12px/22px Verdana,sans-serif', 'height:22px', 'margin:0', 'padding:0', 'opacity:1', 'position:absolute', 'top:-14px', 'left:-14px', 'text-align:center', 'text-decoration:none', 'width:22px', 'z-index:1000'].join(";")
+			style: ['background:#d1d1d1', 'border:2px solid #eee', 'border-radius:50%', 'box-shadow:inset 0 0 1px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.5)', 'color:#555', 'font:bold 12px/22px Verdana,sans-serif', 'height:22px', 'margin:0', 'padding:0', 'opacity:1', 'position:absolute', 'top:-14px', 'left:-14px', 'text-align:center', 'text-decoration:none', 'width:22px', 'z-index:1000'].join(";")
 		});
-		close_button.element.addEventListener("click", function() {
+		close_button.element.addEventListener("click", function () {
 			El.remove.apply(El);
 		}, true);
 
 		// Close the frame when clicking on the background
-		El.element.addEventListener("click", function(e) {
+		El.element.addEventListener("click", function (e) {
 			if (e.target != El.element) return;
 			El.remove.apply(El);
 		}, true);
 
 		// CSS Reset
 		this.insert('<style type="text/css">body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:"";}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}a{color:#6cf;text-decoration:none;}a:hover{text-decoration:underline;}</style>');
-		this.insert('<style type="text/css">html,body{background:transparent}body{color:#fff;font:13px sans-serif;padding:10px 20px}</style>');
+		this.insert('<style type="text/css">html,body{background:transparent}body{color:#fff;font:13px sans-serif;padding:10px 20px;overflow:auto}</style>');
 
 		if (content) {
 			this.insert(content);
-			this.height(frameDocument.height);
-			this.width(frameDocument.width);
+			this.width(frameDocument.width || frameDocument.body.scrollWidth);
+			this.height(frameDocument.height || frameDocument.body.offsetHeight);
 		}
 
-
 		// Center frame after window resizes
-		window.addEventListener("resize", function(e) {
+		window.addEventListener("resize", function (e) {
 			contentEl.center();
 		}, false);
-
 
 		this.center();
 		return this;
@@ -222,14 +220,14 @@
 	/**
 	 * Test cases
 	 */
+	var test_data = 'Duis tortor lacus, porttitor non ultrices nec, euismod eu nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac lacus quis urna accumsan faucibus eget at odio. Sed laoreet massa et dolor facilisis sed auctor nibh ultricies. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec aliquet consectetur odio non tristique. Aenean nisl tortor, imperdiet at consequat sit amet, porttitor sit amet magna. Integer fringilla, elit quis tincidunt dapibus, nulla magna faucibus nisi, vitae euismod sem mauris ac ante. Donec pharetra nisl eget metus sollicitudin sodales. In hac habitasse platea dictumst. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed commodo blandit turpis eu interdum. Pellentesque vestibulum fringilla mi sit amet sodales. Nunc dignissim ante eget urna ultricies venenatis. Etiam in rutrum est.';
+	test_data+= '<br><br>Testing... <a href="http://www.google.com">google.com</a><br><a href="#">http://www.awwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww-wwwwwwwwwwwwwwwwwshiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiitttttttttt.com/this/is/a/really/lo-ng/url/that/will/probably/fuck/up/the/sizing.html</a>';
 
-	var test_data = 'Testing... <a href="http://www.google.com">google.com</a><br><a href="">http://www.awwwwwwwwshiiiiiiiiitttttttttt.com/this/is/a/really/long/url/that/will/probably/fuck/up/the/sizing.html</a>';
-
-	window.W = new Win();
-	W.insert(test_data);
+	// window.W = new Win();
+	// W.insert(test_data);
 	// console.log(W);
-	// window.F = new Element.Frame(test_data);
-	// console.log(F);
+	window.F = new Element.Frame(test_data);
+	console.log(F);
 
 	// window.I = new FrameInline(test_data);
 	// console.log(I);
