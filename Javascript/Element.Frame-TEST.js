@@ -183,8 +183,6 @@
 		return this;
 	}
 
-
-
 	function Win(url) {
 		if (url) return window.open(url);
 		var w = window.open().document;
@@ -227,11 +225,11 @@
 
 	var test_data = 'Testing... <a href="http://www.google.com">google.com</a><br><a href="">http://www.awwwwwwwwshiiiiiiiiitttttttttt.com/this/is/a/really/long/url/that/will/probably/fuck/up/the/sizing.html</a>';
 
-	// window.W = new Win();
-	// W.insert(test_data);
+	window.W = new Win();
+	W.insert(test_data);
 	// console.log(W);
-	window.F = new Element.Frame(test_data);
-	console.log(F);
+	// window.F = new Element.Frame(test_data);
+	// console.log(F);
 
 	// window.I = new FrameInline(test_data);
 	// console.log(I);
