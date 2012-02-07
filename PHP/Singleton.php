@@ -23,21 +23,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package   ShiftSearch
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
- * @copyright 2010 Scott Buchanan
+ * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @version   SVN: $Id:$
  */
 
 /**
  * Implementation of the Singleton design pattern.
- *
- * @package   ShiftSearch
- * @author    Scott Buchanan <buchanan.sc@gmail.com>
- * @copyright 2010 Scott Buchanan
- * @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version   Release: @package_version@
  */
 abstract class Singleton
 {
@@ -91,8 +84,12 @@ abstract class Singleton
 	public static function __callStatic($name, $arguments)
 	{
 		if ("{$name[0]}" === "_") {
-			$callback = array(static::getInstance(), substr($name, 1));
-			if (method_exists($callback[0], $callback[1]))
+			$callback = array(
+				static::getInstance(),
+				substr($name,
+				1),
+			);
+			if (method_exists($callback[0], $callback[1])) 
 				return call_user_func_array($callback, $arguments);
 		}
 		trigger_error("Cannot access method {$callback[0]}->$name statically", E_USER_ERROR);

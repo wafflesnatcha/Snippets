@@ -25,8 +25,8 @@ $str = str_repeat('.', $bytes);
 $micro_seconds = 20000;
 
 for ($i = 0; $i < $length; $i++) {
-    echo $str;
-
-    // slow the download
-    usleep($micro_seconds);
+	echo $str;
+	
+	// slow the download
+	usleep($micro_seconds);
 }
