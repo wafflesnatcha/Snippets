@@ -68,12 +68,10 @@ Element.Frame = function(content) {
 		this.width(frameDocument.width);
 	}
 
-
 	// Center frame after window resizes
 	window.addEventListener("resize", function(e) {
 		contentEl.center();
 	}, false);
-
 
 	this.center();
 	return this;

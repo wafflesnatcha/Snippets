@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
- * @copyright 2011 Scott Buchanan
+ * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @version   SVN: $Id:$
  */
@@ -40,7 +40,7 @@ abstract class _File
 	 * @param  string $path Path to look in
 	 * @return array  List of file/folder names
 	 */
-	public static function getDirectoryContents($path)
+	public static function getDirectoryContents($path = ".")
 	{
 		$files = array();
 		if ($handle = opendir($path)) {
@@ -63,7 +63,7 @@ abstract class _File
 	 * @param  string $ext  Limit to files with this file extension
 	 * @return array  List of file names
 	 */
-	public static function getDirectoryFiles($path, $ext = null)
+	public static function getDirectoryFiles($path = ".", $ext = null)
 	{
 		$files = array();
 		if ($handle = opendir($path)) {

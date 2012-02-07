@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	if (!window.NAV_BOOKMARKLET) window.NAV_BOOKMARKLET = {
 		"pathname": location.pathname,
 		"host": location.host
@@ -23,6 +23,5 @@
 		}
 	}
 	var l = location.protocol + "//" + NAV_BOOKMARKLET.host + NAV_BOOKMARKLET.pathname;
-	if(l != location.href)
-		location = l;
+	if (l != location.href) location = l;
 })();

@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	var inline_styles = document.getElementsByTagName('style'),
 		linked_styles = document.getElementsByTagName('link'),
 		popup = window.open().document;
@@ -29,15 +29,15 @@
 		t.appendChild(popup.createTextNode(text));
 		return t;
 	}
-	
+
 	add(makeText('style', 'iframe{width:100%;height:18em;border:1px solid;'));
 	add(makeText('h3', popup.title = 'Style sheets in ' + location.href));
-	
+
 	for (i = 0; i < inline_styles.length; ++i) {
 		add(makeText('h4', 'Inline style sheet' + iff(' title="', inline_styles[i].title, '"')));
 		add(makeText('pre', trim(inline_styles[i].innerHTML)));
 	}
-	
+
 	for (var i = 0; i < linked_styles.length; ++i) {
 		var rs = linked_styles[i].rel.split(' ');
 		for (var j = 0; j < rs.length; ++j) if (rs[j].toLowerCase() == 'stylesheet') {
