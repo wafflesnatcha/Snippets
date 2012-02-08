@@ -1,6 +1,8 @@
 (*
--- Script.applescript
+-- script name
 -- description
+--
+-- @author Scott Buchanan <buchanan.sc@gmail.com>
 *)
 
 property lib : load script POSIX path of (path to scripts folder) & "lib/lib.scpt"
@@ -18,4 +20,3 @@ on process(argv)
 
 
 end process
-
