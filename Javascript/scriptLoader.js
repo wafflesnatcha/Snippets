@@ -1,6 +1,7 @@
 /**
  * Chainable external javascript file loading
- * http://www.webtoolkit.info/
+ * 
+ * @link http://www.webtoolkit.info
  *
  * @example
  * scriptLoader.load([

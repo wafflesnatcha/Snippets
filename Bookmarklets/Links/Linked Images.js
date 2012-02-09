@@ -4,7 +4,6 @@
 	function Window(url) {
 		if (D != false) return D;
 		if (!url) {
-			//D = window.open(null,null,"height=300,width=600").document;
 			D = window.open().document;
 			D.write();
 			D.close();
@@ -17,34 +16,17 @@
 		else if (typeof n == "object") Window().body.appendChild(n);
 	}
 
-	function I(u) {
-		var t = u.split('.'),
-			e = t[t.length - 1].toLowerCase();
-		return {
-			gif: 1,
-			jpg: 1,
-			jpeg: 1,
-			png: 1,
-			mng: 1
-		}[e]
-	}
-
-	function hE(s) {
-		return s.replace(/&/g, '&').replace(/>/g, '>').replace(/</g, '<').replace(/"/g, '"');
-	}
-
-	var linked = [],
-		q, h, i, src;
-	Write('<style type="text/css">*{font:9pt sans-serif;text-align:center;}img{max-width:98%;margin:4px;box-shadow:0 0 2px 0 #333;border:1px solid #fff;}</style>');
+	var i, q, src, links = [],
+		re = /^(?:http|https|ftp)\:\/\/[^'"\?\&]*.(apng|bmp|gif|ico|jpg|jpeg|png|svg|tiff)(\?.*)?/i;
 
 	for (i = 0; q = document.links[i]; ++i) {
-		h = q.href;
-		if (h && I(h)) {
-			src = hE(h);
-			if (linked.indexOf(src) >= 0) continue;
-			Write('<br><a href="' + src + '" target="_blank"><img src="' + src + '"></a><br>');
-			linked.push(src);
+		if (re.test(q.href) && links.indexOf(q.href) < 0) links.push(q.href);
+	}
+
+	if (links.length > 0) {
+		Write('<style type="text/css">body{font:9pt sans-serif;text-align:center;}img{max-width:95%;box-shadow:0 1px 3px #666;margin:6px;border:1px solid #fff;}</style>');
+		for (i = 0; i < links.length; i++) {
+			Write('<a href="' + links[i] + '" target="_blank"><img src="' + links[i] + '"></a><br />');
 		}
 	}
-	return;
 })();

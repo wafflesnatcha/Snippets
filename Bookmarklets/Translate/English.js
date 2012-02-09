@@ -13,6 +13,7 @@
 	// Untranslates a page if already viewing a translated page
 	if (document.location.href.match(document.location.href.match(/https?:\/\/translate\.google\.com\/translate/))) {
 		location.href = decodeURIComponent(location.href.replace(/^.*[&?](trurl|url|u)=/, '').replace(/[&?].*$/, ''));
+		return;
 	}
 
 	function getQuicksearchTerm() {

@@ -19,33 +19,34 @@ function finishkv() {
 	d.body.appendChild(gd);
 	document.forms["kvdl"].submit();
 }
-
 var d = document;
-var video_id = i(d.body.innerHTML, ';video_id=', '&');
-if (video_id == '') video_id = i(d.body.innerHTML, '"video_id": "', '"');
-var title = i(d.body.innerHTML, 'title" content="', '"');
-if (title == '') title = i(d.body.innerHTML, 'ltr" title="', '"');
-var fmt = i(d.body.innerHTML, 'fmt_url_map=', '&');
-if (fmt == '') fmt = i(kvajax.responseText, '"fmt_url_map": "', '"').replace("\\/", "/");
-
-if (fmt == '') {
-	var kvajax = false;
-	if (!kvajax && typeof XMLHttpRequest != 'undefined') {
-		kvajax = new XMLHttpRequest();
-	}
-	kvajax.open("GET", "http://www.youtube.com/watch?v=" + video_id + "&fmt=18", true);
-	kvajax.onreadystatechange = function() {
-		if (kvajax.readyState == 4) {
-			title = i(kvajax.responseText, 'title" content="', '"');
-			if (title == '') title = i(kvajax.responseText, 'ltr" title="', '"');
-			fmt = i(kvajax.responseText, 'fmt_url_map=', '&');
-			if (fmt == '') fmt = i(kvajax.responseText, '"fmt_url_map": "', '"').replace("\\/", "/");
-			finishkv();
+if (d.location.href.match(/youtube.com/i)) {
+	var video_id = i(d.body.innerHTML, ';video_id=', '&');
+	if (video_id == '') video_id = i(d.body.innerHTML, '"video_id": "', '"');
+	var title = i(d.body.innerHTML, 'title" content="', '"');
+	if (title == '') title = i(d.body.innerHTML, 'ltr" title="', '"');
+	var fmt = i(d.body.innerHTML, 'fmt_stream_map=', '&');
+	if (fmt == '') fmt = i(kvajax.responseText, 'fmt_stream_map": "', '"').replace("\\/", "/");
+	if (fmt == '') {
+		var kvajax = false;
+		if (!kvajax && typeof XMLHttpRequest != 'undefined') {
+			kvajax = new XMLHttpRequest();
 		}
+		kvajax.open("GET", "http://www.youtube.com/get_video_info?video_id=" + video_id + "&fmt=18", true);
+		kvajax.onreadystatechange = function() {
+			if (kvajax.readyState == 4) {
+				title = i(kvajax.responseText, '&title=', '&');
+				if (title == '') title = i(kvajax.responseText, 'title=', '&');
+				fmt = i(kvajax.responseText, 'fmt_stream_map=', '&');
+				if (fmt == '') fmt = i(kvajax.responseText, 'fmt_stream_map": "', '"').replace("\\/", "/");
+				finishkv();
+			}
+		}
+		kvajax.send();
+	} else {
+		finishkv();
 	}
-	kvajax.send();
 } else {
-	finishkv();
+	document.location.href = 'http://keepvid.com/?url=' + escape(window.location);
 }
 */
-

@@ -28,6 +28,7 @@
 	D.write();
 	D.close();
 	D.body.innerHTML = '<style type="text/css">body{font:9pt sans-serif;}a{text-decoration:none;}a:hover{text-decoration:underline;}</style>';
+
 	function a(n) {
 		A(D.body, n);
 	}

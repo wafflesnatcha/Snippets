@@ -1,4 +1,4 @@
-(function () {
+(function() {
 	if (!window.NAV_BOOKMARKLET) window.NAV_BOOKMARKLET = {
 		"pathname": location.pathname,
 		"host": location.host
