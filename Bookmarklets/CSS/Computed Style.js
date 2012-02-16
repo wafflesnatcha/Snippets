@@ -1,4 +1,5 @@
 (function() {
+
 	function A(n, g) {
 		var p = n.parentNode,
 			t = n.tagName;
@@ -10,6 +11,7 @@
 			i = n.id;
 		return A(p, ' > ') + (b ? T : T.toLowerCase()) + (c ? "." + c : "") + (i ? "#" + i : "") + (b ? g : ' ');
 	}
+
 	document.onmouseover = function(e) {
 		e = e ? e : event;
 		var s, g = e.target;
@@ -22,6 +24,7 @@
 		window.status = s;
 		return true;
 	};
+
 	window.status = A(document.documentElement, '');
 	var newSS, styles = '* { cursor: crosshair; }';
 	newSS = document.createElement('link');
@@ -29,6 +32,7 @@
 	newSS.type = 'text/css';
 	newSS.href = 'data:text/css,' + escape(styles);
 	document.getElementsByTagName("head")[0].appendChild(newSS);
+
 	document.onclick = function(e) {
 		e = e ? e : event;
 		var s, g = e.target;
@@ -37,6 +41,7 @@
 		x.document.open();
 		x.document.close();
 		var d = x.document;
+
 		x.onunload = function() {
 			document.onclick = null;
 			document.onmouseover = null;
@@ -50,6 +55,7 @@
 			if (col) r.style.color = col;
 			return r;
 		}
+
 		var typeIndex = {
 			'top': 1,
 			'bottom': 1,
@@ -62,17 +68,20 @@
 			'-moz-appearance': 0,
 			'-moz-box-sizing': 0
 		};
+
 		var colors = ["red", "green", "black"];
 
 		function undirect(v) {
 			return v.replace(/\-(left|top|bottom|right)/, "-*");
 		}
+
 		function diff(n, p) {
 			pcs = p.ownerDocument.defaultView.getComputedStyle(p, "");
 			ncs = n.ownerDocument.defaultView.getComputedStyle(n, "");
-			var A = [];
-			var B = {};
-			var C = {};
+			var A = [],
+				B = {},
+				C = {};
+
 			for (var i = 0; i < ncs.length; ++i) {
 				var e = ncs.item(i),
 					v = ncs.getPropertyValue(e),
@@ -86,8 +95,10 @@
 					A.push([typeIndex[e] != null ? typeIndex[e] : 2, e, v]);
 				}
 			}
+
 			A = A.sort();
 			for (var u in B) if (B[u][0] == 4) C[u] = true;
+
 			for (var i in A) {
 				var t = A[i],
 					e = t[1],
@@ -98,6 +109,7 @@
 				} else d.body.appendChild(sp("div", e + ": " + v, colors[t[0]]));
 			}
 		}
+
 		function info(n) {
 			if (!n) return;
 			if (n.tagName) {
@@ -106,9 +118,11 @@
 			}
 			info(n.parentNode);
 		}
+
 		d.body.appendChild(sp("p", "This shows how the computed style of each node differs from the computed style of its parent. The root element, which has no parent, is instead compared against the root of a blank HTML document."));
 		info(g);
 		x.focus();
 		e.preventDefault();
 	}
+
 })()

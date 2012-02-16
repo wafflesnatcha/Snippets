@@ -1,4 +1,4 @@
-Function.prototype.bindAsEventListener = function () {
+if (!Function.prototype.bindAsEventListener) Function.prototype.bindAsEventListener = function () {
 	var __method = this,
 		args = Array.prototype.slice.call(arguments),
 		object = args.shift();

@@ -1,4 +1,4 @@
-(function () {
+(function() {
 	function getSelSource() {
 		x = document.createElement("div");
 		x.appendChild(window.getSelection().getRangeAt(0).cloneContents());

@@ -1,4 +1,4 @@
-void(function() {
+(function() {
 	var i, a, s;
 	a = document.getElementsByTagName('link');
 	for (i = 0; i < a.length; i++) {
@@ -8,4 +8,4 @@ void(function() {
 			s.href = h + (h.indexOf('?') >= 0 ? '&' : '?') + 'forceReload=' + (new Date().valueOf())
 		}
 	}
-})();
+})()

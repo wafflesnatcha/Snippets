@@ -229,9 +229,9 @@
 	// window.W = new Win();
 	// W.insert(test_data);
 	// console.log(W);
-	window.F = new Element.Frame(test_data);
-	console.log(F);
+	// window.F = new Element.Frame(test_data);
+	// console.log(F);
 
-	// window.I = new FrameInline(test_data);
-	// console.log(I);
+	window.I = new FrameInline(test_data);
+	console.log(I);
 })()

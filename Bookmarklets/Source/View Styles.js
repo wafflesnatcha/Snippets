@@ -1,4 +1,4 @@
-(function () {
+(function() {
 	var inline_styles = document.getElementsByTagName('style'),
 		linked_styles = document.getElementsByTagName('link'),
 		popup = window.open().document;

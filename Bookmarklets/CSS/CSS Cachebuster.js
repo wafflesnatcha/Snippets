@@ -4,4 +4,4 @@
 	for (i = 0; i < x.length; i++) {
 		x[i].href = x[i].href + '?' + new Date().getTime();
 	}
-})();
+})()

@@ -13,6 +13,7 @@
 			update();
 			return;
 		}
+
 		ta.value = "/* Type CSS rules here and they will be applied" + newline + "to pages from '" + location.host + "'" + newline + "immediately as long as you keep this window open. */" + newline + newline;
 
 		function add(s) {
@@ -65,6 +66,7 @@
 				}
 			}
 		}
+
 		function fix(s) {
 			while ((s[0] == newline) && s.length > 1) s = s.slice(1);
 			while ((s[s.length - 1] == newline) && s.length > 1) s = s.substr(0, s.length - 1);
@@ -73,17 +75,16 @@
 			});
 			return s;
 		}
+
 		for (var i = 0, ss; ss = x.document.styleSheets[i]; ++i) add(ss);
 		var imports = "",
 			main = "";
 		var firstNote = "/**** Style sheets whose contents could be loaded were ****/" + newline + "/**** imported instead.  Rule order may be incorrect   ****/" + newline + "/**** as a result. ****/" + newline;
-		if (importCount) {
-			ta.value += firstNote;
-		}
+
+		if (importCount) ta.value += firstNote;
+
 		for (var i = 0; ss = L[i]; ++i) {
-			if (ss.importtext) {
-				imports += ss.importtext + newline;
-			}
+			if (ss.importtext) imports += ss.importtext + newline;
 			main += "/**** " + ss.label + " style sheet" + ss.shorturl + " ****/" + newline;
 			main += newline;
 			main += ss.fulltext;
@@ -94,6 +95,7 @@
 		ta.value += imports + newline + main;
 		update();
 	}
+
 	function update() {
 		try {
 			if (!x || x.closed) {
@@ -127,6 +129,7 @@
 		}
 		setTimeout(update, 150);
 	}
+
 	y = open('', '', 'resizable,scrollbars=yes,width=550,height=520');
 	y.document.write('<title>Edit Styles</title><style>.ec { width: 100%; height: 100%; border: none; margin: 0px; padding: 0px; }</style><body class="ec"><form name="f" style="margin: 0px;" class="ec"><textarea name="ta" wrap="soft" style="margin: 0px; border: 0px; width:100%; height:100%;" class="ec"></textarea><script>' + update + init + 'init();<' + '/script>');
 	y.document.close();
