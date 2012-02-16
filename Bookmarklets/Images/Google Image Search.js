@@ -1,0 +1,1 @@
+void(window.open('http://www.google.com/searchbyimage?image_url=' + encodeURIComponent(document.URL)));
