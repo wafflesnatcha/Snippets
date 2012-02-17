@@ -91,7 +91,7 @@
 			style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:10000'].join(";"),
 			children: [{
 				tag: 'div',
-				style: ['padding:10px 20px', 'margin:0', 'position:absolute', 'background:#222', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
+				style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
@@ -146,7 +146,6 @@
 		this.center();
 		return this;
 	}
-
 	var links = [],
 		re = new RegExp(/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(\?[^\s'"]*)?(?=(?:[^a-zA-Z0-9\-\_]|$)))+/gi);
 
@@ -195,13 +194,19 @@
 		html += makeResultList(links);
 		html += '<hr style="height:2px;border:0;background:#444">';
 	}
-	html += makeResultList([
-		["Keep Tube", "http://keep-tube.com/?url=" + location.href],
-		["KeepVid", "http://keepvid.com/?url=" + location.href],
-		["SaveFrom.net", "http://savefrom.net/" + location.href],
-		["WebVideoFetcher.com", "http://webvideofetcher.com/?url=" + location.href],
-	]);
+	html += makeResultList([[
+		"Keep Tube",
+		"http://keep-tube.com/?url=" + location.href
+		], [
+		"KeepVid",
+		"http://keepvid.com/?url=" + location.href
+		], [
+		"SaveFrom.net",
+		"http://savefrom.net/" + location.href
+		], [
+		"WebVideoFetcher.com",
+		"http://webvideofetcher.com/?url=" + location.href
+		]]);
 
 	return new Element.Frame(html);
-
 })();

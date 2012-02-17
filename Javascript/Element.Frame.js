@@ -6,7 +6,7 @@ Element.Frame = function(content) {
 		style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:10000'].join(";"),
 		children: [{
 			tag: 'div',
-			style: ['padding:10px 20px', 'margin:0', 'position:absolute', 'background:#222', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
+			style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
 			children: [{
 				tag: 'iframe',
 				id: id + '-frame',
