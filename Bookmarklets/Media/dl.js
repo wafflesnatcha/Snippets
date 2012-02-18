@@ -37,8 +37,13 @@
 		},
 
 		height: function(v) {
-			if (v >= 0) this.element.style.height = v + "px";
+			if (v) this.element.style.height = v + (v[v.length - 1] != "%" ? "px" : "");
 			return this.element.offsetHeight;
+		},
+
+		width: function(v) {
+			if (v) this.element.style.width = v + (v[v.length - 1] != "%" ? "px" : "");
+			return this.element.offsetWidth;
 		},
 
 		insert: function(content) {
@@ -74,13 +79,7 @@
 				} else this.element.setAttribute(prop, attr[prop]);
 			}
 			return this;
-		},
-
-		width: function(v) {
-			if (v >= 0) this.element.style.width = v + "px";
-			return this.element.offsetWidth;
 		}
-
 	};
 
 	Element.Frame = function(content) {
@@ -91,12 +90,12 @@
 			style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:10000'].join(";"),
 			children: [{
 				tag: 'div',
-				style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
+				style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border:4px solid #eee', 'border-radius:8px', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:30px', 'min-height:30px', 'max-width:80%', 'max-height:80%'].join(";"),
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
 					src: 'about:blank',
-					style: ['position:absolute', 'left:0', 'top:0', 'right:auto', 'bottom:auto', 'width:100%', 'height:100%', 'border:0', 'margin:0', 'padding:0', 'border-radius:10px', 'background:#222', 'z-index:1'].join(";")
+					style: ['position:absolute', 'left:0', 'top:0', 'right:auto', 'bottom:auto', 'width:100%', 'height:100%', 'border:0', 'margin:0', 'padding:0'].join(";")
 				}]
 			}]
 		});
@@ -124,8 +123,8 @@
 			contentEl.width.apply(contentEl, arguments);
 		};
 		this.resize = function() {
-			this.width(frameDocument.width || frameDocument.body.scrollWidth);
-			this.height(frameDocument.height || frameDocument.body.offsetHeight);
+			this.width((frameDocument.body.scrollWidth || frameDocument.body.offsetWidth || frameDocument.width) + 25);
+			this.height((frameDocument.body.scrollHeight || frameDocument.body.offsetHeight || frameDocument.height));
 		};
 
 		// Close the frame when clicking on the background
@@ -136,16 +135,24 @@
 
 		// CSS Reset
 		this.insert('<style type="text/css">body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:"";}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}a{color:#6cf;text-decoration:none;}a:hover{text-decoration:underline;}</style>');
-		this.insert('<style type="text/css">body{color:#fff;font:13px sans-serif;padding:10px 20px;overflow:auto}</style>');
+		this.insert('<style type="text/css">body{color:#fff;font:13px sans-serif;padding:8px;overflow:auto}ol{white-space:pre}.e a{color:#ff6669}hr{height:2px;border:0;background:#444}</style>');
 
 		if (content) {
 			this.insert(content);
 			this.resize();
 		}
 
+		// Center frame after window resizes
+		window.addEventListener("resize", function(e) {
+			contentEl.center();
+		}, false);
+		
 		this.center();
 		return this;
 	}
+
+
+
 	var links = [],
 		re = new RegExp(/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(\?[^\s'"]*)?(?=(?:[^a-zA-Z0-9\-\_]|$)))+/gi);
 
@@ -176,14 +183,14 @@
 		if (matches && matches.length > 0) links = links.concat(matches)
 	}
 
-	function makeResultList(links) {
+	function makeResultList(links, attribs) {
 		var l, i, html = '';
 		for (i = 0; i < links.length; i++) {
 			l = links[i];
 			if (toString.call(l) !== "[object Array]") l = [l, l]
 			html += '<li><a href="' + l[1] + '" target="_blank">' + l[0] + '</a></li>';
 		}
-		return '<ol style="white-space:pre">' + html + '</ol>';
+		return '<ol ' + (attribs || '') + '>' + html + '</ol>';
 	}
 
 	addFrameContents();
@@ -192,21 +199,21 @@
 	var html = '';
 	if (links.length > 0) {
 		html += makeResultList(links);
-		html += '<hr style="height:2px;border:0;background:#444">';
+		html += '<hr>';
 	}
 	html += makeResultList([[
-		"Keep Tube",
-		"http://keep-tube.com/?url=" + location.href
+		'Keep Tube',
+		'http://keep-tube.com/?url=' + location.href
 		], [
-		"KeepVid",
-		"http://keepvid.com/?url=" + location.href
+		'KeepVid',
+		'http://keepvid.com/?url=' + location.href
 		], [
-		"SaveFrom.net",
-		"http://savefrom.net/" + location.href
+		'SaveFrom.net',
+		'http://savefrom.net/' + location.href
 		], [
-		"WebVideoFetcher.com",
-		"http://webvideofetcher.com/?url=" + location.href
-		]]);
+		'WebVideoFetcher.com',
+		'http://webvideofetcher.com/?url=' + location.href
+		]], 'class="e"');
 
 	return new Element.Frame(html);
 })();

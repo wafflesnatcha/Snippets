@@ -6,12 +6,12 @@ Element.Frame = function(content) {
 		style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:10000'].join(";"),
 		children: [{
 			tag: 'div',
-			style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border-radius:10px', 'border:4px solid #eee', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:50px', 'min-height:50px', 'max-width:80%', 'max-height:80%'].join(";"),
+			style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border:4px solid #eee', 'border-radius:8px', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:30px', 'min-height:30px', 'max-width:80%', 'max-height:80%'].join(";"),
 			children: [{
 				tag: 'iframe',
 				id: id + '-frame',
 				src: 'about:blank',
-				style: ['position:absolute', 'left:0', 'top:0', 'right:auto', 'bottom:auto', 'width:100%', 'height:100%', 'border:0', 'margin:0', 'padding:0', 'border-radius:10px', 'background:#222', 'z-index:1'].join(";")
+				style: ['position:absolute', 'left:0', 'top:0', 'right:auto', 'bottom:auto', 'width:100%', 'height:100%', 'border:0', 'margin:0', 'padding:0'].join(";")
 			}]
 		}]
 	});
@@ -39,8 +39,8 @@ Element.Frame = function(content) {
 		contentEl.width.apply(contentEl, arguments);
 	};
 	this.resize = function() {
-		this.width(frameDocument.width || frameDocument.body.scrollWidth);
-		this.height(frameDocument.height || frameDocument.body.offsetHeight);
+		this.width((frameDocument.body.scrollWidth || frameDocument.body.offsetWidth || frameDocument.width) + 25);
+		this.height((frameDocument.body.scrollHeight || frameDocument.body.offsetHeight || frameDocument.height));
 	};
 
 	// Close Button
@@ -64,7 +64,7 @@ Element.Frame = function(content) {
 
 	// CSS Reset
 	this.insert('<style type="text/css">body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:"";}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}a{color:#6cf;text-decoration:none;}a:hover{text-decoration:underline;}</style>');
-	this.insert('<style type="text/css">body{color:#fff;font:13px sans-serif;padding:10px 20px;overflow:auto}</style>');
+	this.insert('<style type="text/css">body{color:#fff;font:13px sans-serif;padding:8px;overflow:auto}</style>');
 
 	if (content) {
 		this.insert(content);
