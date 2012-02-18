@@ -3,7 +3,7 @@
 use strict;
 use IO::File;
 
-our $COCOA_DIALOG = "$ENV{HOME}/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog";
+our $COCOA_DIALOG = "$ENV{HOME}/Applications/CocoaDialog.app/Contents/MacOS/CocoaDialog";
 die "$COCOA_DIALOG doesn't exist" unless -e $COCOA_DIALOG;
 
 ###
