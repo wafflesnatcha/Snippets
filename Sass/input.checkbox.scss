@@ -1,0 +1,36 @@
+input[type='checkbox'] {
+	@include appearance(none);
+	@include background-image(linear-gradient(top, rgba(255,255,255,.7), rgba(201,201,201,.7)));
+	@include background-origin(border-box);
+	@include border-radius(3px);
+	@include box-shadow(0 0 1px rgba(255,255,255,.35));
+	@include box-sizing(border-box);
+	@include inline-block;
+	background-color: #eee;
+	border: 1px solid rgba(100,100,100,.5);
+	height: 14px;
+	margin: 0 3px;
+	outline: none;
+	position: relative;
+	top: 2px;
+	vertical-align: baseline;
+	width: 14px;
+}
+input[type='checkbox']:disabled {
+	opacity: .75;
+}
+input[type='checkbox']:not(:disabled):not(:active):hover {
+	background-color: #fff;
+}
+input[type='checkbox']:not(:disabled):active {
+	@include box-shadow(0 0 1px rgba(255,255,255,.35), 0 1px 3px rgba(0,0,0,.2) inset);
+	background-color: #bbb;
+	border-color: rgba(100,100,100,.8);
+}
+input[type='checkbox']:checked::before {
+	color: #000;
+	content: image-url("tick.png");
+	left: 2px;
+	top: -1px;
+	position: absolute;
+}

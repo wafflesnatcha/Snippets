@@ -1,37 +1,37 @@
 input[type="text"],
 input[type="password"],
 textarea {
-font-family: 'Segoe UI', Tahoma, Helvetica, Arial, sans-serif !important;
-color: #000 !important;
-padding: 2px !important;
-margin: 0 !important;
-outline: 0 !important;
-border: 1px solid !important;
-background-color: #FFF !important;
--moz-border-radius: 2px !important;
--moz-background-clip: border;
--moz-outline: none !important;
--moz-appearance: none !important;
--moz-border-top-colors: 	#ABADB3 !important;
--moz-border-right-colors: 	#DBDFE6 !important;
--moz-border-bottom-colors: 	#E3E9EF !important;
--moz-border-left-colors: 	#E2E3EA !important;
+	background-color: #FFF;
+	border: 1px solid;
+	color: #000;
+	font-family: 'Segoe UI', Tahoma, Helvetica, Arial, sans-serif;
+	margin: 0;
+	outline: 0;
+	padding: 2px;
+	-moz-border-radius: 2px;
+	-moz-background-clip: border;
+	-moz-outline: none;
+	-moz-appearance: none;
+	-moz-border-top-colors: 	#ABADB3;
+	-moz-border-right-colors: 	#DBDFE6;
+	-moz-border-bottom-colors: 	#E3E9EF;
+	-moz-border-left-colors: 	#E2E3EA;
 }
 
 input:hover,
 input[type="password"]:hover,
 textarea:hover {
--moz-border-top-colors: 	#5794BF !important;
--moz-border-right-colors: 	#B7D5EA !important;
--moz-border-bottom-colors: 	#C7E2F1 !important;
--moz-border-left-colors: 	#C5DAED !important;
+	-moz-border-top-colors: 	#5794BF;
+	-moz-border-right-colors: 	#B7D5EA;
+	-moz-border-bottom-colors: 	#C7E2F1;
+	-moz-border-left-colors: 	#C5DAED;
 }
 
 input:focus,
 input[type="password"]:focus,
 textarea:focus {
--moz-border-top-colors: 	#3D7BAD !important;
--moz-border-right-colors: 	#A4C9E3 !important;
--moz-border-bottom-colors: 	#B7D9ED !important;
--moz-border-left-colors: 	#B5CFE7 !important;
+	-moz-border-top-colors: 	#3D7BAD;
+	-moz-border-right-colors: 	#A4C9E3;
+	-moz-border-bottom-colors: 	#B7D9ED;
+	-moz-border-left-colors: 	#B5CFE7;
 }
