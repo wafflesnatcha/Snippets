@@ -1,32 +1,25 @@
 <?php
 /**
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- * + Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * + Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- * + Neither the name of the <ORGANIZATION> nor the names of its contributors
- * may be used to endorse or promote products derived
- * from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  *
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
- * @copyright 2011 Scott Buchanan
- * @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version   SVN: $Id:$
+ * @copyright 2012 Scott Buchanan
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @version   1.0.0 2012-02-22
  */
 
 /**
@@ -172,8 +165,12 @@ class Console
 	public static function __callStatic($name, $arguments)
 	{
 		if ("{$name[0]}" === "_") {
-			$callback = array(static::getInstance(), substr($name, 1));
-			if (method_exists($callback[0], $callback[1])) 
+			$callback = array(
+				static::getInstance(),
+				substr($name,
+				1),
+			);
+			if (method_exists($callback[0], $callback[1]))
 				return call_user_func_array($callback, $arguments);
 		}
 		trigger_error("Cannot access method " . __CLASS__ . "->$name statically", E_USER_ERROR);
@@ -186,9 +183,9 @@ class Console
 	 */
 	public function enable()
 	{
-		error_reporting(E_ALL|E_STRICT);
+		error_reporting(E_ALL| E_STRICT);
 		ini_set("display_errors", 1);
-		set_error_handler(array($this, "phpErrorHandler"), E_ALL|E_STRICT);
+		set_error_handler(array($this, "phpErrorHandler"), E_ALL| E_STRICT);
 		set_exception_handler(array($this, "phpExceptionHandler"));
 
 		/*
@@ -292,7 +289,7 @@ class Console
 	 */
 	public function time()
 	{
-		$t = round((float)microtime(true) - $this->time_start, 5);
+		$t = round((float) microtime(true) - $this->time_start, 5);
 		$args = func_get_args();
 		array_unshift($args, $t);
 		$this->process(self::TIME, $args);
@@ -312,7 +309,7 @@ class Console
 	 */
 	public function display($target = null)
 	{
-		if (!$this->enabled) 
+		if (!$this->enabled)
 			return false;
 		$t = $this->target($target);
 		switch ($t) {
@@ -338,7 +335,7 @@ class Console
 	public function logfile($path = false)
 	{
 		if ($path !== false) {
-			if ((file_exists($path) && is_writable($path)) || is_writable(dirname($path))) 
+			if ((file_exists($path) && is_writable($path)) || is_writable(dirname($path)))
 				$this->path_log = $path;
 		}
 		return $this->path_log;
@@ -352,7 +349,7 @@ class Console
 	 */
 	public function target($new_target = null)
 	{
-		if ($new_target) 
+		if ($new_target)
 			$this->target = $new_target;
 		return $this->target;
 	}
@@ -401,7 +398,7 @@ class Console
 		$rel_file = static::getRelativePath($errfile, $this->path_root);
 		$message = "$rel_file:$errline - $errstr";
 		$this->process($priority, "$rel_file:$errline - $errstr");
-		if ($exit_after) 
+		if ($exit_after)
 			exit(2);
 	}
 
@@ -443,13 +440,13 @@ class Console
 			self::WARN => "%yWARN",
 			self::WTF => "%y%bW%gT%rF%c",
 		);
-		if ($prefixes[$priority]) 
+		if ($prefixes[$priority])
 			$prefix = $prefixes[$priority] . "%n ";
-		$args = (array)$args;
+		$args =(array) $args;
 		foreach ($args as &$a) {
-			if (is_array($a) || is_object($a)) 
+			if (is_array($a) || is_object($a))
 				$a = var_export($a, true);
-			elseif (is_bool($a)) 
+			elseif (is_bool($a))
 				$a = ($a === true) ? "TRUE" : "FALSE";
 		}
 		$str = implode(", ", $args);
@@ -487,7 +484,7 @@ class Console
 	 */
 	private function displayToFile()
 	{
-		if (!$this->path_log) 
+		if (!$this->path_log)
 			return;
 		$fp = fopen($this->path_log, "a");
 		$out = $this->output;
@@ -520,7 +517,7 @@ class Console
 	 */
 	private function colorConvert($string, $colored = true)
 	{
-		if (!$this->isColorTerm() || !$colored) 
+		if (!$this->isColorTerm() || !$colored)
 			return preg_replace("/([^%]?)(%[kK0rR1gG2yY3bB4mM5pPcC6wW7FU8_9n])/", "$1", $string);
 		$colors = $this->colorCode();
 		foreach ($colors as $k => $v) {
@@ -557,7 +554,7 @@ class Console
 			"%C" => "\033[46m",
 			"%W" => "\033[47m",
 		);
-		if ($code !== false) 
+		if ($code !== false)
 			return $codes_ansi[$code];
 		return $codes_ansi;
 	}
@@ -604,10 +601,10 @@ class Console
 	private function get_arg(&$arg)
 	{
 		if (is_object($arg)) {
-			$arr = (array)$arg;
+			$arr =(array) $arg;
 			$args = array();
 			foreach ($arr as $key => $value) {
-				if (strpos($key, chr(0)) !== false) 
+				if (strpos($key, chr(0)) !== false)
 					$key = '';
 				// $args[] = '[' . $key . '] => ' . $this->get_arg($value);
 				$args[] = '[' . $key . '] => ' . call_user_func(__METHOD__, $value);
@@ -636,12 +633,12 @@ class Console
 		$pathParts = explode('/', $path);
 		$compareToParts = explode('/', $compareTo);
 		foreach ($compareToParts as $index => $part) {
-			if (isset($pathParts[$index]) && $pathParts[$index] == $part) 
+			if (isset($pathParts[$index]) && $pathParts[$index] == $part)
 				continue;
 			$relative[] = '..';
 		}
 		foreach ($pathParts as $index => $part) {
-			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part) 
+			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part)
 				continue;
 			$relative[] = $part;
 		}
