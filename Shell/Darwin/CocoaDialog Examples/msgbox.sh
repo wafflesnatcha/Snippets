@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CD="$HOME/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+CD="cocoaDialog"
 
 rv=`$CD msgbox --no-newline \
     --text "What's your favorite OS?" \

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CD="$HOME/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+CD="cocoaDialog"
 
 rv=`$CD ok-msgbox --text "We need to make sure you see this message" \
     --informative-text "(Yes, the message was to inform you about itself)" \

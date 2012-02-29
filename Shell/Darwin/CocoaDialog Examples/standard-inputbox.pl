@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 
-our $CD = "$ENV{HOME}/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog";
+our $CD = "$ENV{HOME}/lib/cocoaDialog.app/Contents/MacOS/cocoaDialog";
 
 my $rv = `$CD standard-inputbox --title "Your Name" --no-newline \\
     --informative-text "Enter your name"`;

@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 
-our $CD = "$ENV{HOME}/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog";
+our $CD = "cocoaDialog";
 
 my $rv = `$CD inputbox --title "Search" --no-newline \\
     --informative-text "Enter your search term" \\

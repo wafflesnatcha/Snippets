@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CD="$HOME/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+CD="$HOME/lib/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 
 rv=`$CD yesno-msgbox --no-cancel --string-output --no-newline \
     --text  "This is a simple first example" \

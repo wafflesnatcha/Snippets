@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CD="$HOME/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+CD="cocoaDialog"
 
 rv=`$CD fileselect \
 	--title "This is a fileselect"\

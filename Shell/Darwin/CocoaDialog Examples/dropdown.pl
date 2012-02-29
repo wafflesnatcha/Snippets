@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 
-our $CD = "$ENV{HOME}/bin/Darwin/CocoaDialog.app/Contents/MacOS/CocoaDialog";
+our $CD = "$ENV{HOME}/lib/CocoaDialog.app/Contents/MacOS/CocoaDialog";
 
 my $rv = `$CD dropdown --title "Preferred OS" --no-newline \\
 	---text "What is your favorite OS?" \\
