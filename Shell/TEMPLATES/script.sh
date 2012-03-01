@@ -23,7 +23,7 @@ while (($#)); do
 		-f|--flag) echo opt_flag=1 ;;
         -v|--variable) echo opt_variable=$2; shift ;;
 		-*|--*) FAIL "unknown option ${1}" ;;
-        *) shift; break ;;
+        *) break ;;
 	esac
 	shift
 done
