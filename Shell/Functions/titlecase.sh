@@ -1,6 +1,6 @@
 # Usage: 
-# 	titlecase Lorem ipsum dolor sit amet.
-#		>> Lorem Ipsum Dolor Sit Amet.
+# $ titlecase Lorem ipsum dolor sit amet.
+# Lorem Ipsum Dolor Sit Amet.
 
 titlecase() {
 	[[ ${#@} < 1 ]] && return 1

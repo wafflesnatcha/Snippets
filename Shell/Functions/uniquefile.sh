@@ -7,13 +7,13 @@
 # (# being the next number in a sequence of files that already exist)
 # 
 # Usage: (assuming "path/to/file.txt" and "path/to/file.2.txt" already exist)
-# 	filename=$(uniquefile "path/to/file.txt")
-# 		>> path/to/file.3.txt
+# $ filename=$(uniquefile "path/to/file.txt")
+# path/to/file.3.txt
 # 
 # You can specify a separator using the second parameter (defaults to .)
 # Usage:
-# 	filename=$(uniquefile "path/to/file.txt" " ")
-# 		>> path/to/file 3.txt
+# $ filename=$(uniquefile "path/to/file.txt" " ")
+# path/to/file 3.txt
 
 uniquefile() {
 	local i=1
