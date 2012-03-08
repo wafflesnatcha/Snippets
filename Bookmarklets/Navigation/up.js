@@ -14,7 +14,6 @@
 			}
 		} else {
 			var path_parts = NAV_BOOKMARKLET.pathname.split("/");
-			// var i = path_parts.length;
 			for (var i = path_parts.length; i >= 0; i--) {
 				if (path_parts[i] == "") path_parts.splice(i, 1);
 			}
