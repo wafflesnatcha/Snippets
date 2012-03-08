@@ -1,16 +1,16 @@
 (function() {
 	if (!window.NAV_BOOKMARKLET) window.NAV_BOOKMARKLET = {
-		"pathname": location.pathname,
-		"host": location.host
+		"pathname": document.location.pathname,
+		"host": document.location.host
 	};
-	if (location.hash === "") {
+	if (document.location.hash === "") {
 		if (NAV_BOOKMARKLET.pathname == "/") {
 			var host_parts = NAV_BOOKMARKLET.host.split(".");
 			if (host_parts.length > 2) {
 				host_parts.shift();
 				NAV_BOOKMARKLET.host = host_parts.join(".");
-			} else if (location.port) {
-				NAV_BOOKMARKLET.host = location.hostname;
+			} else if (document.location.port) {
+				NAV_BOOKMARKLET.host = document.location.hostname;
 			}
 		} else {
 			var path_parts = NAV_BOOKMARKLET.pathname.split("/");
@@ -22,6 +22,6 @@
 			NAV_BOOKMARKLET.pathname = (path_parts.length > 0) ? "/" + path_parts.join("/") + "/" : "/";
 		}
 	}
-	var l = location.protocol + "//" + NAV_BOOKMARKLET.host + NAV_BOOKMARKLET.pathname;
-	if (l != location.href) location = l;
+	var l = document.location.protocol + "//" + NAV_BOOKMARKLET.host + NAV_BOOKMARKLET.pathname;
+	if (l != document.location.href) document.location = l;
 })();
