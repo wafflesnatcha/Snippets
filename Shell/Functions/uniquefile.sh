@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-# uniquefile
+# uniquefile PATH [SEPARATOR]
 # like mktemp but supports a numbered sequence of files
 # 
 # Makes sure file doesn't already exist in specified path. If it does, ".#" is 
@@ -12,8 +11,8 @@
 # 
 # You can specify a separator using the second parameter (defaults to .)
 # Usage:
-# $ filename=$(uniquefile "path/to/file.txt" " ")
-# path/to/file 3.txt
+# $ filename=$(uniquefile "path/to/file.txt" " copy ")
+# path/to/file copy 3.txt
 
 uniquefile() {
 	local i=1

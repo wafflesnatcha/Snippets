@@ -1,5 +1,5 @@
 /*
-	g++ -isysroot /Developer/SDKs/MacOSX10.6.sdk -Wall -Os -o find_app find_app.cc -framework ApplicationServices
+	g++ -isysroot "$(xcode-select -print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk" -Wall -Os -o find_app find_app.cc -framework ApplicationServices
 */
 
 #include <unistd.h>
