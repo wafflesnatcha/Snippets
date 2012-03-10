@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<title>Dump Class Readme</title>
+<script type="text/javascript" src="dump.js"></script>
+<script type="text/javascript">
+var d = new Date();
+var hash = [];
+hash['section1'] = ['test1','test2'];
+hash['section2'] = ['test3','test4'];
+function greet(fn,sn) {alert('Hi ' + fn + ' ' + sn);}
+greet.prototype.test = function(a,b){alert(a + b);}
+greet.prototype.test1 = hash;
+var obj = {
+'name':'value',
+'key':'value',
+'num':3254325,
+'obj':{
+	'bool':true,
+	'num':1,
+	'func':function(){alert('do stuff')},
+	'nestedobj':{
+		'bool1':false,
+		'aaa':2,
+		'num':'$huns',
+		'obj':{
+			'arr':['a','b','c','d'],
+			'num':3,
+			'word':'shaun',
+			'empty array':[]}
+		}
+	},
+'arr':[1123,232,{'auth':'shaun b','empty object':{}}],
+'hash':hash,
+'greetFunc':greet
+};
+window.onload = function() {
+var btn1 = document.getElementById('oDump');
+var btn2 = document.getElementById('aDump');
+var btn3 = document.getElementById('fDump');
+var btn4 = document.getElementById('sDump');
+var showTypes = document.getElementById('showTypes');
+btn1.onclick = function() {dump(obj, showTypes.checked, 'dump_output');};
+btn2.onclick = function() {dump(['asf','asfsaf',46346,{'key':'value'},d,greet,/\s/,null,document.getElementsByTagName('p'),null,btn1], showTypes.checked, 'dump_output');};
+btn3.onclick = function() {dump(greet, showTypes.checked, 'dump_output');};
+btn4.onclick = function() {dump('some test text...', showTypes.checked, 'dump_output');};
+};
+</script>
+<style type="text/css">body{font-family:Arial,Helvetica,sans-serif;font-size:12px}h1{font-size:16px;font-weight:normal}h2{font-size:14px;font-weight:normal}pre{overflow:scroll;width:500px;border:1px solid #999;padding:5px}.h{cursor:hand;cursor:pointer}#searchDump{width:170px}</style>
+</head>
+<body>
+	<h1>Dump Method</h1>
+	<p>The Dump method is based on one of the tags available in Coldfusion ( &lt;cfdump&gt;) providing the ability to display simple and complex variables in a user friendly way that is perfect for debugging/inspecting data. There is no way to do this with javascript and often I had wanted a method to do this. This method will do just that allowing for an infinite amount of data nesting complete with color coding for different data types, the ability to show/hide the data's type (String/Number/Boolean/Object/Array/Function), expandable and collapsible tables/keys and cross browser support.</p>
+	<p>Click on the buttons bellow to see some examples in action, toggle the Show Data Types box to see javascript data typing in action (not possible in Coldfusion). </p>
+	<h2>Browser Support</h2>
+	<p>Internet Explorer 6, Internet Explorer 7, Firefox 1.5, Opera 8, Safari 1.2 (Mac), Firefox (Mac) - all tested, should also work in most other browsers </p>
+	<h2>Dump Examples</h2>
+	<p><strong>Click to see dump examples</strong> (Click on headings/keys to expand and collapse tables/values) </p>
+	<form action="" method="post">
+		<div>
+			<input type="button" id="oDump" value="Dump Object" />
+			<input type="button" id="aDump" value="Dump Array" />
+			<input type="button" id="fDump" value="Dump Function" />
+			<input type="button" id="sDump" value="Dump String" />
+			<input type="checkbox" id="showTypes" value="1" checked="checked" />
+		<label for="showTypes" class="h">Show Data Types</label>
+		</div>
+	</form>
+	<h2>Usage</h2>
+	<p><strong>dump(value, [showTypes]) </strong><br /> @ param value (Any) value to dump <br /> @ param [showTypes] (Boolean) optional to display each key/value's type <br />@ return (Void) returns nothing </p>
+	<p><strong>Examples</strong></p>
+	<pre>dump(myObject, true); // opens a dump window displaying key/value types of myObject<br />dump([123,456,789], false); // opens a dump window not displaying key/value types of the array passed<br />dump('string value', false); // opens a dump window showing the string value</pre>
+	<hr>
+	<div id="dump_output"></div>
+</body>
+</html>
