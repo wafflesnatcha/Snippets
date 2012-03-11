@@ -1,3 +1,9 @@
+/**
+ * DOM Element Helper
+ *
+ * @author Scott Buchanan <buchanan.sc@gmail.com>
+ */
+
 function Element(config) {
 	if (typeof config === "string") {
 		var res = [],
@@ -8,34 +14,22 @@ function Element(config) {
 		}
 		return res;
 	} else if (typeof config === "object") {
-		this.config = config;
 		if (config.toString() === "[object Object]") {
 			this.element = document.createElement(config.tag);
 			this.setAttributes(config);
-		} else {
-			this.element = config;
-		}
+		} else this.element = config;
 	}
 	return this;
 }
 
 Element.prototype = {
 
-	center: function(el) {
-		var el = el || window,
-			w = el.innerWidth || el.clientWidth,
-			h = el.innerHeight || el.clientHeight;
-		this.element.style.left = Math.round((w - this.width()) / 2) + "px";
-		this.element.style.top = Math.round((h - this.height()) / 2) + "px";
+	destroy: function() {
+		if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
 	},
 
 	empty: function() {
 		while (this.element.hasChildNodes()) this.element.removeChild(this.element.firstChild);
-	},
-
-	height: function(v) {
-		if (v >= 0) this.element.style.height = v + "px";
-		return this.element.offsetHeight;
 	},
 
 	insert: function(content) {
@@ -53,6 +47,28 @@ Element.prototype = {
 				return new Element(content);
 			}
 		}
+	},
+
+	setAttributes: function(attr) {
+		for (var prop in attr) {
+			if (prop == "tag") continue;
+			else if (prop == "text") this.insert(attr[prop]);
+			else if (prop == "children") {
+				this.children = [];
+				for (var i = 0; i < attr[prop].length; i++) {
+					this.children.push(this.insert(attr[prop][i]));
+				}
+			} else this.element.setAttribute(prop, attr[prop]);
+		}
+		return this;
+	},
+
+	center: function(el) {
+		var el = el || window;
+		this.width(this.width());
+		this.height(this.height());
+		this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + "px";
+		this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + "px";
 	},
 
 	offset: function() {
@@ -75,27 +91,13 @@ Element.prototype = {
 		return offset;
 	},
 
-	remove: function() {
-		if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
-	},
-
-	setAttributes: function(attr) {
-		for (var prop in attr) {
-			if (prop == "tag") continue;
-			else if (prop == "text") this.insert(attr[prop]);
-			else if (prop == "children") {
-				this.children = [];
-				for (var i = 0; i < attr[prop].length; i++) {
-					this.children.push(this.insert(attr[prop][i]));
-				}
-			} else this.element.setAttribute(prop, attr[prop]);
-		}
-		return this;
+	height: function(v) {
+		if (v >= 0) this.element.style.height = v + "px";
+		return this.element.offsetHeight;
 	},
 
 	width: function(v) {
 		if (v >= 0) this.element.style.width = v + "px";
 		return this.element.offsetWidth;
 	}
-
 };

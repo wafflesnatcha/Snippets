@@ -1,9 +1,15 @@
+/**
+ * Element.Frame
+ * 
+ * @requires Element.js
+ */
+
 Element.Frame = function(content) {
 	var id = 'frame-' + (new Date).getTime();
 	this.El = new Element({
 		tag: 'div',
 		id: id,
-		style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:10000'].join(";"),
+		style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:999999'].join(";"),
 		children: [{
 			tag: 'div',
 			style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border:4px solid #eee', 'border-radius:8px', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:30px', 'min-height:30px', 'max-width:80%', 'max-height:80%'].join(";"),
@@ -29,6 +35,7 @@ Element.Frame = function(content) {
 	for (var prop in this.El) this[prop] = this.El[prop];
 	this.element = frameDocument.body;
 
+	// Override some functions
 	this.center = function() {
 		contentEl.center.apply(contentEl, arguments);
 	};
@@ -50,16 +57,16 @@ Element.Frame = function(content) {
 		href: 'javascript:void(0)',
 		text: 'X',
 		title: 'Close',
-		style: ['background:#d1d1d1', 'border:2px solid #eee', 'border-radius:50%', 'box-shadow:inset 0 0 1px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.5)', 'color:#555', 'font:bold 12px/22px Verdana,sans-serif', 'height:22px', 'margin:0', 'padding:0', 'opacity:1', 'position:absolute', 'top:-14px', 'left:-14px', 'text-align:center', 'text-decoration:none', 'width:22px', 'z-index:1000'].join(";")
+		style: ['background:#d1d1d1', 'border:0', 'border-radius:50%', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'color:#555', 'font:800 12px/23px "Arial Black",Verdana,sans-serif', 'height:23px', 'margin:0', 'padding:0', 'opacity:1', 'position:absolute', 'top:-12px', 'left:-12px', 'text-align:center', 'text-decoration:none', 'width:23px', 'z-index:1000'].join(";")
 	});
 	close_button.element.addEventListener("click", function() {
-		El.remove.apply(El);
+		El.destroy.apply(El);
 	}, true);
 
 	// Close the frame when clicking on the background
 	El.element.addEventListener("click", function(e) {
 		if (e.target != El.element) return;
-		El.remove.apply(El);
+		El.destroy.apply(El);
 	}, true);
 
 	// CSS Reset

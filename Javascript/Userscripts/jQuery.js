@@ -34,4 +34,5 @@ function addJQuery(callback) {
 }
 addJQuery(function() {
 	// your code here
-}
+	console.log(this, arguments);
+});
