@@ -1,1 +1,0 @@
-hdiutil create -ov -scrub -srcfolder ReleaseFolder/ -volname Release-1.2.3 Release.dmg
