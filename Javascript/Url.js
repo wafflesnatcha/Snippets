@@ -20,11 +20,8 @@ var Url = {
 	_utf8_encode: function (string) {
 		string = string.replace(/\r\n/g, "\n");
 		var utftext = "";
-
 		for (var n = 0; n < string.length; n++) {
-
 			var c = string.charCodeAt(n);
-
 			if (c < 128) {
 				utftext += String.fromCharCode(c);
 			} else if ((c > 127) && (c < 2048)) {
@@ -35,9 +32,7 @@ var Url = {
 				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
 				utftext += String.fromCharCode((c & 63) | 128);
 			}
-
 		}
-
 		return utftext;
 	},
 
@@ -46,11 +41,8 @@ var Url = {
 		var string = "";
 		var i = 0;
 		var c = c1 = c2 = 0;
-
 		while (i < utftext.length) {
-
 			c = utftext.charCodeAt(i);
-
 			if (c < 128) {
 				string += String.fromCharCode(c);
 				i++;
@@ -64,10 +56,7 @@ var Url = {
 				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
 				i += 3;
 			}
-
 		}
-
 		return string;
 	}
-
 }

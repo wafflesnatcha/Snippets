@@ -69,12 +69,12 @@
 		},
 
 		height: function(v) {
-			if (v >= 0) this.element.style.height = v + "px";
+			if (v) this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 			return this.element.offsetHeight;
 		},
 
 		width: function(v) {
-			if (v >= 0) this.element.style.width = v + "px";
+			if (v) this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 			return this.element.offsetWidth;
 		}
 	};
@@ -84,15 +84,47 @@
 		this.El = new Element({
 			tag: 'div',
 			id: id,
-			style: ['background:#000', 'background:rgba(0,0,0,.8)', 'bottom:0', 'left:0', 'position:fixed', 'right:0', 'top:0', 'z-index:10000'].join(";"),
+			style: [
+				'background:#000',
+				'background:rgba(0,0,0,.8)',
+				'bottom:0',
+				'left:0',
+				'position:fixed',
+				'right:0',
+				'top:0',
+				'z-index:10000'
+				].join(";"),
 			children: [{
 				tag: 'div',
-				style: ['padding:0', 'margin:0', 'position:absolute', 'background:#222', 'border:4px solid #eee', 'border-radius:8px', 'box-shadow:0 1px 2px rgba(0,0,0,.5)', 'min-width:30px', 'min-height:30px', 'max-width:80%', 'max-height:80%'].join(";"),
+				style: [
+					'background:#222',
+					'border:4px solid #eee',
+					'border-radius:8px',
+					'box-shadow:0 1px 2px rgba(0,0,0,.5)',
+					'margin:0',
+					'max-width:80%',
+					'max-height:80%',
+					'min-width:30px',
+					'min-height:30px',
+					'padding:0',
+					'position:absolute'
+					].join(";"),
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
 					src: 'about:blank',
-					style: ['position:absolute', 'left:0', 'top:0', 'right:auto', 'bottom:auto', 'width:100%', 'height:100%', 'border:0', 'margin:0', 'padding:0'].join(";")
+					style: [
+						'border:0',
+						'bottom:auto',
+						'height:100%',
+						'left:0',
+						'margin:0',
+						'padding:0',
+						'position:absolute',
+						'right:auto',
+						'top:0',
+						'width:100%'
+						].join(";")
 				}]
 			}]
 		});
@@ -130,7 +162,11 @@
 			El.destroy.apply(El);
 		}, true);
 
-		this.insert('<style type="text/css">html,body{padding:0;margin:0}body{color:#fff;font:13px sans-serif;padding:8px;overflow:auto}ol,li{list-style:none;margin:0;padding:0;white-space:pre}a{color:#6cf;text-decoration:none;}a:visited{color:#ba66ff;}.e a{color:#ff6669}hr{height:2px;border:0;background:#444}</style>');
+		this.insert({
+			tag: 'style',
+			type: 'text/css',
+			text: 'html,body{padding:0;margin:0}body{color:#fff;display:inline-block;font:13px sans-serif;padding:8px;overflow:auto}ol,li{list-style:none;margin:0;padding:0;white-space:pre}a{color:#6cf;text-decoration:none;}a:visited{color:#ba66ff;}.e a{color:#ff6669}hr{height:2px;border:0;background:#444}</style>'
+		});
 
 		if (content) {
 			this.insert(content);
@@ -141,16 +177,18 @@
 		return this;
 	}
 
-
-
 	var links = [],
-		re = new RegExp(/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(\?[^\s'"]*)?(?=(?:[^a-zA-Z0-9\-\_]|$)))+/gi);
+		patterns = [
+			new RegExp(/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(\?[^\s'"]*)?(?=(?:[^a-zA-Z0-9\-\_]|$)))+/gi),
+			// new RegExp(/(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/gi)
+			];
 
 	function addFrameContents(f) {
 		var f = f || window;
 		try {
 			scanText(f.document.documentElement.innerHTML);
-			scanText(decodeURIComponent(f.document.documentElement.innerHTML));
+			// scanText(decodeURIComponent(f.document.documentElement.innerHTML));
+			scanText(unescape(f.document.documentElement.innerHTML));
 		} catch (err) {
 			return;
 		}
@@ -169,8 +207,15 @@
 	}
 
 	function scanText(text) {
-		var matches = text.match(re);
-		if (matches && matches.length > 0) links = links.concat(matches)
+		var i, x, pl = patterns.length;
+		for (i = 0; i < pl; i++) {
+			var match = text.match(patterns[i]);
+			if (match && match.length > 0) {
+				for (x = 0; x < match.length; x++) {
+					links.push(match[x]);
+				}
+			}
+		}
 	}
 
 	function makeResultList(links, attribs) {

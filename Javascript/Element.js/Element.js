@@ -92,12 +92,12 @@ Element.prototype = {
 	},
 
 	height: function(v) {
-		if (v >= 0) this.element.style.height = v + "px";
+		if (v) this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 		return this.element.offsetHeight;
 	},
 
 	width: function(v) {
-		if (v >= 0) this.element.style.width = v + "px";
+		if (v) this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 		return this.element.offsetWidth;
 	}
 };
