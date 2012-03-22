@@ -1,0 +1,3 @@
+@mixin invert-lightness($color, $property: color) {
+	#{$property}: change-color($color, $lightness: 100% - lightness($color));
+}
