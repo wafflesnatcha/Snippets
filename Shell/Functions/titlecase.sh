@@ -1,9 +1,8 @@
 # titlecase STRING ...
 # 
-# Usage: 
+# Example: 
 # $ titlecase "Lorem ipsum dolor sit amet."
 # Lorem Ipsum Dolor Sit Amet.
-
 titlecase() {
 	[[ ${#@} < 1 ]] && return 1
 	local r;

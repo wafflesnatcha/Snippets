@@ -1,7 +1,8 @@
 # imgur PATH
-# 
-# Usage:
+#
+# Example:
 # $ imgur "/path/to/some/image.jpg"
+# http://i.imgur.com/wZjS5.jpg
 
 imgur() {
 	local result=$(cat "$1" | curl -qL $([[ $TERM = "dumb" ]] && echo "-sS" || echo "-#") --connect-timeout 15 -F "image=@-" -F "key=1913b4ac473c692372d108209958fd15" "http://api.imgur.com/2/upload.xml")
