@@ -1,18 +1,28 @@
 /**
  * DOM Element Helper
  *
- * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @author Scott Buchanan http://wafflesnatcha.github.com
+ * @param {String|Object} config Can be an existing DOM element, a CSS selector, or object
+ * 
+ * @example
+ * // Using existing DOM elements
+ * var el1 = new Element(document.body);
+ * var el2 = new Element("body > :first-child");
+ * 
+ * @example
+ * // Creating a new element
+ * var element = new Element({tag: 'div', class: 'some-div'});
  */
 
 function Element(config) {
 	if (typeof config === "string") {
 		var res = [],
 			arr = document.querySelectorAll(config);
-		if (arr.length == 0) return;
+		if (arr.length == 0) return undefined;
 		for (var i = 0; i < arr.length; i++) {
 			res.push(new Element(arr[i]));
 		}
-		return res;
+		return (res.length == 1)? res[0] : res;
 	} else if (typeof config === "object") {
 		if (config.toString() === "[object Object]") {
 			this.element = document.createElement(config.tag);

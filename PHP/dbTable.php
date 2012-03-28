@@ -23,7 +23,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @author Scott Buchanan http://wafflesnatcha.github.com
  * @copyright 2012 Scott Buchanan
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @version CVS: $Id:$

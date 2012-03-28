@@ -60,14 +60,6 @@
 			return this;
 		},
 
-		center: function(el) {
-			var el = el || window;
-			this.width(this.width());
-			this.height(this.height());
-			this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + "px";
-			this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + "px";
-		},
-
 		height: function(v) {
 			if (v) this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 			return this.element.offsetHeight;
@@ -85,45 +77,46 @@
 			tag: 'div',
 			id: id,
 			style: [
-				'background:#000',
-				'background:rgba(0,0,0,.8)',
-				'bottom:0',
-				'left:0',
-				'position:fixed',
-				'right:0',
-				'top:0',
-				'z-index:10000'
+				'background: #000',
+				'background: rgba(0,0,0,.8)',
+				'bottom: 0',
+				'left: 0',
+				'min-height: 150px',
+				'position: fixed',
+				'right: 0',
+				'top: 0',
+				'z-index: 10000'
 				].join(";"),
 			children: [{
 				tag: 'div',
 				style: [
-					'background:#222',
-					'border:4px solid #eee',
-					'border-radius:8px',
-					'box-shadow:0 1px 2px rgba(0,0,0,.5)',
-					'margin:0',
-					'max-width:80%',
-					'max-height:80%',
-					'min-width:30px',
-					'min-height:30px',
-					'padding:0',
-					'position:absolute'
+					'background: #222',
+					'border: 4px solid #eee',
+					'border-radius: 8px',
+					'box-shadow: 0 1px 2px rgba(0,0,0,.5)',
+					'margin: 0',
+					'max-width: 90%',
+					'max-height: 90%',
+					'min-width: 30px',
+					'min-height: 30px',
+					'padding: 0',
+					'position: absolute'
 					].join(";"),
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
 					src: 'about:blank',
 					style: [
-						'border:0',
-						'bottom:auto',
-						'height:100%',
-						'left:0',
-						'margin:0',
-						'padding:0',
-						'position:absolute',
-						'right:auto',
-						'top:0',
-						'width:100%'
+						'border: 0',
+						'bottom: auto',
+						'height: 100%',
+						'left: 0',
+						'margin: 0',
+						'padding: 0',
+						'position: absolute',
+						'right: auto',
+						'top: 0',
+						'width: 100%'
 						].join(";")
 				}]
 			}]
@@ -131,7 +124,8 @@
 
 		document.body.appendChild(this.El.element);
 
-		var El = this.El,
+		var me = this,
+			El = this.El,
 			contentEl = El.children[0],
 			frameEl = contentEl.children[0],
 			frameDocument = frameEl.element.contentWindow.document;
@@ -143,17 +137,23 @@
 		this.element = frameDocument.body;
 
 		this.center = function() {
-			contentEl.center.apply(contentEl, arguments);
+			this.width(this.width());
+			this.height(this.height());
+			contentEl.element.style.left = Math.round((El.width() - this.width()) / 2) + "px";
+			contentEl.element.style.top = Math.round((El.height() - this.height()) / 2) + "px";
+			
 		};
-		this.height = function() {
-			contentEl.height.apply(contentEl, arguments);
+		this.height = function(v) {
+			if (v) contentEl.height.apply(contentEl, arguments);
+			return this.element.offsetHeight;
 		};
-		this.width = function() {
-			contentEl.width.apply(contentEl, arguments);
+		this.width = function(v) {
+			if (v) contentEl.width.apply(contentEl, arguments);
+			return this.element.offsetWidth;
 		};
 		this.resize = function() {
-			this.width((frameDocument.body.scrollWidth || frameDocument.body.offsetWidth || frameDocument.width) + 25);
-			this.height((frameDocument.body.scrollHeight || frameDocument.body.offsetHeight || frameDocument.height));
+			this.width((frameDocument.body.offsetWidth || frameDocument.body.scrollWidth || frameDocument.width));
+			this.height((frameDocument.body.offsetHeight || frameDocument.body.scrollHeight || frameDocument.height));
 		};
 
 		// Close the frame when clicking on the background
@@ -172,6 +172,11 @@
 			this.insert(content);
 			this.resize();
 		}
+		
+		// Center frame after window resizes
+		window.addEventListener("resize", function(e) {
+			me.center();
+		}, false);
 
 		this.center();
 		return this;

@@ -1,7 +1,7 @@
 /**
  * Trigger a mouse event on an element or a set of coordinates
  * 
- * @author Scott Buchanan <buchanan.sc@gmail.com> 
+ * @author Scott Buchanan http://wafflesnatcha.github.com
  * @example
  * mouseEvent('mousedown', '.summary > button');
  * mouseEvent('click', "button[command='#sort-command']");
