@@ -73,7 +73,7 @@
 
 	Element.Frame = function(content) {
 		var id = 'frame-' + (new Date).getTime();
-		this.El = new Element({
+		this.element_mask = new Element({
 			tag: 'div',
 			id: id,
 			style: [
@@ -86,7 +86,7 @@
 				'right: 0',
 				'top: 0',
 				'z-index: 10000'
-				].join(";"),
+				].join("!important;") + "!important;",
 			children: [{
 				tag: 'div',
 				style: [
@@ -101,12 +101,13 @@
 					'min-height: 30px',
 					'padding: 0',
 					'position: absolute'
-					].join(";"),
+					].join("!important;") + "!important;",
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
 					src: 'about:blank',
 					style: [
+						'background: transparent',
 						'border: 0',
 						'bottom: auto',
 						'height: 100%',
@@ -117,31 +118,31 @@
 						'right: auto',
 						'top: 0',
 						'width: 100%'
-						].join(";")
+						].join("!important;") + "!important;"
 				}]
 			}]
 		});
 
-		document.body.appendChild(this.El.element);
+		document.body.appendChild(this.element_mask.element);
 
 		var me = this,
-			El = this.El,
-			contentEl = El.children[0],
+			element_mask = this.element_mask,
+			contentEl = element_mask.children[0],
 			frameEl = contentEl.children[0],
 			frameDocument = frameEl.element.contentWindow.document;
 
 		frameDocument.write();
 		frameDocument.close();
 
-		for (var prop in this.El) this[prop] = this.El[prop];
+		for (var prop in this.element_mask) this[prop] = this.element_mask[prop];
 		this.element = frameDocument.body;
 
 		this.center = function() {
 			this.width(this.width());
 			this.height(this.height());
-			contentEl.element.style.left = Math.round((El.width() - this.width()) / 2) + "px";
-			contentEl.element.style.top = Math.round((El.height() - this.height()) / 2) + "px";
-			
+			contentEl.element.style.left = Math.round((element_mask.width() - contentEl.width()) / 2) + "px";
+			contentEl.element.style.top = Math.round((element_mask.height() - contentEl.height()) / 2) + "px";
+
 		};
 		this.height = function(v) {
 			if (v) contentEl.height.apply(contentEl, arguments);
@@ -157,22 +158,31 @@
 		};
 
 		// Close the frame when clicking on the background
-		El.element.addEventListener("click", function(e) {
-			if (e.target != El.element) return;
-			El.destroy.apply(El);
+		element_mask.element.addEventListener("click", function(e) {
+			if (e.target != element_mask.element) return;
+			element_mask.destroy();
 		}, true);
 
 		this.insert({
 			tag: 'style',
 			type: 'text/css',
-			text: 'html,body{padding:0;margin:0}body{color:#fff;display:inline-block;font:13px sans-serif;padding:8px;overflow:auto}ol,li{list-style:none;margin:0;padding:0;white-space:pre}a{color:#6cf;text-decoration:none;}a:visited{color:#ba66ff;}.e a{color:#ff6669}hr{height:2px;border:0;background:#444}</style>'
+			text: [
+				'html,body{padding:0;margin:0}',
+				'body{color:#fff;display:inline-block;font:13px sans-serif;padding:8px;overflow:auto}',
+				'ol,li{list-style:none;margin:0;padding:0;white-space:pre}',
+				'a{color:#6cf;text-decoration:none}',
+				'a:hover{text-decoration:underline}',
+				'a:visited{color:#ba66ff}',
+				'.e a{color:#ff6669}',
+				'hr{height:2px;border:0;background:#444}'
+			].join('')
 		});
 
 		if (content) {
 			this.insert(content);
 			this.resize();
 		}
-		
+
 		// Center frame after window resizes
 		window.addEventListener("resize", function(e) {
 			me.center();
@@ -184,15 +194,13 @@
 
 	var links = [],
 		patterns = [
-			new RegExp(/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(\?[^\s'"]*)?(?=(?:[^a-zA-Z0-9\-\_]|$)))+/gi),
-			// new RegExp(/(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/gi)
-			];
+			// /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/gi,
+			/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))+/gi
+		];
 
 	function addFrameContents(f) {
-		var f = f || window;
 		try {
 			scanText(f.document.documentElement.innerHTML);
-			// scanText(decodeURIComponent(f.document.documentElement.innerHTML));
 			scanText(unescape(f.document.documentElement.innerHTML));
 		} catch (err) {
 			return;
@@ -233,7 +241,7 @@
 		return '<ol ' + (attribs || '') + '>' + html + '</ol>';
 	}
 
-	addFrameContents();
+	addFrameContents(window);
 	links = links.unique();
 
 	var html = '';
@@ -245,11 +253,11 @@
 		'Keep Tube',
 		'http://keep-tube.com/?url=' + location.href
 		], [
-		'KeepVid',
-		'http://keepvid.com/?url=' + location.href
-		], [
 		'SaveFrom.net',
 		'http://savefrom.net/' + location.href
+		], [
+		'KeepVid',
+		'http://keepvid.com/?url=' + location.href
 		], [
 		'WebVideoFetcher.com',
 		'http://webvideofetcher.com/?url=' + location.href
