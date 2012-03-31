@@ -2,7 +2,7 @@
 -- script name
 -- description
 --
--- @author Scott Buchanan <buchanan.sc@gmail.com>
+-- @author Scott Buchanan http://wafflesnatcha.github.com
 *)
 
 property lib : load script POSIX path of (path to scripts folder) & "lib/lib.scpt"

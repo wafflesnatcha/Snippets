@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 SCRIPT_NAME="$(basename "$0")"
-SCRIPT_VERSION="0.0.1 (2012-02-28)"
+SCRIPT_VERSION="0.0.1 2012-02-28"
 
 usage() {
 cat <<EOF

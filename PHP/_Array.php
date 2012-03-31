@@ -16,7 +16,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @author    Scott Buchanan <buchanan.sc@gmail.com>
+ * @author    Scott Buchanan http://wafflesnatcha.github.com
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  * @version   1.0.0 2012-02-22
