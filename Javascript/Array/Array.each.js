@@ -8,11 +8,11 @@ if (!Array.prototype.each) Array.prototype.each = function(fn, bind) {
 /**
  * Array.each (alternative)
  */
-if (!Array.prototype.each) Array.prototype.each = function(fun) {
-	var len = this.length;
-	if (typeof fun != "function") throw new TypeError();
-	var thisp = arguments[1];
-	for (var i = 0; i < len; i++) {
-		if (i in this) fun.call(thisp, this[i], i, this);
+if (!Array.prototype.each) Array.prototype.each = function(callback) {
+	if (typeof callback != "function") throw new TypeError();
+	var i, l = this.length,
+		thisp = arguments[1];
+	for (i = 0; i < l; i++) {
+		if (i in this) callback.call(thisp, this[i], i, this);
 	}
 };
