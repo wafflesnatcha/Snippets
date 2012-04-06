@@ -18,13 +18,12 @@
 
 	function getQuicksearchTerm() {
 		var term = '%s';
-		if (term && term != unescape('%25%73')) return term;
-		return false;
+		return (term && term != unescape('%25%73')) ? term : false;
 	}
 
 	function getSelectedText(frame) {
 		var frame = frame || window;
-		// console.info('getSelectedText(%o)', frame);
+
 		// look for iframes
 		var f = frame.document.getElementsByTagName('iframe');
 		if (f.length > 0) {

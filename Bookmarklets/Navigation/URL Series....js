@@ -2,15 +2,17 @@
 	function selectColor(i) {
 		return ["#fdc", "#cdf", "#bfd", "#dbf", "#fbd"][i % 5];
 	}
-	var u = location.href,
-		ul = u.length;
-	var tparts = [""],
-		zparts = [],
-		nz = 0;
 
 	function isDigit(c) {
 		return ("0" <= c && c <= "9");
 	}
+
+	var u = location.href,
+		ul = u.length,
+		tparts = [""],
+		zparts = [],
+		nz = 0;	
+
 	for (i = 0; i < ul;) {
 		for (; i < ul && !isDigit(u.charAt(i)); ++i) tparts[nz] += u.charAt(i);
 		if (i < ul) {
@@ -20,6 +22,7 @@
 			++nz;
 		}
 	}
+	
 	if (!nz) {
 		alert("No numbers in URL.");
 		return;

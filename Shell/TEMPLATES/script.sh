@@ -22,6 +22,7 @@ while (($#)); do
         -h|--help) usage; exit 0 ;;
 		-f|--flag) echo opt_flag=1 ;;
         -v|--variable) echo opt_variable=$2; shift ;;
+		--) break ;;
 		-*|--*) FAIL "unknown option ${1}" ;;
         *) break ;;
 	esac
