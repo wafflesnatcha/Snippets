@@ -15,11 +15,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- *
- * @author    Scott Buchanan http://wafflesnatcha.github.com
+ * 
+ * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   1.0.0 2012-02-22
+ * @link      http://wafflesnatcha.github.com
  */
 
 /**
@@ -79,7 +79,7 @@ abstract class _File
 	 */
 	public static function getIncludeContents($filename)
 	{
-		if (!is_file($filename))
+		if (!is_file($filename)) 
 			return false;
 		ob_start();
 		include $filename;
@@ -108,12 +108,12 @@ abstract class _File
 		$pathParts = explode('/', $path);
 		$compareToParts = explode('/', $compareTo);
 		foreach ($compareToParts as $index => $part) {
-			if (isset($pathParts[$index]) && $pathParts[$index] == $part)
+			if (isset($pathParts[$index]) && $pathParts[$index] == $part) 
 				continue;
 			$relative[] = '..';
 		}
 		foreach ($pathParts as $index => $part) {
-			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part)
+			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part) 
 				continue;
 			$relative[] = $part;
 		}

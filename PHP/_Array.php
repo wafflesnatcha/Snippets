@@ -15,11 +15,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- *
- * @author    Scott Buchanan http://wafflesnatcha.github.com
+ * 
+ * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   1.0.0 2012-02-22
+ * @link      http://wafflesnatcha.github.com
  */
 
 /**
@@ -30,9 +30,8 @@ abstract class _Array
 	/**
 	 * Mimics in_array(), but will match single values in a needle array.
 	 *
-	 * @param  mixed   $needle   If it's anything other than an array, this function
-	 *                           behaves identical to in_array().
-	 * @param  unknown $haystack array to search in
+	 * @param  mixed   $needle   If it's anything other than an array, this function behaves identical to in_array().
+	 * @param  unknown $haystack Array to search in
 	 * @return boolean True if at least 1 value in $needle exists in $haystack
 	 * @see    http://php.net/in_array
 	 */
