@@ -1,27 +1,29 @@
 # uniquefile PATH [SEPARATOR]
 # like mktemp but supports a numbered sequence of files
-# 
-# Makes sure file doesn't already exist in specified path. If it does, ".#" is 
+#
+# Makes sure file doesn't already exist in specified path. If it does, ".#" is
 # appended to the end of the given filename, before the extension.
 # (# being the next number in a sequence of files that already exist)
-# 
+#
 # Example: (assuming "path/to/file.txt" and "path/to/file.2.txt" already exist)
 # $ filename=$(uniquefile "path/to/file.txt")
+# $ echo $filename
 # path/to/file.3.txt
-# 
+#
 # You can specify a separator using the second parameter (defaults to .)
 # Example:
 # $ filename=$(uniquefile "path/to/file.txt" " copy ")
+# $ echo $filename
 # path/to/file copy 3.txt
 uniquefile() {
 	local i=1
-	local dir="$(dirname "$1")"
-	local file="$(basename "$1")"
-	local name="${file%.*}"
-	local ext="${file##*.}"
+	local dirname="$(dirname "$1")"
+	local basename="$(basename "$1")"
+	local name="${basename%.*}"
+	local ext="${basename##*.}"
 	local try="$name"
-	while [[ -e "$dir/$try.$ext" ]]; do
-		i=$(($i+1)); try="${name}${2:-.}${i}";
+	while [ -e "$dirname/$try.$ext" ]; do
+		((i++)) && try="${name}${2:- }${i}"
 	done
-	echo "$dir/$try.$ext"
+	echo "$dirname/$try.$ext"
 }
