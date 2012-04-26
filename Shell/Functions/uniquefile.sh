@@ -19,11 +19,12 @@ uniquefile() {
 	local i=1
 	local dirname="$(dirname "$1")"
 	local basename="$(basename "$1")"
-	local name="${basename%.*}"
-	local ext="${basename##*.}"
+	local name="$basename"
+	local ext=
+	[ ! -d "$1" ] && { name="${basename%.*}"; ext=".${basename##*.}"; }
 	local try="$name"
-	while [ -e "$dirname/$try.$ext" ]; do
+	while [ -e "$dirname/$try$ext" ]; do
 		((i++)) && try="${name}${2:- }${i}"
 	done
-	echo "$dirname/$try.$ext"
+	echo "$dirname/$try$ext"
 }
