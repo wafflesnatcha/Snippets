@@ -1,5 +1,6 @@
 /**
- * Array.unique (fastest)
+ * Array.unique
+ * (fastest)
  */
 if (!Array.prototype.unique) Array.prototype.unique = function() {
 	var obj = {},
@@ -12,7 +13,8 @@ if (!Array.prototype.unique) Array.prototype.unique = function() {
 };
 
 /**
- * Array.unique (retains original order)
+ * Array.unique
+ * (retains original order)
  */
 if (!Array.prototype.unique) Array.prototype.unique = function() {
 	for (var i = 0; i < this.length; i++) {

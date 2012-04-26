@@ -6,7 +6,8 @@ if (!Array.prototype.each) Array.prototype.each = function(fn, bind) {
 };
 
 /**
- * Array.each (alternative)
+ * Array.each
+ * (alternative)
  */
 if (!Array.prototype.each) Array.prototype.each = function(callback) {
 	if (typeof callback != "function") throw new TypeError();
