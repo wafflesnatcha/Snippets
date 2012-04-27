@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>WebKit Page turner</title>
+<style>
+/* Set 3D perspective */
+body {
+	-webkit-transform-style: preserve-3d;
+	-webkit-perspective: 800px;
+	text-align: center;
+}
+/* Define a page */
+.page {
+	position: absolute;
+	top: 50;
+	height: 200;
+	width: 150;
+	padding: 25;
+	background-color: #ffcc99;
+	padding: 15;
+	border-radius: 10;
+	border: 1px solid tan;
+    -webkit-transition: -webkit-transform 1.5s; /* Animate transforms over 1.5 seconds */
+	-webkit-backface-visibility: hidden; /* Hide pages when flipped over */
+}
+/* Front page pivots on left edge, is on right of screen when face up */
+.front {
+	left: 225;
+	-webkit-transform-origin: 0px 0px;
+}
+ 
+/* Back page pivots on right edge, is on left of screen when face up */
+.back {
+	left: 50;
+	-webkit-transform-origin: 100% 50%;
+	-webkit-transform: rotateY(180deg); /* back of page starts flipped over */
+}
+</style>
+
+<script type="text/javascript">
+// Flip page front-to-back
+function flip() {
+        document.getElementById("frontPage").style.webkitTransform = "rotateY(-180deg)";
+        document.getElementById("backPage").style.webkitTransform="rotateY(0deg)";
+}
+// Flop page back to front
+function flop() {
+        document.getElementById("frontPage").style.webkitTransform = "rotateY(0deg)";
+        document.getElementById("backPage").style.webkitTransform="rotateY(180deg)";
+}
+// Initialize event handlers on page load
+function init() {
+    // Click event marks a mouse click
+    document.getElementById("frontPage").addEventListener("click", flip, false);
+    document.getElementById("backPage").addEventListener("click", flop, false);
+    // Touchend event marks end of tap or swipe
+    document.getElementById("frontPage").addEventListener("touchend", flip, false);
+    document.getElementById("backPage").addEventListener("touchend", flop, false);
+    // Touchstart event means we can remove click event listeners
+    document.body.addEventListener("touchstart", noClicks, false);
+    // Allow user to swipe without scrolling the page
+    document.body.addEventListener("touchmove", noScroll, false);
+}
+ 
+// Prevent a swipe from scrolling the browser page
+function noScroll(e) {
+    event.preventDefault();
+    }
+// If we're getting touch events, remove click handlers
+function noClicks(e) {
+    document.getElementById("frontPage").removeEventListener("click", flip, false);
+    document.getElementById("backPage").removeEventListener("click", flop, false);
+    // only need to do this once, so remove this handler now that its job is done
+    document.body.removeEventListener("touchstart", noClicks, false);
+}
+</script>
+</head>
+ 
+<body onload="init();">
+    <h2>Click, tap, or swipe to turn the page.</h2>
+    <div class="page back" id="backPage">
+        <p>Back</p>
+    </div>
+    <div class="page front" id="frontPage">
+        <p>Front</p>
+    </div>
+</body>
+</html>
