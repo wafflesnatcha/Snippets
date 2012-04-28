@@ -1,12 +1,20 @@
 # titlecase STRING ...
 # 
 # Example: 
-# $ titlecase "Lorem ipsum dolor sit amet."
-# Lorem Ipsum Dolor Sit Amet.
+# $ titlecase "Lorem ipsum-dolor   sit, amet."
+# Lorem Ipsum-dolor   Sit, Amet.   
 titlecase() {
 	[[ ${#@} < 1 ]] && return 1
-	local r;
-	for a in $@; do r="$r`echo ${a:0:1} | tr a-z A-Z`${a:1} "; done
-	echo -n ${r:0:((${#r}-1))}
+	local text="$@"
+	local output end word
+	while [ ${#text} -gt 0 ]; do
+		end="${text#*[[:space:]]}"
+		[ "$text" = "$end" ] && end=""
+		word="${text:0:$((${#text} - ${#end}))}"
+		output="$output$(echo "${word:0:1}" | tr "[:lower:]" "[:upper:]")${word:1}"
+		text="$end"
+	done
+	echo "$output"
 }
 
+titlecase "Lorem ipsum-dolor   sit, amet.   "
