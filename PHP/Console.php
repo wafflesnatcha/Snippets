@@ -1,5 +1,7 @@
 <?php
 /**
+ * PHP Version 5.3.0
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -16,10 +18,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @author    Scott Buchanan http://wafflesnatcha.github.com
+ * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   1.0.0 2012-02-22
+ * @version   2012-02-22
+ * @link      http://wafflesnatcha.github.com
  */
 
 /**

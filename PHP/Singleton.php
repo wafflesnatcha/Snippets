@@ -18,10 +18,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @author    Scott Buchanan http://wafflesnatcha.github.com
+ * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   1.0.0 2012-02-22
+ * @version   2012-02-22
+ * @link      http://wafflesnatcha.github.com
  */
 
 /**
@@ -79,14 +80,22 @@ abstract class Singleton
 	public static function __callStatic($name, $arguments)
 	{
 		if ("{$name[0]}" === "_") {
-			$callback = array(
-				static::getInstance(),
-				substr($name,
-				1),
-			);
+			$callback = array(static::getInstance(), substr($name, 1));
 			if (method_exists($callback[0], $callback[1]))
 				return call_user_func_array($callback, $arguments);
 		}
 		trigger_error("Cannot access method " . __CLASS__ . "->$name statically", E_USER_ERROR);
 	}
+
+	public function __call($name, $arguments)
+	{
+		if ("{$name[0]}" === "_") {
+			$class = get_called_class();
+			$method = $class . "::" . substr($name, 1);
+			if (class_exists($class) && is_callable($method))
+				return call_user_func_array($method, $arguments);
+			trigger_error("Cannot access method {$callback[0]}::$name in object context", E_USER_ERROR);
+		}
+	}
+
 }

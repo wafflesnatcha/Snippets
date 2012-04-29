@@ -16,6 +16,7 @@
 	f.style.fontFamily = "Lucida Grande";
 	f.style.border = "1px solid #666";
 	f.style.outline = "1px solid #000";
+	f.style.zIndex = 9999999;
 	b.body.appendChild(f);
 
 	function a(g) {
