@@ -15,8 +15,8 @@
 			'url': 'http://www.microsofttranslator.com/bv.aspx?ref=&from=&to=en&a=<%url%>'
 		},
 		'google': {
-			'text': 'http://translate.google.com/translate?u=<%url%>&hl=en&langpair=auto|en&tbb=1&ie=<%charset%>',
-			'url': 'http://translate.google.com/translate_t?text=<%text%>&hl=en&langpair=auto|en&tbb=1&ie=<%charset%>'
+			'text': 'http://translate.google.com/translate_t?text=<%text%>&hl=en&langpair=auto|en&tbb=1&ie=<%charset%>',
+			'url': 'http://translate.google.com/translate?u=<%url%>&hl=en&langpair=auto|en&tbb=1&ie=<%charset%>'
 		}
 	};
 
@@ -42,21 +42,20 @@
 		for (i = 0; i < frames.length; i++) {
 			try {
 				t = arguments.callee.call(this, frames[i]);
-				if (t != '') return t;
+				if (t && t != '') return t;
 			} catch (e) {}
 		}
 
-		return ((frame.getSelection && frame.getSelection()) || (frame.document.getSelection && frame.document.getSelection()) || (frame.document.selection && frame.document.selection.createRange && frame.document.selection.createRange().text));
+		var text = ((f.getSelection && f.getSelection()) || (f.document.getSelection && f.document.getSelection()) || (f.document.selection && f.document.selection.createRange && f.document.selection.createRange().text));
+		if(text && text != '') return text.toString().replace(/^\s*/, "").replace(/\s*$/, "");
 	}
 
 	var charset = document.charset || document.characterSet,
 		url = location.href,
 		text = getQuicksearchTerm() || getSelectedText(),
-		service = (text && text != "") ? services[service]['text'] : services[service]['url'];
+		service = (text && text != '') ? services[service]['text'] : services[service]['url'];
 
 	// Replace placeholders in URL
 	service = service.replace('<%url%>', url).replace('<%text%>', text).replace('<%charset%>', charset).replace(/<%[a-z_\-0-9]+%>/ig, '');
-	// location.href = service;
-	console.log(service);
-
+	location.href = service;
 })('google');
