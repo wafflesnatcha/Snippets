@@ -3,12 +3,14 @@
 		bmlRadioValue = this.checked;
 		bmlRadioRef = this;
 	}
+
 	function click() {
 		if ((window.bmlRadioRef == this) && window.bmlRadioValue) {
 			this.checked = false;
 			bmlRadioRef = null;
 		}
 	}
+
 	function mU(radio) {
 		radio.onmousedown = down;
 		radio.onkeydown = down;

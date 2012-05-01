@@ -12,6 +12,7 @@ function F(p) {
 	}
 	return m;
 }
+
 function C(n, cz) {
 	var i = -1;
 	for (ab = 0; ab < cz.length; ab++) {
@@ -19,6 +20,7 @@ function C(n, cz) {
 	}
 	return i;
 }
+
 function B() {
 	fz.length = 0;
 	if (!document.forms.length) {

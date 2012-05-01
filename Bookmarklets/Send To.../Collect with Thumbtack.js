@@ -1,1 +1,0 @@
-(function(){var snippet_host='http://thumbtack.livelabs.com/Scripts/Bookmarklet/';var scriptBlock=document.createElement('SCRIPT');scriptBlock.type='text/javascript';scriptBlock.src=snippet_host+'bookmarklet.js?'+parseInt(Number(new Date())/1000);document.getElementsByTagName('head')[0].appendChild(scriptBlock);})();
