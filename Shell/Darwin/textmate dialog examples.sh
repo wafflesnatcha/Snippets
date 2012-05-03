@@ -13,7 +13,7 @@
 # 	"$TM_SUPPORT_PATH/nibs/SimpleNotificationWindow.nib" \
 # 	2>&1 &
 
-"$DIALOG" menu --items '({title = foo;}, {separator = 1;}, {header=1; title = bar;}, {title = baz;})'
+# "$DIALOG" menu --items '({title = foo;}, {separator = 1;}, {header=1; title = bar;}, {title = baz;})'
 
 # "$DIALOG" popup --suggestions '( { display = law; }, { display = laws; insert = "(${1:hello}, ${2:again})"; } )'
 

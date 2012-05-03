@@ -27,20 +27,38 @@
  */
 abstract class _File
 {
+	
+	/**
+	 * Search include_path for a file.
+	 * 
+	 * @param  string  $file  File name to search for.
+	 * @return string|boolean If the file is found, return the path to it. Otherwise return false.
+	 * @access public 
+	 */
+	function searchIncludePath($file)
+	{
+		$paths = array_unique(explode(PATH_SEPARATOR, PATH_SEPARATOR . get_include_path()));
+		foreach ($paths as $p) {
+			$f = ($p ? rtrim($p, "/") . "/" : "") . "$file";
+			if (file_exists($f)) 
+				return $f;
+		}
+		return false;
+	}
+
 	/**
 	 * List directory contents
 	 *
-	 * @param  string $path Path to look in
+	 * @param  string $directory Directory to list files from.
 	 * @return array  List of file/folder names
 	 */
-	public static function getDirectoryContents($path = ".")
+	public static function listDirectory($directory = ".")
 	{
 		$files = array();
-		if ($handle = opendir($path)) {
+		if ($handle = opendir($directory)) {
 			while ($filename = readdir($handle)) {
-				if ($filename != "." && $filename != "..") {
+				if ($filename != "." && $filename != "..") 
 					$files[] = $filename;
-				}
 			}
 			closedir($handle);
 		}
@@ -120,3 +138,9 @@ abstract class _File
 		return implode('/', $relative);
 	}
 }
+
+/**
+ * TESTS
+ */
+
+// var_dump(_File::searchIncludePath("pear.php"));
