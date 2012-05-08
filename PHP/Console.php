@@ -128,7 +128,7 @@ class Console
 	}
 
 	/**
-	 * Prevents to clone the instance.
+	 * Prevent cloning the instance.
 	 *
 	 * @return void
 	 */
@@ -421,7 +421,7 @@ class Console
 	 */
 	public function isColorTerm()
 	{
-		return(isset($_SERVER['TERM']) && $_SERVER['TERM'] == "xterm-color");
+		return(isset($_SERVER['TERM']) && ( $_SERVER['TERM'] == "xterm-color" || $_SERVER['TERM'] == "xterm-256color" || ( isset($_SERVER['CLICOLOR']) && $_SERVER['CLICOLOR'] != 0 )));
 	}
 
 	/**
