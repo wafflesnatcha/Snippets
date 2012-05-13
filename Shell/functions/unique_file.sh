@@ -37,5 +37,5 @@ unique_file() {
 		try="${name}${2:- }${i}"
 	done
 
-	echo "$dirname/$try$ext" 1>&2
+	echo "$dirname/$try$ext"
 }
