@@ -17,4 +17,5 @@ titlecase() {
 	echo "$output"
 }
 
-titlecase "Lorem ipsum-dolor   sit, amet.   "
+# Tests
+# titlecase "Lorem ipsum-dolor   sit, amet.   "
