@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
+# script.sh by Scott Buchanan <buchanan.sc@gmail.com> http://wafflesnatcha.github.com
 SCRIPT_NAME="$(basename "$0")"
 SCRIPT_VERSION="0.0.1 2012-02-28"
 
-usage() {
-cat <<EOF
+usage() { cat <<EOF
 $SCRIPT_NAME $SCRIPT_VERSION
 Description of this script.
 
@@ -15,7 +15,8 @@ Options:
  -h, --help            Show this help
 EOF
 }
-FAIL() { [[ $1 ]] && echo "$SCRIPT_NAME: $1" >&2; exit ${2:-1}; }
+
+ERROR() { [[ $1 ]] && echo "$SCRIPT_NAME: $1" 1>&2; [[ $2 > -1 ]] && exit $2; }
 
 while (($#)); do
 	case $1 in
@@ -23,8 +24,8 @@ while (($#)); do
 		-f|--flag) echo opt_flag=1 ;;
         -v|--variable) echo opt_variable=$2; shift ;;
 		--) break ;;
-		-*|--*) FAIL "unknown option ${1}" ;;
-        *) break ;;
+		-*|--*) ERROR "unknown option ${1}" 1 ;;
+		*) break ;;
 	esac
 	shift
 done

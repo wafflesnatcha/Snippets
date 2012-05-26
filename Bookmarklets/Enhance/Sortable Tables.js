@@ -7,7 +7,7 @@
 	}
 	for (j = 0; j < tables.length; ++j) tables[j].className += " sortable";
 
-/*
+	/*
 	  SortTable
 	  version 2
 	  7th April 2007
@@ -24,7 +24,8 @@
 	  This basically means: do what you want with it.
 */
 
-	var stIsIE = /*@cc_on!@*/false;
+	var stIsIE = /*@cc_on!@*/
+	false;
 
 	sorttable = {
 		init: function() {
@@ -257,7 +258,7 @@
 			delete newrows;
 		},
 
-/* sort functions
+		/* sort functions
 	     each sort function takes two parameters, a and b
 	     you are comparing a[0] and b[0] */
 		sort_numeric: function(a, b) {
@@ -347,7 +348,7 @@
 		}
 	}
 
-/* ******************************************************************
+	/* ******************************************************************
 	   Supporting functions: bundled here to avoid depending on a library
 	   ****************************************************************** */
 
@@ -359,7 +360,7 @@
 
 	/* for Internet Explorer */
 	/*@cc_on @*/
-/*@if (@_win32)
+	/*@if (@_win32)
 	    document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
 	    var script = document.getElementById("__ie_onload");
 	    script.onreadystatechange = function() {
@@ -384,7 +385,6 @@
 	// written by Dean Edwards, 2005
 	// with input from Tino Zijdel, Matthias Miller, Diego Perini
 	// http://dean.edwards.name/weblog/2005/10/add-event/
-
 	function dean_addEvent(element, type, handler) {
 		if (element.addEventListener) {
 			element.addEventListener(type, handler, false);
@@ -452,7 +452,7 @@
 	}
 
 	// Dean's forEach: http://dean.edwards.name/base/forEach.js
-/*
+	/*
 		forEach, version 1.0
 		Copyright 2006, Dean Edwards
 		License: http://www.opensource.org/licenses/mit-license.php
@@ -504,7 +504,4 @@
 				resolve.forEach(object, block, context);
 			}
 		};
-
-
-
 })()
