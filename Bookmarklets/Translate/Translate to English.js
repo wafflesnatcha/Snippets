@@ -1,11 +1,14 @@
 /**
- * Translate to English
+ * Translate to English Bookmarklet
  *
  * Chooses what to translate in this order:
  * 1. Text entered after the search keyword (when typing directly into the URL
  *    bar in Firefox, i.e. "übersetzen mir")
  * 2. Selected text
  * 3. The current page
+ *
+ * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @link http://wafflesnatcha.github.com
  */
 
 (function(service) {
