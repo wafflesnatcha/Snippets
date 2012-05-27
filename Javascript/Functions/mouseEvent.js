@@ -1,10 +1,14 @@
 /**
- * Trigger a mouse event on an element or a set of coordinates
+ * Trigger a mouse event on an element or a set of coordinates.
  * 
- * @author Scott Buchanan http://wafflesnatcha.github.com
- * @example
+ * Example:
+ * <code>
  * mouseEvent('mousedown', '.summary > button');
  * mouseEvent('click', "button[command='#sort-command']");
+ * </code>
+ * 
+ * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @link http://wafflesnatcha.github.com
  */
 
 function mouseEvent(event, x, y) {
