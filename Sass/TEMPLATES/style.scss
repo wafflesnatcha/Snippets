@@ -14,16 +14,15 @@ $heading: $body;
 $link: #1525ab;
 $link_visited: #680094;
 
-
 html, body {
-	-ms-text-size-adjust: 100%;
-	-webkit-text-size-adjust: 100%;
 	height: 100%;
 	margin: 0;
 	padding: 0;
 }
 
 body {
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;	
 	background: $body__bg;
 	color: $body;
 	font: {
@@ -54,7 +53,7 @@ i, em {
 	font-style: italic;
 }
 
-#{headings()} {
+h1, h2, h3, h4, h5, h6 {
 	color: $heading;
 	font: {
 		family: $font_heading;

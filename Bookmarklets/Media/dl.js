@@ -1,6 +1,17 @@
-(function() {
+/**
+ * Bookmarklet to find media files in the current page.
+ * 
+ * Search entire page source for anything that might be a media file. Including
+ * links, embedded plugins, and even the plain text.
+ * 
+ * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @link http://wafflesnatcha.github.com
+ * @version r2 2012-05-29
+ */
 
-	if (!Array.prototype.unique) Array.prototype.unique = function() {
+(function () {
+
+	if (!Array.prototype.unique) Array.prototype.unique = function () {
 		for (var i = 0; i < this.length; i++) for (x = i + 1; x < this.length; x++) while (this[i] == this[x]) this.splice(x, 1)
 		return this;
 	};
@@ -9,11 +20,11 @@
 		if (typeof config === "string") {
 			var res = [],
 				arr = document.querySelectorAll(config);
-			if (arr.length == 0) return;
+			if (arr.length == 0) return undefined;
 			for (var i = 0; i < arr.length; i++) {
 				res.push(new Element(arr[i]));
 			}
-			return res;
+			return (res.length == 1) ? res[0] : res;
 		} else if (typeof config === "object") {
 			if (config.toString() === "[object Object]") {
 				this.element = document.createElement(config.tag);
@@ -24,12 +35,15 @@
 	}
 
 	Element.prototype = {
-
-		destroy: function() {
+		destroy: function () {
 			if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
 		},
 
-		insert: function(content) {
+		empty: function () {
+			while (this.element.hasChildNodes()) this.element.removeChild(this.element.firstChild);
+		},
+
+		insert: function (content) {
 			if (typeof content == "string") this.element.innerHTML += content;
 			else if (typeof content == "object") {
 				if (content instanceof Element) {
@@ -46,7 +60,7 @@
 			}
 		},
 
-		setAttributes: function(attr) {
+		setAttributes: function (attr) {
 			for (var prop in attr) {
 				if (prop == "tag") continue;
 				else if (prop == "text") this.insert(attr[prop]);
@@ -60,123 +74,120 @@
 			return this;
 		},
 
-		height: function(v) {
+		center: function (el) {
+			var el = el || window;
+			this.width(this.width());
+			this.height(this.height());
+			this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + "px";
+			this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + "px";
+		},
+
+		offset: function () {
+			var el = this.element,
+				offset = {
+					left: 0,
+					top: 0
+				};
+			if (el.offsetParent) {
+				while (1) {
+					offset.left += el.offsetLeft;
+					offset.top += el.offsetTop;
+					if (!el.offsetParent) break;
+					el = el.offsetParent;
+				}
+			} else if (el.x && el.y) {
+				offset.left += el.x;
+				offset.top += el.y;
+			} else return null;
+			return offset;
+		},
+
+		height: function (v) {
 			if (v) this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 			return this.element.offsetHeight;
 		},
 
-		width: function(v) {
+		width: function (v) {
 			if (v) this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 			return this.element.offsetWidth;
 		}
 	};
 
-	Element.Frame = function(content) {
+	Element.Frame = function (content) {
 		var id = 'frame-' + (new Date).getTime();
 		this.element_mask = new Element({
 			tag: 'div',
 			id: id,
-			style: [
-				'background: #000',
-				'background: rgba(0,0,0,.8)',
-				'bottom: 0',
-				'left: 0',
-				'min-height: 150px',
-				'position: fixed',
-				'right: 0',
-				'top: 0',
-				'z-index: 10000'
-				].join("!important;") + "!important;",
+			style: ['background: #000', 'background: rgba(0,0,0,.8)', 'bottom: 0', 'left: 0', 'min-height: 150px', 'position: fixed', 'right: 0', 'top: 0', 'z-index: 999999'].join('!important;') + '!important;',
 			children: [{
 				tag: 'div',
-				style: [
-					'background: #222',
-					'border: 4px solid #eee',
-					'border-radius: 8px',
-					'box-shadow: 0 1px 2px rgba(0,0,0,.5)',
-					'margin: 0',
-					'max-width: 90%',
-					'max-height: 90%',
-					'min-width: 30px',
-					'min-height: 30px',
-					'padding: 0',
-					'position: absolute'
-					].join("!important;") + "!important;",
+				style: ['background: #222', 'border: 4px solid #eee', 'border-radius: 8px', 'box-shadow: 0 1px 2px rgba(0,0,0,.5)', 'margin: 0', 'max-width: 90%', 'max-height: 90%', 'min-width: 80px', 'min-height: 80px', 'padding: 0', 'position: absolute'].join('!important;') + '!important;',
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
 					src: 'about:blank',
-					style: [
-						'background: transparent',
-						'border: 0',
-						'bottom: auto',
-						'height: 100%',
-						'left: 0',
-						'margin: 0',
-						'padding: 0',
-						'position: absolute',
-						'right: auto',
-						'top: 0',
-						'width: 100%'
-						].join("!important;") + "!important;"
+					style: ['background: transparent', 'border: 0', 'bottom: auto', 'height: 100%', 'left: 0', 'margin: 0', 'padding: 0', 'position: absolute', 'right: auto', 'top: 0', 'width: 100%'].join('!important;') + '!important;'
 				}]
 			}]
 		});
 
 		document.body.appendChild(this.element_mask.element);
 
-		var me = this,
-			element_mask = this.element_mask,
-			contentEl = element_mask.children[0],
-			frameEl = contentEl.children[0],
-			frameDocument = frameEl.element.contentWindow.document;
+		var element_mask = this.element_mask,
+			element_content = element_mask.children[0],
+			frame_document = element_content.children[0].element.contentWindow.document;
 
-		frameDocument.write();
-		frameDocument.close();
+		frame_document.write();
+		frame_document.close();
 
-		for (var prop in this.element_mask) this[prop] = this.element_mask[prop];
-		this.element = frameDocument.body;
+		for (var prop in this.element_mask) {
+			this[prop] = this.element_mask[prop];
+		}
+		this.element = frame_document.body;
 
-		this.center = function() {
+		// Function overrides
+		this.center = function () {
 			this.width(this.width());
 			this.height(this.height());
-			contentEl.element.style.left = Math.round((element_mask.width() - contentEl.width()) / 2) + "px";
-			contentEl.element.style.top = Math.round((element_mask.height() - contentEl.height()) / 2) + "px";
-
+			element_content.element.style.left = Math.round((element_mask.width() - element_content.width()) / 2) + "px";
+			element_content.element.style.top = Math.round((element_mask.height() - element_content.height()) / 2) + "px";
 		};
-		this.height = function(v) {
-			if (v) contentEl.height.apply(contentEl, arguments);
+		this.destroy = function () {
+			element_mask.destroy();
+		};
+		this.height = function (v) {
+			if (v) element_content.height.apply(element_content, arguments);
 			return this.element.offsetHeight;
 		};
-		this.width = function(v) {
-			if (v) contentEl.width.apply(contentEl, arguments);
+		this.width = function (v) {
+			if (v) element_content.width.apply(element_content, arguments);
 			return this.element.offsetWidth;
 		};
-		this.resize = function() {
-			this.width((frameDocument.body.offsetWidth || frameDocument.body.scrollWidth || frameDocument.width));
-			this.height((frameDocument.body.offsetHeight || frameDocument.body.scrollHeight || frameDocument.height));
+		this.resize = function () {
+			this.width((frame_document.body.offsetWidth || frame_document.body.scrollWidth || frame_document.width));
+			this.height((frame_document.body.offsetHeight || frame_document.body.scrollHeight || frame_document.height));
 		};
 
-		// Close the frame when clicking on the background
-		element_mask.element.addEventListener("click", function(e) {
+		// Close the frame when clicking on the modal background
+		element_mask.element.addEventListener("click", function (e) {
 			if (e.target != element_mask.element) return;
 			element_mask.destroy();
 		}, true);
 
-		this.insert({
+		// Frame body styles
+		frame_document.head.appendChild(new Element({
 			tag: 'style',
 			type: 'text/css',
 			text: [
-				'html,body{padding:0;margin:0}',
-				'body{color:#fff;display:inline-block;font:13px sans-serif;padding:8px;overflow:auto}',
+				'html,body{background:transparent;padding:0;margin:0;}',
+				'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
 				'ol,li{list-style:none;margin:0;padding:0;white-space:pre}',
 				'a{color:#6cf;text-decoration:none}',
 				'a:hover{text-decoration:underline}',
 				'a:visited{color:#ba66ff}',
-				'.e a{color:#ff6669}',
 				'hr{height:2px;border:0;background:#444}'
-			].join('')
-		});
+				].join('\n')
+		}).element)
 
 		if (content) {
 			this.insert(content);
@@ -184,7 +195,8 @@
 		}
 
 		// Center frame after window resizes
-		window.addEventListener("resize", function(e) {
+		var me = this;
+		window.addEventListener("resize", function (e) {
 			me.center();
 		}, false);
 
@@ -192,12 +204,13 @@
 		return this;
 	}
 
-	var links = [],
-		patterns = [
-			// /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/gi,
-			/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))+/gi
-		];
 
+
+	var links = [];
+	var patterns = [
+		/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))+/gi
+		];
+	// // /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/gi,
 	function addFrameContents(f) {
 		try {
 			scanText(f.document.documentElement.innerHTML);
@@ -206,16 +219,20 @@
 			return;
 		}
 
-		// find iframes
-		var frames = f.document.getElementsByTagName('iframe');
-		if (frames.length > 0) for (var i = 0; i < frames.length; i++) {
-			arguments.callee.apply(this, [frames[i].contentWindow]);
+		// find frames
+		var frames = Array.prototype.slice.call(f.frames);
+		while (frames.length) {
+			try {
+				arguments.callee.call(this, frames.shift());
+			} catch (err) {}
 		}
 
-		// find actual frames
-		var frames = f.frames;
-		if (f.length > 0) for (var i = 0; i < f.length; i++) {
-			arguments.callee.apply(this, [frames[i]]);
+		// find iframes
+		var frames = Array.prototype.slice.call(f.document.getElementsByTagName('iframe'));
+		while (frames.length) {
+			try {
+				arguments.callee.call(this, frames.shift().contentWindo);
+			} catch (err) {}
 		}
 	}
 
@@ -223,10 +240,8 @@
 		var i, x, pl = patterns.length;
 		for (i = 0; i < pl; i++) {
 			var match = text.match(patterns[i]);
-			if (match && match.length > 0) {
-				for (x = 0; x < match.length; x++) {
-					links.push(match[x]);
-				}
+			if (match && match.length > 0) for (x = 0; x < match.length; x++) {
+				links.push(match[x]);
 			}
 		}
 	}
@@ -235,8 +250,8 @@
 		var l, i, html = '';
 		for (i = 0; i < links.length; i++) {
 			l = links[i];
-			if (toString.call(l) !== "[object Array]") l = [l, l]
-			html += '<li><a href="' + l[1] + '" target="_blank">' + l[0] + '</a></li>';
+			if (toString.call(l) !== "[object Array]") l = [l, l];
+			html += '<li><a href="' + l[1] + '" target="_blank"' + (l.length > 1 ? ' ' + l[2] : '') + '>' + l[0] + '</a></li>';
 		}
 		return '<ol ' + (attribs || '') + '>' + html + '</ol>';
 	}
@@ -249,19 +264,15 @@
 		html += makeResultList(links);
 		html += '<hr>';
 	}
-	html += makeResultList([[
-		'Keep Tube',
-		'http://keep-tube.com/?url=' + location.href
-		], [
-		'SaveFrom.net',
-		'http://savefrom.net/' + location.href
-		], [
-		'KeepVid',
-		'http://keepvid.com/?url=' + location.href
-		], [
-		'WebVideoFetcher.com',
-		'http://webvideofetcher.com/?url=' + location.href
-		]], 'class="e"');
+
+	// Third - party video download links
+	var extra = 'style="color:#ff6669!important"';
+	html += makeResultList([
+		['Keep Tube', 'http://keep-tube.com/?url=' + location.href, extra],
+		['SaveFrom.net', 'http://savefrom.net/' + location.href, extra],
+		['KeepVid', 'http://keepvid.com/?url=' + location.href, extra],
+		['WebVideoFetcher.com', 'http://webvideofetcher.com/d?url=' + location.href, extra]
+		]);
 
 	return new Element.Frame(html);
 })();

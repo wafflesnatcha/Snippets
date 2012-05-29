@@ -1,48 +1,57 @@
 /**
  * DOM Element Helper
- *
- * @author Scott Buchanan http://wafflesnatcha.github.com
- * @param {String|Object} config Can be an existing DOM element, a CSS selector, or object
  * 
- * @example
- * // Using existing DOM elements
+ * Example, using existing DOM elements:
+ * <code>
  * var el1 = new Element(document.body);
  * var el2 = new Element("body > :first-child");
+ * </code>
  * 
- * @example
- * // Creating a new element
+ * Example, creating a new element:
+ * <code>
  * var element = new Element({tag: 'div', class: 'some-div'});
+ * </code>
+ * 
+ * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @link http://wafflesnatcha.github.com
+ * @version r2 2012-05-29
  */
 
+/**
+ * @constructor
+ */
 function Element(config) {
-	if (typeof config === "string") {
-		var res = [],
-			arr = document.querySelectorAll(config);
-		if (arr.length == 0) return undefined;
-		for (var i = 0; i < arr.length; i++) {
-			res.push(new Element(arr[i]));
-		}
-		return (res.length == 1)? res[0] : res;
-	} else if (typeof config === "object") {
-		if (config.toString() === "[object Object]") {
-			this.element = document.createElement(config.tag);
-			this.setAttributes(config);
-		} else this.element = config;
-	}
-	return this;
+	this.init.apply(this, arguments);
 }
 
 Element.prototype = {
+	init: function (config) {
+		if (typeof config === "string") {
+			var res = [],
+				arr = document.querySelectorAll(config);
+			if (arr.length == 0) return undefined;
+			for (var i = 0; i < arr.length; i++) {
+				res.push(new Element(arr[i]));
+			}
+			return (res.length == 1) ? res[0] : res;
+		} else if (typeof config === "object") {
+			if (config.toString() === "[object Object]") {
+				this.element = document.createElement(config.tag);
+				this.setAttributes(config);
+			} else this.element = config;
+		}
+		return this;
+	},
 
-	destroy: function() {
+	destroy: function () {
 		if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
 	},
 
-	empty: function() {
+	empty: function () {
 		while (this.element.hasChildNodes()) this.element.removeChild(this.element.firstChild);
 	},
 
-	insert: function(content) {
+	insert: function (content) {
 		if (typeof content == "string") this.element.innerHTML += content;
 		else if (typeof content == "object") {
 			if (content instanceof Element) {
@@ -59,7 +68,7 @@ Element.prototype = {
 		}
 	},
 
-	setAttributes: function(attr) {
+	setAttributes: function (attr) {
 		for (var prop in attr) {
 			if (prop == "tag") continue;
 			else if (prop == "text") this.insert(attr[prop]);
@@ -73,7 +82,7 @@ Element.prototype = {
 		return this;
 	},
 
-	center: function(el) {
+	center: function (el) {
 		var el = el || window;
 		this.width(this.width());
 		this.height(this.height());
@@ -81,7 +90,7 @@ Element.prototype = {
 		this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + "px";
 	},
 
-	offset: function() {
+	offset: function () {
 		var el = this.element,
 			offset = {
 				left: 0,
@@ -101,12 +110,12 @@ Element.prototype = {
 		return offset;
 	},
 
-	height: function(v) {
+	height: function (v) {
 		if (v) this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 		return this.element.offsetHeight;
 	},
 
-	width: function(v) {
+	width: function (v) {
 		if (v) this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
 		return this.element.offsetWidth;
 	}

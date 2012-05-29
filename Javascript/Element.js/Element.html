@@ -29,28 +29,28 @@ ante eget urna ultricies venenatis. Etiam in rutrum est.
 &lt;a href="#"&gt;http://www.awwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww-wwwwwwwwwwwwwwwwwshiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiitttttttttt.com/this/is/a/really/lo-ng/url/that/will/probably/fuck/up/the/sizing.html&lt;/a&gt;
 </textarea>
 <br>
-<button onclick="test_Element_Frame()">Element.Frame</button>
-<button onclick="test_Element_FrameInline()">Element.FrameInline</button>
-<button onclick="test_Element_Window()">Element.Window</button>
+<button onclick="test_Frame()">Element.Frame</button>
+<button onclick="test_FrameInline()">Element.FrameInline</button>
+<button onclick="test_Window()">Element.Window</button>
 
 <script type="text/javascript">
 function test_getContent() {
 	return document.getElementById("test_content").value;
 }
-function test_Element_Frame() {
-	var el = new Element.Frame(test_getContent());
-	console.log(el);
+function test_Frame() {
+	element_frame = new Element.Frame(test_getContent());
+	console.log("var element_frame = %o", element_frame);
 }
-function test_Element_FrameInline() {
-	var el = new Element.FrameInline(test_getContent());
-	// el.insert(test_getContent());
-	// el.center();
-	console.log(el);
+function test_FrameInline() {
+	element_frameinline = new Element.FrameInline(test_getContent());
+	// element_frameinline.insert(test_getContent());
+	// element_frameinline.center();
+	console.log("var element_frameinline = %o", element_frameinline);
 }
-function test_Element_Window() {
-	var el = new Element.Window();
-	el.insert(test_getContent());
-	console.log(el);
+function test_Window() {
+	var element_window = new Element.Window();
+	element_window.insert(test_getContent());
+	console.log("var element_window = %o", element_window);
 }
 </script>
 
