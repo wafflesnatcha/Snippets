@@ -17,14 +17,14 @@
  * @version r2 2012-05-29
  */
 
-/**
- * @constructor
- */
 function Element(config) {
 	this.init.apply(this, arguments);
 }
 
 Element.prototype = {
+	/**
+	 * @constructor
+	 */
 	init: function (config) {
 		if (typeof config === "string") {
 			var res = [],

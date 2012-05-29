@@ -1,7 +1,8 @@
 /**
  * Simple function benchmarking
  *
- * @example
+ * Example:
+ * <code>
  * function test1(array_size) {
  *     var a = [],
  *         s = array_size || 3000;
@@ -15,22 +16,31 @@
  *     'args': [3000]
  * });
  * console.log("test1.benchmark", result);
+ * </code>
  *
- * // or simply:
- * console.log("test1.benchmark", test1.benchmark(500));
+ * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @link http://wafflesnatcha.github.com
  */
 
-if (!Function.prototype.benchmark) Function.prototype.benchmark = function(c) {
-	var i, start, end, config = {
-		'iterations': (c && typeof c !== "object") ? c : 1000,
-		'args': []
+if (!Function.prototype.benchmark) {
+	Function.prototype.benchmark = function (c) {
+		var i, prop, start, end, config = {
+			'iterations': (c && typeof c !== "object") ? c : 1000,
+			'args': []
+		};
+		if (c && typeof c === "object") {
+			for (prop in c) {
+				if (config[prop]) {
+					config[prop] = c[prop];
+				}
+			}
+		}
+		i = config.iterations;
+		start = new Date();
+		while (i--) {
+			this.apply(this, config.args);
+		}
+		end = new Date();
+		return (end - start);
 	};
-	if (c && typeof c === "object") for (var property in c) config[property] = c[property];
-	i = config.iterations;
-	start = new Date();
-	while (i--) {
-		this.apply(this, config.args);
-	}
-	end = new Date();
-	return (end - start);
 }

@@ -11,36 +11,43 @@
 
 (function () {
 
-	if (!Array.prototype.unique) Array.prototype.unique = function () {
-		for (var i = 0; i < this.length; i++) for (x = i + 1; x < this.length; x++) while (this[i] == this[x]) this.splice(x, 1)
-		return this;
-	};
+	if (!Array.prototype.unique) {
+		Array.prototype.unique = function () {
+			var i, x, l = this.length;
+			for (i = 0; i < this.length; i++) {
+				for (x = i + 1; x < this.length; x++) {
+					while (this[i] == this[x]) this.splice(x, 1);
+				}
+			}
+			return this;
+		};
+	}
 
 	function Element(config) {
-		if (typeof config === "string") {
-			var res = [],
-				arr = document.querySelectorAll(config);
-			if (arr.length == 0) return undefined;
-			for (var i = 0; i < arr.length; i++) {
-				res.push(new Element(arr[i]));
-			}
-			return (res.length == 1) ? res[0] : res;
-		} else if (typeof config === "object") {
-			if (config.toString() === "[object Object]") {
-				this.element = document.createElement(config.tag);
-				this.setAttributes(config);
-			} else this.element = config;
-		}
-		return this;
+		this.init.apply(this, arguments);
 	}
 
 	Element.prototype = {
-		destroy: function () {
-			if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
+		init: function (config) {
+			if (typeof config === "string") {
+				var res = [],
+					arr = document.querySelectorAll(config);
+				if (arr.length == 0) return undefined;
+				for (var i = 0; i < arr.length; i++) {
+					res.push(new Element(arr[i]));
+				}
+				return (res.length == 1) ? res[0] : res;
+			} else if (typeof config === "object") {
+				if (config.toString() === "[object Object]") {
+					this.element = document.createElement(config.tag);
+					this.setAttributes(config);
+				} else this.element = config;
+			}
+			return this;
 		},
 
-		empty: function () {
-			while (this.element.hasChildNodes()) this.element.removeChild(this.element.firstChild);
+		destroy: function () {
+			if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
 		},
 
 		insert: function (content) {
@@ -80,26 +87,6 @@
 			this.height(this.height());
 			this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + "px";
 			this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + "px";
-		},
-
-		offset: function () {
-			var el = this.element,
-				offset = {
-					left: 0,
-					top: 0
-				};
-			if (el.offsetParent) {
-				while (1) {
-					offset.left += el.offsetLeft;
-					offset.top += el.offsetTop;
-					if (!el.offsetParent) break;
-					el = el.offsetParent;
-				}
-			} else if (el.x && el.y) {
-				offset.left += el.x;
-				offset.top += el.y;
-			} else return null;
-			return offset;
 		},
 
 		height: function (v) {
@@ -194,7 +181,6 @@
 			this.resize();
 		}
 
-		// Center frame after window resizes
 		var me = this;
 		window.addEventListener("resize", function (e) {
 			me.center();
@@ -237,21 +223,22 @@
 	}
 
 	function scanText(text) {
-		var i, x, pl = patterns.length;
+		var i, x, match, pl = patterns.length;
 		for (i = 0; i < pl; i++) {
-			var match = text.match(patterns[i]);
-			if (match && match.length > 0) for (x = 0; x < match.length; x++) {
+			match = text.match(patterns[i]);
+			if (match) for (x = 0; x < match.length; x++) {
 				links.push(match[x]);
 			}
 		}
 	}
 
 	function makeResultList(links, attribs) {
-		var l, i, html = '';
-		for (i = 0; i < links.length; i++) {
+		var l, i, len = links.length,
+			html = '';
+		for (i = 0; i < len; i++) {
 			l = links[i];
-			if (toString.call(l) !== "[object Array]") l = [l, l];
-			html += '<li><a href="' + l[1] + '" target="_blank"' + (l.length > 1 ? ' ' + l[2] : '') + '>' + l[0] + '</a></li>';
+			if (typeof l === "string") l = [l, l];
+			html += '<li><a href="' + (l[1] || l[0]) + '" target="_blank"' + (l[2] || '') + '>' + l[0] + '</a></li>';
 		}
 		return '<ol ' + (attribs || '') + '>' + html + '</ol>';
 	}
@@ -260,13 +247,10 @@
 	links = links.unique();
 
 	var html = '';
-	if (links.length > 0) {
-		html += makeResultList(links);
-		html += '<hr>';
-	}
+	if (links.length > 0) html += makeResultList(links) + '<hr>';
 
-	// Third - party video download links
-	var extra = 'style="color:#ff6669!important"';
+	// Third party video download links
+	var extra = 'style="color:#ff6669"';
 	html += makeResultList([
 		['Keep Tube', 'http://keep-tube.com/?url=' + location.href, extra],
 		['SaveFrom.net', 'http://savefrom.net/' + location.href, extra],
