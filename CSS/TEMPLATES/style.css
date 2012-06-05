@@ -5,6 +5,7 @@ html, body {
 }
 
 body {
+	-moz-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;
 	background: white;
@@ -67,7 +68,7 @@ h6 {
 }
 
 pre, code, kbd, samp {
-	font-family: "Menlo", "Consolas", "DejaVu Sans Mono", "Courier New", monospace;
+	font-family: "Menlo", "Consolas", "DejaVu Sans Mono", "Courier", monospace;
 	font-size: inherit;
 }
 
@@ -98,11 +99,15 @@ table {
 
 ul, ol {
 	list-style: disc outside;
-	padding: 0 0 0 40px;
 	margin-left: 0;
 	margin-right: 0;
+	padding: 0 0 0 40px;
 }
 
 ol {
 	list-style-type: decimal;
+}
+
+input, textarea, button, select {
+	font-size: inherit;
 }

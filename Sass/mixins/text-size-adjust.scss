@@ -1,0 +1,5 @@
+@mixin text-size-adjust($percentage: 100%) {
+	-moz-text-size-adjust: $percentage;
+	-ms-text-size-adjust: $percentage;
+	-webkit-text-size-adjust: $percentage;
+}

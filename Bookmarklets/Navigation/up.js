@@ -1,26 +1,30 @@
-(function() {
-	if (!window.NAV_BOOKMARKLET) window.NAV_BOOKMARKLET = {
-		"pathname": document.location.pathname,
-		"host": document.location.host
-	};
+(function () {
+	var host = window._BMRK_NAV ? window._BMRK_NAV.host : document.location.host
+	var pathname = window._BMRK_NAV ? window._BMRK_NAV.pathname : document.location.pathname
+
 	if (document.location.hash === "") {
-		if (NAV_BOOKMARKLET.pathname == "/") {
-			var host_parts = NAV_BOOKMARKLET.host.split(".");
-			if (host_parts.length > 2) {
-				host_parts.shift();
-				NAV_BOOKMARKLET.host = host_parts.join(".");
+		if (host == "/") {
+			var h = host.split(".");
+			if (h.length > 2) {
+				h.shift();
+				host = h.join(".");
 			} else if (document.location.port) {
-				NAV_BOOKMARKLET.host = document.location.hostname;
+				host = document.location.hostname;
 			}
 		} else {
-			var path_parts = NAV_BOOKMARKLET.pathname.split("/");
-			for (var i = path_parts.length; i >= 0; i--) {
-				if (path_parts[i] == "") path_parts.splice(i, 1);
+			var p = pathname.split("/");
+			for (var i = p.length; i >= 0; i--) {
+				if (p[i] == "") p.splice(i, 1);
 			}
-			path_parts.pop();
-			NAV_BOOKMARKLET.pathname = (path_parts.length > 0) ? "/" + path_parts.join("/") + "/" : "/";
+			p.pop();
+			pathname = (p.length > 0) ? "/" + p.join("/") + "/" : "/";
 		}
 	}
-	var l = document.location.protocol + "//" + NAV_BOOKMARKLET.host + NAV_BOOKMARKLET.pathname;
+
+	var l = document.location.protocol + "//" + host + pathname;
+	window._BMRK_NAV = {
+		"pathname": pathname,
+		"host": host
+	};
 	if (l != document.location.href) document.location = l;
 })();

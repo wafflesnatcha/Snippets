@@ -1,8 +1,9 @@
-(function() {
+(function () {
+	window._BMRK_NAV_INC = window._BMRK_NAV_INC ? parseInt(window._BMRK_NAV_INC) : 0;
+	window._BMRK_NAV_INC--;
+
 	var c, b, oldNum, newNum, href = document.location.href,
 		href_length = href.length;
-	window.BOOKMARKLET_NAVIB = window.BOOKMARKLET_NAVIB || 0;
-	window.BOOKMARKLET_NAVIB--;
 
 	for (c = href_length - 1; c >= 0; --c) {
 		if (href.charAt(c).match(/[0-9]/)) {
@@ -18,7 +19,7 @@
 	if (c < 0) return;
 
 	oldNum = href.substring(b, c + 1);
-	newNum = "" + (parseInt(oldNum, 10) + window.BOOKMARKLET_NAVIB);
+	newNum = "" + (parseInt(oldNum, 10) + window._BMRK_NAV_INC);
 
 	while (newNum.length < oldNum.length) {
 		newNum = "0" + newNum;

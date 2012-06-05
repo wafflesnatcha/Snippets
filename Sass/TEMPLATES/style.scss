@@ -1,5 +1,5 @@
 $font_body: "Lucida Grande", "Segoe UI", "Tahoma", "Arial", sans-serif;
-$font_code: "Menlo", "Consolas", "DejaVu Sans Mono", "Courier New", monospace;
+$font_code: "Menlo", "Consolas", "DejaVu Sans Mono", "Courier", monospace;
 $font_heading: $font_body;
 
 $font_size: 13px;
@@ -21,6 +21,7 @@ html, body {
 }
 
 body {
+	-moz-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;	
 	background: $body__bg;
@@ -114,4 +115,8 @@ ul, ol {
 
 ol {
 	list-style-type: decimal;
+}
+
+input, textarea, button, select {
+	font-size: inherit;
 }

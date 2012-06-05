@@ -3,9 +3,8 @@
  * 
  * @link https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every#Compatibility 
  */
-
 if (!Array.prototype.every) {
-	Array.prototype.every = function(fun /*, thisp */ ) {
+	Array.prototype.every = function (fun /*, thisp */ ) {
 		"use strict";
 
 		if (this == null) throw new TypeError();
