@@ -14,7 +14,7 @@
  * 
  * @author Scott Buchanan <buchanan.sc@gmail.com>
  * @link http://wafflesnatcha.github.com
- * @version r2 2012-05-29
+ * @version r3 2012-06-05
  */
 
 function Element(config) {
@@ -29,16 +29,20 @@ Element.prototype = {
 		if (typeof config === "string") {
 			var res = [],
 				arr = document.querySelectorAll(config);
-			if (arr.length == 0) return undefined;
-			for (var i = 0; i < arr.length; i++) {
-				res.push(new Element(arr[i]));
+			if (arr.length == 0) {
+				return undefined;
+			}
+			while (arr.length) {
+				res.push(new Element(arr.pop()));
 			}
 			return (res.length == 1) ? res[0] : res;
 		} else if (typeof config === "object") {
 			if (config.toString() === "[object Object]") {
 				this.element = document.createElement(config.tag);
-				this.setAttributes(config);
-			} else this.element = config;
+				this.attr(config);
+			} else {
+				this.element = config;
+			}
 		}
 		return this;
 	},
@@ -52,8 +56,8 @@ Element.prototype = {
 	},
 
 	insert: function (content) {
-		if (typeof content == "string") this.element.innerHTML += content;
-		else if (typeof content == "object") {
+		if (typeof content === "string") this.element.innerHTML += content;
+		else if (typeof content === "object") {
 			if (content instanceof Element) {
 				this.element.appendChild(content.element);
 				return content;
@@ -68,16 +72,33 @@ Element.prototype = {
 		}
 	},
 
-	setAttributes: function (attr) {
+	attr: function (attr, val) {
+		if (typeof attr === "string") {
+			if (!val) {
+				var i, l = this.element.attributes.length;
+				for (i = 0; i < l; i++) {
+					if (this.element.attributes[i].name == attr) {
+						return this.element.attributes[i].value;
+					}
+				}
+				return undefined;
+			} else attr = {
+				attr: val
+			};
+		}
 		for (var prop in attr) {
-			if (prop == "tag") continue;
-			else if (prop == "text") this.insert(attr[prop]);
-			else if (prop == "children") {
+			if (prop == "text") {
+				this.insert(attr[prop]);
+			} else if (prop == "children") {
 				this.children = [];
 				for (var i = 0; i < attr[prop].length; i++) {
 					this.children.push(this.insert(attr[prop][i]));
 				}
-			} else this.element.setAttribute(prop, attr[prop]);
+			} else if (prop != "tag") {
+				if (attr.hasOwnProperty(prop)) {
+					this.element.setAttribute(prop, attr[prop]);
+				}
+			}
 		}
 		return this;
 	},

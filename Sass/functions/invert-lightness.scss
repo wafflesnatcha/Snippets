@@ -1,0 +1,3 @@
+@function invert-lightness($color) {
+	@return change-color($color, $lightness: 100% - lightness($color));
+}
