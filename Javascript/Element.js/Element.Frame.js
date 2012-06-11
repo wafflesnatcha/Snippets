@@ -9,7 +9,7 @@
  * @requires Element.js
  * @author Scott Buchanan <buchanan.sc@gmail.com>
  * @link http://wafflesnatcha.github.com
- * @version r2 2012-05-29
+ * @version r3 2012-06-11
  */
 
 Element.Frame = function (content) {
@@ -17,15 +17,73 @@ Element.Frame = function (content) {
 	this.element_mask = new Element({
 		tag: 'div',
 		id: id,
-		style: ['background: #000', 'background: rgba(0,0,0,.8)', 'bottom: 0', 'left: 0', 'min-height: 150px', 'position: fixed', 'right: 0', 'top: 0', 'z-index: 999999'].join('!important;') + '!important;',
+		style: [
+			'background: #000',
+			'background: rgba(0,0,0,.8)',
+			'border: 0',
+			'bottom: 0',
+			'display: block',
+			'float: none',
+			'height: auto',
+			'left: 0',
+			'margin: 0',
+			'max-height: none',
+			'max-width: none',
+			'min-height: 150px',
+			'min-width: 0',
+			'padding: 0',
+			'position: fixed',
+			'right: 0',
+			'top: 0',
+			'visibility: visible',
+			'width: auto',
+			'z-index: 999999'
+			].join(' !important;') + ' !important;',
 		children: [{
 			tag: 'div',
-			style: ['background: #222', 'border: 4px solid #eee', 'border-radius: 8px', 'box-shadow: 0 1px 2px rgba(0,0,0,.5)', 'margin: 0', 'max-width: 90%', 'max-height: 90%', 'min-width: 80px', 'min-height: 80px', 'padding: 0', 'position: absolute'].join('!important;') + '!important;',
+			style: ([
+				'border-radius: 8px',
+				'box-shadow: 0 1px 2px rgba(0,0,0,.5)',
+				'background: #222',
+				'border: 4px solid #eee',
+				'display: block',
+				'float: none',
+				'margin: 0',
+				'max-height: 90%',
+				'max-width: 90%',
+				'min-height: 80px',
+				'min-width: 80px',
+				'padding: 0',
+				'position: absolute',
+				'visibility: visible',
+				'z-index: 1'
+				].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 			children: [{
 				tag: 'iframe',
 				id: id + '-frame',
 				src: 'about:blank',
-				style: ['background: transparent', 'border: 0', 'bottom: auto', 'height: 100%', 'left: 0', 'margin: 0', 'padding: 0', 'position: absolute', 'right: auto', 'top: 0', 'width: 100%'].join('!important;') + '!important;'
+				style: ([
+					'border-radius: 8px',
+					'background: transparent',
+					'border: 0',
+					'bottom: auto',
+					'display: block',
+					'float: none',
+					'height: 100%',
+					'left: 0',
+					'margin: 0',
+					'max-height: none',
+					'max-width: none',
+					'min-height: 0',
+					'min-width: 0',
+					'padding: 0',
+					'position: absolute',
+					'right: auto',
+					'top: 0',
+					'visibility: visible',
+					'width: 100%',
+					'z-index: 1'
+					].join('!important;') + '!important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 			}]
 		}]
 	});
@@ -55,11 +113,15 @@ Element.Frame = function (content) {
 		element_mask.destroy();
 	};
 	this.height = function (v) {
-		if (v) element_content.height.apply(element_content, arguments);
+		if (v) {
+			element_content.height.apply(element_content, arguments);
+		}
 		return this.element.offsetHeight;
 	};
 	this.width = function (v) {
-		if (v) element_content.width.apply(element_content, arguments);
+		if (v) {
+			element_content.width.apply(element_content, arguments);
+		}
 		return this.element.offsetWidth;
 	};
 	this.resize = function () {
@@ -74,7 +136,31 @@ Element.Frame = function (content) {
 		href: 'javascript:void(0)',
 		text: 'X',
 		title: 'Close',
-		style: ['background: #d1d1d1', 'border: 0', 'border-radius: 50%', 'box-shadow: 0 1px 2px rgba(0,0,0,.5)', 'color: #555', 'font: 800 12px/23px "Arial Black",Verdana,sans-serif', 'height: 23px', 'margin: 0', 'padding: 0', 'opacity: 1', 'position: absolute', 'top: -12px', 'left: -12px', 'text-align: center', 'text-decoration: none', 'width: 23px', 'z-index: 1000'].join(";")
+		style: ([
+			'border-radius: 6px',
+			'box-shadow: 0 1px 2px rgba(0,0,0,.5)',
+			'background: #b03131',
+			'background: rgba(176,49,49,.9)',
+			'border: 0',
+			'color: #fff',
+			'display: block',
+			'float: none',
+			'font: 800 12px/23px "Arial Black", Verdana, sans-serif',
+			'height: 23px',
+			'left: -12px',
+			'margin: 0',
+			'opacity: 1',
+			'padding: 0',
+			'position: absolute',
+			'right: auto',
+			'text-align: center',
+			'text-decoration: none',
+			'text-shadow: 0 1px 0 rgba(0,0,0,.3)',
+			'top: -12px',
+			'visibility: visible',
+			'width: 23px',
+			'z-index: 1000'
+			].join(' !important;') + ' !important;').replace(/\s*(box-shadow:([^;]+);)/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1')
 	});
 	close_button.element.addEventListener("click", function () {
 		element_mask.destroy();
@@ -82,24 +168,24 @@ Element.Frame = function (content) {
 
 	// Close the frame when clicking on the modal background
 	element_mask.element.addEventListener("click", function (e) {
-		if (e.target != element_mask.element) return;
-		element_mask.destroy();
+		if (e.target == element_mask.element) {
+			element_mask.destroy();
+		}
 	}, true);
 
 	// Frame body styles
-	frame_document.head.appendChild(new Element({
+	frame_document.getElementsByTagName('head')[0].appendChild(new Element({
 		tag: 'style',
 		type: 'text/css',
 		text: [
 			'html,body{background:transparent;padding:0;margin:0;}',
 			'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
-			'ol,li{list-style:none;margin:0;padding:0;white-space:pre}',
 			'a{color:#6cf;text-decoration:none}',
 			'a:hover{text-decoration:underline}',
 			'a:visited{color:#ba66ff}',
 			'hr{height:2px;border:0;background:#444}'
 			].join('\n')
-	}).element)
+	}).element);
 
 	if (content) {
 		this.insert(content);

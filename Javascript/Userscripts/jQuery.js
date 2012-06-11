@@ -1,10 +1,13 @@
 /**
+ * Dynamically inserting jQuery into a Script
+ * 
+ * jQuery CDN hosted locations:
  * jQuery.com [http://code.jquery.com]
  *  - http://code.jquery.com/jquery.min.js
  *  - http://code.jquery.com/jquery.js
  * Google Libraries API [http://code.google.com/apis/libraries/devguide.html#jquery]
- *  - https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js
- *  - https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js
+ *  - https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
+ *  - https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js
  */
 
 /**
@@ -13,10 +16,10 @@
 
 (function() {
 	var script = document.createElement('script');
-	script.setAttribute('src', 'http://code.jquery.com/jquery.min.js');
+	script.setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
 	script.setAttribute('type', 'text/javascript');
 	document.getElementsByTagName('body')[0].appendChild(script);
-});
+})();
 
 /**
  * With callback on jQuery load

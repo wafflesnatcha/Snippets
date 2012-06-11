@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
+	<title>Element.js</title>
+	<style type="text/css">
+	button{display:block;font-size:13px;margin:8px}
+	</style>
+	
+	<script src="Element.js" type="text/javascript"></script>
+	<script src="Element.Frame.js" type="text/javascript"></script>
+	<script src="Element.FrameInline.js" type="text/javascript"></script>
+	<script src="Element.Window.js" type="text/javascript"></script>
+</head>
+<body>
+
+<textarea id="test_content" name="test_content" rows="20" cols="40" style="width:50%;float:left;height:90%;">
+&lt;p&gt;Duis tortor lacus, porttitor non ultrices nec, euismod eu nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac lacus quis urna accumsan faucibus eget at odio. Sed laoreet massa et dolor facilisis sed auctor nibh ultricies. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec aliquet consectetur odio non tristique. Aenean nisl tortor, imperdiet at consequat sit amet, porttitor sit amet magna. Integer fringilla, elit quis tincidunt dapibus, nulla magna faucibus nisi, vitae euismod sem mauris ac ante. Donec pharetra nisl eget metus sollicitudin sodales. In hac habitasse platea dictumst. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed commodo blandit turpis eu interdum. Pellentesque vestibulum fringilla mi sit amet sodales. Nunc dignissim ante eget urna ultricies venenatis. Etiam in rutrum est.&lt;/p&gt;
+
+&lt;p&gt;Testing... &lt;a href="http://www.google.com"&gt;google.com&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;http://www.rgareagr-greagnreia478yhgrwabgkrwbaenwioqg4ugngfdskagmfkalgnrjeioaghru83qhgn43qjgnrelwmavkfahguir3oqgnrwalvnwjlkabnrleangjriwale.com/this/is/a/really/lo-ng/url/that/should__test/the/resizing.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;Dapibus etiam libero mus non phasellus porta purus quis senectus ullamcorper&lt;/li&gt;
+	&lt;li&gt;&lt;p&gt;Diam dignissim dolor et facilisi lectus mattis nostra praesent primis rutrum sociis, augue nisl quisque semper tempor torquent, consequat dignissim eget suspendisse, aptent duis lacus penatibus porta sed tincidunt.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</textarea>
+
+<p style="float:left">
+	<button onclick="test_Frame()">Element.Frame</button>
+	<button onclick="test_FrameInline()">Element.FrameInline</button>
+	<button onclick="test_Window()">Element.Window</button>
+</p>
+
+<script type="text/javascript">
+function test_getContent() {
+	return document.getElementById("test_content").value;
+}
+function test_Frame() {
+	element_frame = new Element.Frame(test_getContent());
+	console.log("var element_frame = %o", element_frame);
+}
+function test_FrameInline() {
+	element_frameinline = new Element.FrameInline(test_getContent());
+	// element_frameinline.insert(test_getContent());
+	// element_frameinline.center();
+	console.log("var element_frameinline = %o", element_frameinline);
+}
+function test_Window() {
+	var element_window = new Element.Window();
+	element_window.insert(test_getContent());
+	console.log("var element_window = %o", element_window);
+}
+</script>
+
+</body>
+</html>

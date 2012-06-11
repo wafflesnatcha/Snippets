@@ -23,6 +23,19 @@
 		};
 	}
 
+	if (!String.prototype.template) {
+		String.prototype.template = function (data) {
+			var prop, result = this;
+			data = data || {};
+			for (prop in data) {
+				if (data.hasOwnProperty(prop)) {
+					result = result.replace('{{' + prop + '}}', data[prop]);
+				}
+			}
+			return result.replace(/\{\{.+?\}\}/ig, '');
+		};
+	}
+
 	function Element(config) {
 		this.init.apply(this, arguments);
 	}
@@ -90,30 +103,106 @@
 		},
 
 		height: function (v) {
-			if (v) this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+			if (v) {
+				this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+			}
 			return this.element.offsetHeight;
 		},
 
 		width: function (v) {
-			if (v) this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+			if (v) {
+				this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+			}
 			return this.element.offsetWidth;
 		}
 	};
+
+	/**
+	 * A modal window using Element.js
+	 * 
+	 * Example usage:
+	 * <code>
+	 * var el = new Element.Frame('<p>some text <b>bold text</b></p>')
+	 * </code>
+	 * 
+	 * @requires Element.js
+	 * @author Scott Buchanan <buchanan.sc@gmail.com>
+	 * @link http://wafflesnatcha.github.com
+	 * @version r3 2012-06-11
+	 */
 
 	Element.Frame = function (content) {
 		var id = 'frame-' + (new Date).getTime();
 		this.element_mask = new Element({
 			tag: 'div',
 			id: id,
-			style: ['background: #000', 'background: rgba(0,0,0,.8)', 'bottom: 0', 'left: 0', 'min-height: 150px', 'position: fixed', 'right: 0', 'top: 0', 'z-index: 999999'].join('!important;') + '!important;',
+			style: [
+				'background: #000',
+				'background: rgba(0,0,0,.8)',
+				'border: 0',
+				'bottom: 0',
+				'display: block',
+				'float: none',
+				'height: auto',
+				'left: 0',
+				'margin: 0',
+				'max-height: none',
+				'max-width: none',
+				'min-height: 150px',
+				'min-width: 0',
+				'padding: 0',
+				'position: fixed',
+				'right: 0',
+				'top: 0',
+				'visibility: visible',
+				'width: auto',
+				'z-index: 999999'
+				].join(' !important;') + ' !important;',
 			children: [{
 				tag: 'div',
-				style: ['background: #222', 'border: 4px solid #eee', 'border-radius: 8px', 'box-shadow: 0 1px 2px rgba(0,0,0,.5)', 'margin: 0', 'max-width: 90%', 'max-height: 90%', 'min-width: 80px', 'min-height: 80px', 'padding: 0', 'position: absolute'].join('!important;') + '!important;',
+				style: ([
+					'border-radius: 8px',
+					'box-shadow: 0 1px 2px rgba(0,0,0,.5)',
+					'background: #222',
+					'border: 4px solid #eee',
+					'display: block',
+					'float: none',
+					'margin: 0',
+					'max-height: 90%',
+					'max-width: 90%',
+					'min-height: 80px',
+					'min-width: 80px',
+					'padding: 0',
+					'position: absolute',
+					'visibility: visible',
+					'z-index: 1'
+					].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
 					src: 'about:blank',
-					style: ['background: transparent', 'border: 0', 'bottom: auto', 'height: 100%', 'left: 0', 'margin: 0', 'padding: 0', 'position: absolute', 'right: auto', 'top: 0', 'width: 100%'].join('!important;') + '!important;'
+					style: ([
+						'border-radius: 8px',
+						'background: transparent',
+						'border: 0',
+						'bottom: auto',
+						'display: block',
+						'float: none',
+						'height: 100%',
+						'left: 0',
+						'margin: 0',
+						'max-height: none',
+						'max-width: none',
+						'min-height: 0',
+						'min-width: 0',
+						'padding: 0',
+						'position: absolute',
+						'right: auto',
+						'top: 0',
+						'visibility: visible',
+						'width: 100%',
+						'z-index: 1'
+						].join('!important;') + '!important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 				}]
 			}]
 		});
@@ -143,11 +232,15 @@
 			element_mask.destroy();
 		};
 		this.height = function (v) {
-			if (v) element_content.height.apply(element_content, arguments);
+			if (v) {
+				element_content.height.apply(element_content, arguments);
+			}
 			return this.element.offsetHeight;
 		};
 		this.width = function (v) {
-			if (v) element_content.width.apply(element_content, arguments);
+			if (v) {
+				element_content.width.apply(element_content, arguments);
+			}
 			return this.element.offsetWidth;
 		};
 		this.resize = function () {
@@ -157,30 +250,31 @@
 
 		// Close the frame when clicking on the modal background
 		element_mask.element.addEventListener("click", function (e) {
-			if (e.target != element_mask.element) return;
-			element_mask.destroy();
+			if (e.target == element_mask.element) {
+				element_mask.destroy();
+			}
 		}, true);
 
 		// Frame body styles
-		frame_document.head.appendChild(new Element({
+		frame_document.getElementsByTagName('head')[0].appendChild(new Element({
 			tag: 'style',
 			type: 'text/css',
 			text: [
 				'html,body{background:transparent;padding:0;margin:0;}',
 				'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
-				'ol,li{list-style:none;margin:0;padding:0;white-space:pre}',
 				'a{color:#6cf;text-decoration:none}',
 				'a:hover{text-decoration:underline}',
 				'a:visited{color:#ba66ff}',
 				'hr{height:2px;border:0;background:#444}'
 				].join('\n')
-		}).element)
+		}).element);
 
 		if (content) {
 			this.insert(content);
 			this.resize();
 		}
 
+		// Center frame after window resizes
 		var me = this;
 		window.addEventListener("resize", function (e) {
 			me.center();
@@ -232,31 +326,65 @@
 		}
 	}
 
-	function makeResultList(links, attribs) {
-		var l, i, len = links.length,
+	function makeResultList(links) {
+		var item, i, len = links.length,
 			html = '';
 		for (i = 0; i < len; i++) {
-			l = links[i];
-			if (typeof l === "string") l = [l, l];
-			html += '<li><a href="' + (l[1] || l[0]) + '" target="_blank"' + (l[2] || '') + '>' + l[0] + '</a></li>';
+			item = links[i];
+			if (typeof l === "string") {
+				item = {
+					name: item,
+					url: item,
+					style: ''
+				};
+			} else if (Object.prototype.toString.call(item) === "[object Array]") {
+				item = {
+					name: item[0],
+					url: item.length > 1 ? item[1] : item[0],
+					style: item.length > 2 ? item[2] : ''
+				};
+			}
+			item['href'] = document.location.href;
+			item['target'] = item['target'] || '_blank';
+			item['name'] = item['name'] || item['url'];
+
+			html += '<li><a href="{{url}}" target="{{target}}" style="{{style}}">{{name}}</a></li>'.template(item);
 		}
-		return '<ol ' + (attribs || '') + '>' + html + '</ol>';
+		return '<ol style="list-style:none;padding:0;margin:0">' + html + '</ol>';
 	}
 
 	addFrameContents(window);
 	links = links.unique();
 
 	var html = '';
-	if (links.length > 0) html += makeResultList(links) + '<hr>';
+	if (links.length > 0) {
+		html += makeResultList(links) + '<hr>';
+	}
 
 	// Third party video download links
-	var extra = 'style="color:#ff6669"';
+	var style = 'color:#ff6669;background:url(\'{{icon}}\') left center no-repeat;padding:0 0 0 20px;';
 	html += makeResultList([
-		['Keep Tube', 'http://keep-tube.com/?url=' + location.href, extra],
-		['SaveFrom.net', 'http://savefrom.net/' + location.href, extra],
-		['KeepVid', 'http://keepvid.com/?url=' + location.href, extra],
-		['WebVideoFetcher.com', 'http://webvideofetcher.com/d?url=' + location.href, extra]
-		]);
+		{
+		name: 'Keep Tube',
+		url: 'http://keep-tube.com/?url={{href}}',
+		style: style,
+		icon: 'http://keep-tube.com/images/keep-tube.ico'
+	}, {
+		name: 'SaveFrom.net',
+		url: 'http://savefrom.net/{{href}}',
+		style: style,
+		icon: 'http://savefrom.net/favicon.ico'
+	}, {
+		name: 'KeepVid',
+		url: 'http://keepvid.com/?url={{href}}',
+		style: style,
+		icon: 'http://keepvid.com/favicon.ico'
+	}, {
+		name: 'WebVideoFetcher.com',
+		url: 'http://webvideofetcher.com/d?url={{href}}',
+		style: style,
+		icon: 'http://webvideofetcher.com/favicon.ico'
+	}]);
 
 	return new Element.Frame(html);
 })();

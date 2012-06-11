@@ -23,13 +23,13 @@ html, body {
 body {
 	-moz-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
-	-webkit-text-size-adjust: 100%;	
+	-webkit-text-size-adjust: 100%;
 	background: $body__bg;
 	color: $body;
 	font: {
 		family: $font_body;
 		size: $font_size;
-	}
+	};
 	line-height: normal;
 }
 
@@ -60,7 +60,7 @@ h1, h2, h3, h4, h5, h6 {
 		family: $font_heading;
 		style: normal;
 		weight: 700;
-	}
+	};
 }
 
 h1 { font-size: 2em; }
@@ -74,7 +74,7 @@ pre, code, kbd, samp {
 	font: {
 		family: $font_code;
 		size: inherit;
-	}
+	};
 }
 
 blockquote {
@@ -83,7 +83,7 @@ blockquote {
 	margin: {
 		left: 40px;
 		right: 0;
-	}
+	};
 }
 
 hr {
@@ -98,7 +98,7 @@ dl, dt, dd {
 	margin: {
 		left: 0;
 		right: 0;
-	}
+	};
 }
 
 table {
@@ -109,8 +109,10 @@ table {
 ul, ol {
 	list-style: disc outside;
 	padding: 0 0 0 40px;
-	margin-left: 0;
-	margin-right: 0;
+	margin: {
+		left: 0;
+		right: 0;
+	};
 }
 
 ol {
@@ -119,4 +121,10 @@ ol {
 
 input, textarea, button, select {
 	font-size: inherit;
+}
+
+fieldset {
+	border-style: solid;
+	border-width: 1px;
+	margin: 4px;
 }

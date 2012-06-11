@@ -19,11 +19,9 @@ a {
 	color: #1525ab;
 	text-decoration: none;
 }
-
 a:visited {
 	color: #680094;
 }
-
 a:hover, a:active, a:focus {
 	text-decoration: underline;
 }
@@ -99,9 +97,9 @@ table {
 
 ul, ol {
 	list-style: disc outside;
+	padding: 0 0 0 40px;
 	margin-left: 0;
 	margin-right: 0;
-	padding: 0 0 0 40px;
 }
 
 ol {
@@ -110,4 +108,10 @@ ol {
 
 input, textarea, button, select {
 	font-size: inherit;
+}
+
+fieldset {
+	border-style: solid;
+	border-width: 1px;
+	margin: 4px;
 }
