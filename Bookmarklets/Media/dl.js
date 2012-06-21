@@ -262,7 +262,7 @@
 			text: [
 				'html,body{background:transparent;padding:0;margin:0;}',
 				'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
-				'a{color:#6cf;text-decoration:none}',
+				'a{color:#6cf;text-decoration:none;white-space:pre}',
 				'a:hover{text-decoration:underline}',
 				'a:visited{color:#ba66ff}',
 				'hr{height:2px;border:0;background:#444}'
@@ -331,11 +331,9 @@
 			html = '';
 		for (i = 0; i < len; i++) {
 			item = links[i];
-			if (typeof l === "string") {
+			if (typeof item === "string") {
 				item = {
-					name: item,
-					url: item,
-					style: ''
+					url: links[i]
 				};
 			} else if (Object.prototype.toString.call(item) === "[object Array]") {
 				item = {
@@ -343,6 +341,7 @@
 					url: item.length > 1 ? item[1] : item[0],
 					style: item.length > 2 ? item[2] : ''
 				};
+				console.log(item);
 			}
 			item['href'] = document.location.href;
 			item['target'] = item['target'] || '_blank';
@@ -362,7 +361,7 @@
 	}
 
 	// Third party video download links
-	var style = 'color:#ff6669;background:url(\'{{icon}}\') left center no-repeat;padding:0 0 0 20px;';
+	var style = 'color:#ff6669;background:url(\'{{icon}}\') left center no-repeat;padding:0 0 0 20px';
 	html += makeResultList([
 		{
 		name: 'Keep Tube',
@@ -370,15 +369,15 @@
 		style: style,
 		icon: 'http://keep-tube.com/images/keep-tube.ico'
 	}, {
-		name: 'SaveFrom.net',
-		url: 'http://savefrom.net/{{href}}',
-		style: style,
-		icon: 'http://savefrom.net/favicon.ico'
-	}, {
 		name: 'KeepVid',
 		url: 'http://keepvid.com/?url={{href}}',
 		style: style,
 		icon: 'http://keepvid.com/favicon.ico'
+	}, {
+		name: 'SaveFrom.net',
+		url: 'http://savefrom.net/{{href}}',
+		style: style,
+		icon: 'http://savefrom.net/favicon.ico'
 	}, {
 		name: 'WebVideoFetcher.com',
 		url: 'http://webvideofetcher.com/d?url={{href}}',
