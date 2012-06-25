@@ -10,16 +10,18 @@
  * @requires Element.js
  * @author Scott Buchanan <buchanan.sc@gmail.com>
  * @link http://wafflesnatcha.github.com
- * @version r1 2012-05-26
+ * @version r2 2012-06-24
  */
 
 Element.Window = function (content) {
 	var documentEl = window.open().document;
-	documentEl.write();
+	documentEl.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
 	documentEl.close();
-
 	this.element = documentEl.body;
-	if (content) this.insert(content);
+	if (content) {
+		this.insert(content);
+	}
 	return this;
-}
-Element.Window.prototype = Element.prototype
+};
+
+Element.Window.prototype = Element.prototype;

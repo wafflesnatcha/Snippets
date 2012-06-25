@@ -1,9 +1,9 @@
 /**
  * Bookmarklet to find media files in the current page.
- * 
+ *
  * Search entire page source for anything that might be a media file. Including
  * links, embedded plugins, and even the plain text.
- * 
+ *
  * @author Scott Buchanan <buchanan.sc@gmail.com>
  * @link http://wafflesnatcha.github.com
  * @version r2 2012-05-29
@@ -11,16 +11,8 @@
 
 (function () {
 
-	if (!Array.prototype.unique) {
-		Array.prototype.unique = function () {
-			var i, x, l = this.length;
-			for (i = 0; i < this.length; i++) {
-				for (x = i + 1; x < this.length; x++) {
-					while (this[i] == this[x]) this.splice(x, 1);
-				}
-			}
-			return this;
-		};
+	if (typeof __DL_BOOKMARKLET !== "undefined") {
+		return false;
 	}
 
 	if (!String.prototype.template) {
@@ -36,36 +28,76 @@
 		};
 	}
 
-	function Element(config) {
+	/**
+	 * DOM Element Helper
+	 *
+	 * Example, using existing DOM elements:
+	 * <code>
+	 * var el1 = new Element(document.body);
+	 * var el2 = new Element("body > :first-child");
+	 * </code>
+	 *
+	 * Example, creating a new element:
+	 * <code>
+	 * var element = new Element({tag: 'div', class: 'some-div'});
+	 * </code>
+	 *
+	 * @author Scott Buchanan <buchanan.sc@gmail.com>
+	 * @link http://wafflesnatcha.github.com
+	 * @version r4 2012-06-24
+	 */
+
+	function Element() {
 		this.init.apply(this, arguments);
 	}
 
 	Element.prototype = {
+		/**
+		 * @constructor
+		 */
 		init: function (config) {
 			if (typeof config === "string") {
 				var res = [],
 					arr = document.querySelectorAll(config);
-				if (arr.length == 0) return undefined;
-				for (var i = 0; i < arr.length; i++) {
-					res.push(new Element(arr[i]));
+				if (arr.length == 0) {
+					return undefined;
+				}
+				while (arr.length) {
+					res.push(new Element(arr.pop()));
 				}
 				return (res.length == 1) ? res[0] : res;
 			} else if (typeof config === "object") {
 				if (config.toString() === "[object Object]") {
 					this.element = document.createElement(config.tag);
-					this.setAttributes(config);
-				} else this.element = config;
+					this.attr(config);
+				} else {
+					this.element = config;
+				}
 			}
 			return this;
 		},
 
 		destroy: function () {
-			if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
+			this.empty();
+			if (this.element.parentNode) {
+				this.element.parentNode.removeChild(this.element);
+			}
+			if (this.ondestroy && typeof this.ondestroy === "function") {
+				this.ondestroy.call(this);
+			}
+		},
+
+		empty: function () {
+			while (this.element.hasChildNodes()) {
+				this.element.removeChild(this.element.firstChild);
+			}
 		},
 
 		insert: function (content) {
-			if (typeof content == "string") this.element.innerHTML += content;
-			else if (typeof content == "object") {
+			if (typeof content === "string") {
+				this.element.innerHTML += content;
+				return this;
+			} else if (typeof content === "object") {
 				if (content instanceof Element) {
 					this.element.appendChild(content.element);
 					return content;
@@ -78,28 +110,80 @@
 					return new Element(content);
 				}
 			}
+			return undefined;
 		},
 
-		setAttributes: function (attr) {
-			for (var prop in attr) {
-				if (prop == "tag") continue;
-				else if (prop == "text") this.insert(attr[prop]);
-				else if (prop == "children") {
+		appendTo: function (parent) {
+			if (typeof parent !== "object" || !(parent instanceof Element)) {
+				parent = new Element(parent);
+			}
+			return parent.insert(this);
+		},
+
+		attr: function (attr, val) {
+			if (typeof attr === "string") {
+				if (!val) {
+					var i, l = this.element.attributes.length;
+					for (i = 0; i < l; i++) {
+						if (this.element.attributes[i].name == attr) {
+							return this.element.attributes[i].value;
+						}
+					}
+					return undefined;
+
+				} else {
+					attr = {
+						attr: val
+					};
+				}
+			}
+
+			var prop;
+			for (prop in attr) {
+				if (prop == "text") {
+					this.insert(attr[prop]);
+				} else if (prop == "children") {
 					this.children = [];
 					for (var i = 0; i < attr[prop].length; i++) {
 						this.children.push(this.insert(attr[prop][i]));
 					}
-				} else this.element.setAttribute(prop, attr[prop]);
+				} else if (prop != "tag") {
+					if (attr.hasOwnProperty(prop)) {
+						this.element.setAttribute(prop, attr[prop]);
+					}
+				}
 			}
+
 			return this;
 		},
 
 		center: function (el) {
-			var el = el || window;
+			el = el || window;
 			this.width(this.width());
 			this.height(this.height());
 			this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + "px";
 			this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + "px";
+		},
+
+		offset: function () {
+			var el = this.element,
+				offset = {
+					left: 0,
+					top: 0
+				};
+			if (el.offsetParent) {
+				while (el) {
+					offset.left += el.offsetLeft;
+					offset.top += el.offsetTop;
+					el = el.offsetParent ? el.offsetParent : undefined;
+				}
+			} else if (el.x && el.y) {
+				offset.left += el.x;
+				offset.top += el.y;
+			} else {
+				return undefined;
+			}
+			return offset;
 		},
 
 		height: function (v) {
@@ -118,13 +202,29 @@
 	};
 
 	/**
+	 * Shortcut method to
+	 *
+	 * Example:
+	 * <code>
+	 * $E(document.body).insert('<h1>New Content</h1>');
+	 * var element = new Element({tag: 'div', class: 'some-div'});
+	 * </code>
+	 */
+
+	if (!window.hasOwnProperty('$E')) {
+		window.$E = function (config) {
+			return new Element(config);
+		};
+	}
+
+	/**
 	 * A modal window using Element.js
-	 * 
+	 *
 	 * Example usage:
 	 * <code>
 	 * var el = new Element.Frame('<p>some text <b>bold text</b></p>')
 	 * </code>
-	 * 
+	 *
 	 * @requires Element.js
 	 * @author Scott Buchanan <buchanan.sc@gmail.com>
 	 * @link http://wafflesnatcha.github.com
@@ -170,13 +270,13 @@
 					'margin: 0',
 					'max-height: 90%',
 					'max-width: 90%',
-					'min-height: 80px',
-					'min-width: 80px',
+					'min-height: 50px',
+					'min-width: 50px',
 					'padding: 0',
 					'position: absolute',
 					'visibility: visible',
 					'z-index: 1'
-					].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
+					].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+);)/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
@@ -202,18 +302,20 @@
 						'visibility: visible',
 						'width: 100%',
 						'z-index: 1'
-						].join('!important;') + '!important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
+						].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 				}]
 			}]
 		});
 
-		document.body.appendChild(this.element_mask.element);
+		// document.body.appendChild(this.element_mask.element);
+		this.element_mask.appendTo(document.body);
 
-		var element_mask = this.element_mask,
+		var me = this,
+			element_mask = this.element_mask,
 			element_content = element_mask.children[0],
 			frame_document = element_content.children[0].element.contentWindow.document;
 
-		frame_document.write();
+		frame_document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
 		frame_document.close();
 
 		for (var prop in this.element_mask) {
@@ -230,6 +332,9 @@
 		};
 		this.destroy = function () {
 			element_mask.destroy();
+			if (this.ondestroy && typeof this.ondestroy === "function") {
+				this.ondestroy.call(this);
+			}
 		};
 		this.height = function (v) {
 			if (v) {
@@ -246,28 +351,32 @@
 		this.resize = function () {
 			this.width((frame_document.body.offsetWidth || frame_document.body.scrollWidth || frame_document.width));
 			this.height((frame_document.body.offsetHeight || frame_document.body.scrollHeight || frame_document.height));
+			this.center();
+		};
+		this.addCSS = function (css) {
+			return new Element(frame_document.getElementsByTagName('head')[0]).insert({
+				tag: 'style',
+				type: 'text/css',
+				text: css
+			});
 		};
 
 		// Close the frame when clicking on the modal background
 		element_mask.element.addEventListener("click", function (e) {
 			if (e.target == element_mask.element) {
-				element_mask.destroy();
+				me.destroy();
 			}
 		}, true);
 
 		// Frame body styles
-		frame_document.getElementsByTagName('head')[0].appendChild(new Element({
-			tag: 'style',
-			type: 'text/css',
-			text: [
-				'html,body{background:transparent;padding:0;margin:0;}',
-				'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
-				'a{color:#6cf;text-decoration:none;white-space:pre}',
-				'a:hover{text-decoration:underline}',
-				'a:visited{color:#ba66ff}',
-				'hr{height:2px;border:0;background:#444}'
-				].join('\n')
-		}).element);
+		this.addCSS([
+			'html,body{background:transparent;padding:0;margin:0}',
+			'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
+			'a{color:#6cf;text-decoration:none}',
+			'a:hover{text-decoration:underline}',
+			'a:visited{color:#ba66ff}',
+			'hr{height:2px;border:0;background:#444}'
+			].join(''));
 
 		if (content) {
 			this.insert(content);
@@ -275,22 +384,13 @@
 		}
 
 		// Center frame after window resizes
-		var me = this;
 		window.addEventListener("resize", function (e) {
 			me.center();
 		}, false);
 
-		this.center();
 		return this;
 	}
 
-
-
-	var links = [];
-	var patterns = [
-		/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))+/gi
-		];
-	// // /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/gi,
 	function addFrameContents(f) {
 		try {
 			scanText(f.document.documentElement.innerHTML);
@@ -316,74 +416,140 @@
 		}
 	}
 
-	function scanText(text) {
-		var i, x, match, pl = patterns.length;
-		for (i = 0; i < pl; i++) {
-			match = text.match(patterns[i]);
-			if (match) for (x = 0; x < match.length; x++) {
-				links.push(match[x]);
+	function scanText(text, pattern) {
+		if (!pattern) {
+			var i, pl = patterns.length;
+			for (i = 0; i < pl; i++) {
+				arguments.callee.call(this, text, patterns[i]);
 			}
+			return;
+		}
+
+		var match, link;
+		while (pattern.test(text)) {
+			if (match && match.index >= 0 && match.length >= 0) {
+				text = text.substr(match.index + match.length);
+			}
+			match = text.match(pattern);
+			if (!match) {
+				continue;
+			}
+
+			if (Object.prototype.toString.call(match) === "[object Array]") {
+				if (match.length > 1) {
+					links.push({
+						'url': match[1],
+						'type': (match.length > 2) ? match[2].toUpperCase() : null
+					});
+				} else {
+					links.push(match[0]);
+				}
+			} else {
+				links.push(match);
+			}
+
 		}
 	}
 
-	function makeResultList(links) {
-		var item, i, len = links.length,
+	function itemExists(items, url) {
+		var i, l = items.length;
+		for (i = 0; i < l; i++) {
+			if (items[i].url == url) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function makeResultList(links, list_class) {
+		var items = [],
+			item, i, ll = links.length,
 			html = '';
-		for (i = 0; i < len; i++) {
+
+		for (i = 0; i < ll; i++) {
 			item = links[i];
 			if (typeof item === "string") {
 				item = {
-					url: links[i]
+					'url': links[i]
 				};
 			} else if (Object.prototype.toString.call(item) === "[object Array]") {
 				item = {
-					name: item[0],
-					url: item.length > 1 ? item[1] : item[0],
-					style: item.length > 2 ? item[2] : ''
+					'name': item[0],
+					'url': item.length > 1 ? item[1] : item[0],
+					'style': item.length > 2 ? item[2] : ''
 				};
-				console.log(item);
 			}
+
 			item['href'] = document.location.href;
 			item['target'] = item['target'] || '_blank';
 			item['name'] = item['name'] || item['url'];
 
-			html += '<li><a href="{{url}}" target="{{target}}" style="{{style}}">{{name}}</a></li>'.template(item);
+			if (item.icon) {
+				item.style = (item.style ? item.style : '') + "background-image:url('" + item.icon + "')";
+			}
+
+			if (!itemExists(items, item.url)) {
+				items.push(item);
+				html += [
+					'<li>',
+					    '<a href="{{url}}" target="{{target}}"' + (item['style'] ? ' style="{{style}}"' : '') + '>',
+					    item['type'] ? '<span>{{type}}</span>' : '',
+					    '{{name}}</a>',
+					'</li>'
+					].join('').template(item);
+			}
 		}
-		return '<ol style="list-style:none;padding:0;margin:0">' + html + '</ol>';
+
+		return '<ol' + (list_class ? ' class="' + list_class + '"' : '') + '>' + html + '</ol>';
 	}
 
-	addFrameContents(window);
-	links = links.unique();
+	var html = '',
+		links = [];
+	// /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/i
+	var patterns = [
+		/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))/i
+		];
 
-	var html = '';
+	addFrameContents(window);
 	if (links.length > 0) {
-		html += makeResultList(links) + '<hr>';
+		html += makeResultList(links, 'links') + '<hr class="splitter">';
 	}
 
 	// Third party video download links
-	var style = 'color:#ff6669;background:url(\'{{icon}}\') left center no-repeat;padding:0 0 0 20px';
-	html += makeResultList([
-		{
+	html += makeResultList([{
 		name: 'Keep Tube',
 		url: 'http://keep-tube.com/?url={{href}}',
-		style: style,
 		icon: 'http://keep-tube.com/images/keep-tube.ico'
 	}, {
 		name: 'KeepVid',
 		url: 'http://keepvid.com/?url={{href}}',
-		style: style,
 		icon: 'http://keepvid.com/favicon.ico'
 	}, {
 		name: 'SaveFrom.net',
 		url: 'http://savefrom.net/{{href}}',
-		style: style,
 		icon: 'http://savefrom.net/favicon.ico'
 	}, {
 		name: 'WebVideoFetcher.com',
 		url: 'http://webvideofetcher.com/d?url={{href}}',
-		style: style,
 		icon: 'http://webvideofetcher.com/favicon.ico'
-	}]);
+	}], 'third-party');
 
-	return new Element.Frame(html);
+	window.__DL_BOOKMARKLET = new Element.Frame(html);
+	window.__DL_BOOKMARKLET.addCSS([
+		'body{padding-bottom:26px;min-width:500px}',
+		'ol{list-style:none;padding:0;margin:0}',
+		'li{white-space:nowrap;clear:both}',
+		'li a span{font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
+		'li a:hover span{color:#cef}',
+		'.links li{font-family:Arial,sans-serif}',
+		'.third-party {text-align:center;position:fixed;left:0;right:0}',
+		'.third-party li{display:inline}',
+		'.third-party b{display:none}',
+		'.third-party a{color:#ff6669;padding:0 8px 0 20px;background-position:left center;background-repeat:no-repeat}',
+		'.splitter {margin: 6px -8px}'
+		].join(''));
+	window.__DL_BOOKMARKLET.ondestroy = function () {
+		delete window.__DL_BOOKMARKLET;
+	};
+	window.__DL_BOOKMARKLET.resize();
 })();

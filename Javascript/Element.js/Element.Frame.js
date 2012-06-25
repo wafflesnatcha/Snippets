@@ -57,7 +57,7 @@ Element.Frame = function (content) {
 				'position: absolute',
 				'visibility: visible',
 				'z-index: 1'
-				].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
+				].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+);)/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 			children: [{
 				tag: 'iframe',
 				id: id + '-frame',
@@ -83,18 +83,20 @@ Element.Frame = function (content) {
 					'visibility: visible',
 					'width: 100%',
 					'z-index: 1'
-					].join('!important;') + '!important;').replace(/\s*(box-shadow:([^;]+))/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
+					].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 			}]
 		}]
 	});
 
-	document.body.appendChild(this.element_mask.element);
-
-	var element_mask = this.element_mask,
+	// document.body.appendChild(this.element_mask.element);
+	this.element_mask.appendTo(document.body);
+	
+	var me = this,
+		element_mask = this.element_mask,
 		element_content = element_mask.children[0],
 		frame_document = element_content.children[0].element.contentWindow.document;
 
-	frame_document.write();
+	frame_document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body></body></html>');
 	frame_document.close();
 
 	for (var prop in this.element_mask) {
@@ -111,6 +113,9 @@ Element.Frame = function (content) {
 	};
 	this.destroy = function () {
 		element_mask.destroy();
+		if(this.ondestroy && typeof this.ondestroy === "function") {
+			this.ondestroy.call(this);
+		}
 	};
 	this.height = function (v) {
 		if (v) {
@@ -127,6 +132,14 @@ Element.Frame = function (content) {
 	this.resize = function () {
 		this.width((frame_document.body.offsetWidth || frame_document.body.scrollWidth || frame_document.width));
 		this.height((frame_document.body.offsetHeight || frame_document.body.scrollHeight || frame_document.height));
+		this.center();
+	};
+	this.addCSS = function (css) {
+		return new Element(frame_document.getElementsByTagName('head')[0]).insert({
+			tag: 'style',
+			type: 'text/css',
+			text: css
+		});
 	};
 
 	// Close Button
@@ -163,29 +176,25 @@ Element.Frame = function (content) {
 			].join(' !important;') + ' !important;').replace(/\s*(box-shadow:([^;]+);)/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1')
 	});
 	close_button.element.addEventListener("click", function () {
-		element_mask.destroy();
+		me.destroy();
 	}, true);
 
 	// Close the frame when clicking on the modal background
 	element_mask.element.addEventListener("click", function (e) {
 		if (e.target == element_mask.element) {
-			element_mask.destroy();
+			me.destroy();
 		}
 	}, true);
 
 	// Frame body styles
-	frame_document.getElementsByTagName('head')[0].appendChild(new Element({
-		tag: 'style',
-		type: 'text/css',
-		text: [
-			'html,body{background:transparent;padding:0;margin:0;}',
-			'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
-			'a{color:#6cf;text-decoration:none}',
-			'a:hover{text-decoration:underline}',
-			'a:visited{color:#ba66ff}',
-			'hr{height:2px;border:0;background:#444}'
-			].join('\n')
-	}).element);
+	this.addCSS([
+		'html,body{background:transparent;padding:0;margin:0}',
+		'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
+		'a{color:#6cf;text-decoration:none}',
+		'a:hover{text-decoration:underline}',
+		'a:visited{color:#ba66ff}',
+		'hr{height:2px;border:0;background:#444}'
+		].join(''));
 
 	if (content) {
 		this.insert(content);
@@ -193,11 +202,9 @@ Element.Frame = function (content) {
 	}
 
 	// Center frame after window resizes
-	var me = this;
 	window.addEventListener("resize", function (e) {
 		me.center();
 	}, false);
 
-	this.center();
 	return this;
 }

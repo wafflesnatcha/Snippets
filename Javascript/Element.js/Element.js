@@ -1,23 +1,23 @@
 /**
  * DOM Element Helper
- * 
+ *
  * Example, using existing DOM elements:
  * <code>
  * var el1 = new Element(document.body);
  * var el2 = new Element("body > :first-child");
  * </code>
- * 
+ *
  * Example, creating a new element:
  * <code>
  * var element = new Element({tag: 'div', class: 'some-div'});
  * </code>
- * 
+ *
  * @author Scott Buchanan <buchanan.sc@gmail.com>
  * @link http://wafflesnatcha.github.com
- * @version r3 2012-06-05
+ * @version r4 2012-06-24
  */
 
-function Element(config) {
+function Element() {
 	this.init.apply(this, arguments);
 }
 
@@ -48,16 +48,26 @@ Element.prototype = {
 	},
 
 	destroy: function () {
-		if (this.element.parentNode) this.element.parentNode.removeChild(this.element);
+		this.empty();
+		if (this.element.parentNode) {
+			this.element.parentNode.removeChild(this.element);
+		}
+		if(this.ondestroy && typeof this.ondestroy === "function") {
+			this.ondestroy.call(this);
+		}
 	},
 
 	empty: function () {
-		while (this.element.hasChildNodes()) this.element.removeChild(this.element.firstChild);
+		while (this.element.hasChildNodes()) {
+			this.element.removeChild(this.element.firstChild);
+		}
 	},
 
 	insert: function (content) {
-		if (typeof content === "string") this.element.innerHTML += content;
-		else if (typeof content === "object") {
+		if (typeof content === "string") {
+			this.element.innerHTML += content;
+			return this;
+		} else if (typeof content === "object") {
 			if (content instanceof Element) {
 				this.element.appendChild(content.element);
 				return content;
@@ -70,6 +80,14 @@ Element.prototype = {
 				return new Element(content);
 			}
 		}
+		return undefined;
+	},
+
+	appendTo: function (parent) {
+		if (typeof parent !== "object" || !(parent instanceof Element)) {
+			parent = new Element(parent);
+		}
+		return parent.insert(this);
 	},
 
 	attr: function (attr, val) {
@@ -82,11 +100,16 @@ Element.prototype = {
 					}
 				}
 				return undefined;
-			} else attr = {
-				attr: val
-			};
+
+			} else {
+				attr = {
+					attr: val
+				};
+			}
 		}
-		for (var prop in attr) {
+
+		var prop;
+		for (prop in attr) {
 			if (prop == "text") {
 				this.insert(attr[prop]);
 			} else if (prop == "children") {
@@ -100,11 +123,12 @@ Element.prototype = {
 				}
 			}
 		}
+
 		return this;
 	},
 
 	center: function (el) {
-		var el = el || window;
+		el = el || window;
 		this.width(this.width());
 		this.height(this.height());
 		this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + "px";
@@ -118,26 +142,47 @@ Element.prototype = {
 				top: 0
 			};
 		if (el.offsetParent) {
-			while (1) {
+			while (el) {
 				offset.left += el.offsetLeft;
 				offset.top += el.offsetTop;
-				if (!el.offsetParent) break;
-				el = el.offsetParent;
+				el = el.offsetParent ? el.offsetParent : undefined;
 			}
 		} else if (el.x && el.y) {
 			offset.left += el.x;
 			offset.top += el.y;
-		} else return null;
+		} else {
+			return undefined;
+		}
 		return offset;
 	},
 
 	height: function (v) {
-		if (v) this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+		if (v) {
+			this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+		}
 		return this.element.offsetHeight;
 	},
 
 	width: function (v) {
-		if (v) this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+		if (v) {
+			this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+		}
 		return this.element.offsetWidth;
 	}
 };
+
+/**
+ * Shortcut method to
+ *
+ * Example:
+ * <code>
+ * $E(document.body).insert('<h1>New Content</h1>');
+ * var element = new Element({tag: 'div', class: 'some-div'});
+ * </code>
+ */
+
+if (!window.hasOwnProperty('$E')) {
+	window.$E = function (config) {
+		return new Element(config);
+	};
+}

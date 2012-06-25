@@ -1,0 +1,66 @@
+/**
+ * Assuming your code blocks are structured like:
+ * <pre>
+ *     <code>
+ *     Here is some syntax
+ *     </code>
+ * </pre>
+ */
+
+pre {
+	@include border-radius(0);
+	@include box-sizing(border-box);
+	background-color: transparent;
+	overflow: auto;
+	padding: 0;
+	position: relative;
+	white-space: pre;
+	word-wrap: normal;
+}
+
+pre:after, pre:before {
+	background: none;
+	bottom: 0;
+	content: "";
+	position: absolute;
+	top: 0;
+	width: 12px;
+	z-index: 10;
+}
+
+pre:after {
+	@include border-radius(0 3px 3px 0);
+	@include box-shadow(
+		-12px 0 8px -8px #eee inset,
+		-12px 0 12px -12px #eee inset,
+		-12px 0 12px -12px #eee inset
+	);
+	right: 0;
+}
+
+pre:before {
+	@include border-radius(3px 0 0 3px);
+	@include box-shadow(
+		12px 0 8px -8px #eee inset,
+		12px 0 12px -12px #eee inset,
+		12px 0 12px -12px #eee inset
+	);
+	left: 0;
+}
+
+code {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+pre code {
+	@include border-radius(3px);
+	@include box-sizing(border-box);
+	background-color: #eee;
+	display: block;
+	overflow: auto;
+	padding: 8px 12px;
+	position: relative;
+	white-space: pre;
+	word-wrap: normal;
+}

@@ -5,17 +5,41 @@
 	<meta charset="utf-8">
 	<title>Element.js</title>
 	<style type="text/css">
-	button{display:block;font-size:13px;margin:8px}
+	html, body {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font: 13px sans-serif;
+		padding: 0 8px;
+	}
+	button {
+		font-size: 13px;
+	}
+	textarea {
+		display: block;
+		width: 80%;
+	}
+	label {
+		font-weight: bold;
+	}
 	</style>
-	
+
 	<script src="Element.js" type="text/javascript"></script>
 	<script src="Element.Frame.js" type="text/javascript"></script>
 	<script src="Element.FrameInline.js" type="text/javascript"></script>
 	<script src="Element.Window.js" type="text/javascript"></script>
 </head>
 <body>
-
-<textarea id="test_content" name="test_content" rows="20" cols="40" style="width:50%;float:left;height:90%;">
+	<h1>Element.js</h1>
+	<p>
+		<button onclick="test_Frame()">Element.Frame</button>
+		<button onclick="test_FrameInline()">Element.FrameInline</button>
+		<button onclick="test_Window()">Element.Window</button>
+	</p>
+	<label for="test_content">Default Content</label>
+	<textarea id="test_content" name="test_content" rows="25" cols="40">
 &lt;p&gt;Duis tortor lacus, porttitor non ultrices nec, euismod eu nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac lacus quis urna accumsan faucibus eget at odio. Sed laoreet massa et dolor facilisis sed auctor nibh ultricies. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec aliquet consectetur odio non tristique. Aenean nisl tortor, imperdiet at consequat sit amet, porttitor sit amet magna. Integer fringilla, elit quis tincidunt dapibus, nulla magna faucibus nisi, vitae euismod sem mauris ac ante. Donec pharetra nisl eget metus sollicitudin sodales. In hac habitasse platea dictumst. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed commodo blandit turpis eu interdum. Pellentesque vestibulum fringilla mi sit amet sodales. Nunc dignissim ante eget urna ultricies venenatis. Etiam in rutrum est.&lt;/p&gt;
 
 &lt;p&gt;Testing... &lt;a href="http://www.google.com"&gt;google.com&lt;/a&gt;&lt;/p&gt;
@@ -24,36 +48,31 @@
 
 &lt;ul&gt;
 	&lt;li&gt;Dapibus etiam libero mus non phasellus porta purus quis senectus ullamcorper&lt;/li&gt;
+	&lt;li&gt;Condimentum himenaeos quam varius, ac condimentum duis iaculis mollis nascetur neque pellentesque sed suspendisse.&lt;/li&gt;
 	&lt;li&gt;&lt;p&gt;Diam dignissim dolor et facilisi lectus mattis nostra praesent primis rutrum sociis, augue nisl quisque semper tempor torquent, consequat dignissim eget suspendisse, aptent duis lacus penatibus porta sed tincidunt.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</textarea>
+	</textarea>
 
-<p style="float:left">
-	<button onclick="test_Frame()">Element.Frame</button>
-	<button onclick="test_FrameInline()">Element.FrameInline</button>
-	<button onclick="test_Window()">Element.Window</button>
-</p>
-
-<script type="text/javascript">
-function test_getContent() {
-	return document.getElementById("test_content").value;
-}
-function test_Frame() {
-	element_frame = new Element.Frame(test_getContent());
-	console.log("var element_frame = %o", element_frame);
-}
-function test_FrameInline() {
-	element_frameinline = new Element.FrameInline(test_getContent());
-	// element_frameinline.insert(test_getContent());
-	// element_frameinline.center();
-	console.log("var element_frameinline = %o", element_frameinline);
-}
-function test_Window() {
-	var element_window = new Element.Window();
-	element_window.insert(test_getContent());
-	console.log("var element_window = %o", element_window);
-}
-</script>
+	<script type="text/javascript">
+	function test_getContent() {
+		return document.getElementById("test_content").value;
+	}
+	function test_Frame() {
+		window.element_frame = new Element.Frame(test_getContent());
+		console.info("window.element_frame = %o", element_frame);
+	}
+	function test_FrameInline() {
+		window.element_frameinline = new Element.FrameInline(test_getContent());
+		// element_frameinline.insert(test_getContent());
+		// element_frameinline.center();
+		console.debug("window.element_frameinline = %o", element_frameinline);
+	}
+	function test_Window() {
+		window.element_window = new Element.Window();
+		element_window.insert(test_getContent());
+		console.log("window.element_window = %o", element_window);
+	}
+	</script>
 
 </body>
 </html>
