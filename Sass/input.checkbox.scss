@@ -1,3 +1,4 @@
+@import "compass";
 input[type='checkbox'] {
 	@include appearance(none);
 	@include background-image(linear-gradient(top, rgba(255,255,255,.7), rgba(201,201,201,.7)));
@@ -29,7 +30,7 @@ input[type='checkbox']:not(:disabled):active {
 }
 input[type='checkbox']:checked::before {
 	color: #000;
-	content: image-url("tick.png");
+	content: 'x';
 	left: 2px;
 	top: -1px;
 	position: absolute;
