@@ -101,6 +101,14 @@ dl, dt, dd {
 	};
 }
 
+dt {
+	font-weight: bold;
+}
+
+dd {
+	margin-left: 30px;
+}
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;

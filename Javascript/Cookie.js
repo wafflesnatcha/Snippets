@@ -1,4 +1,4 @@
-var Cookie = (function() {
+var Cookie = (function () {
 
 	function set(name, val, days) {
 		var ex_date = new Date();
