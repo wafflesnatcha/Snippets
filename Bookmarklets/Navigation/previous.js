@@ -18,4 +18,4 @@
 		}
 		document.location = m[1] + x + m[3];
 	}
-})(1, 'next');
+})(-1, 'prev');
