@@ -536,17 +536,17 @@
 
 	window.__DL_BOOKMARKLET = new Element.Frame(html);
 	window.__DL_BOOKMARKLET.addCSS([
-		'body{padding-bottom:26px;min-width:500px}',
+		'body{padding-bottom:36px;min-width:500px}',
 		'ol{list-style:none;padding:0;margin:0}',
 		'li{white-space:nowrap;clear:both}',
 		'li a span{font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
 		'li a:hover span{color:#cef}',
 		'.links li{font-family:Arial,sans-serif}',
-		'.third-party {text-align:center;position:fixed;left:0;right:0}',
+		'.third-party {text-align:center;position:fixed;left:0;right:0;line-height:30px}',
 		'.third-party li{display:inline}',
 		'.third-party b{display:none}',
 		'.third-party a{color:#ff6669;padding:0 8px 0 20px;background-position:left center;background-repeat:no-repeat}',
-		'.splitter {margin: 6px -8px}'
+		'.splitter{margin: 6px -8px 0}'
 		].join(''));
 	window.__DL_BOOKMARKLET.ondestroy = function () {
 		delete window.__DL_BOOKMARKLET;

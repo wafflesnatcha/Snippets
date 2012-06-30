@@ -21,7 +21,7 @@
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   2012-02-22
+ * @version   r2 2012-06-29
  * @link      http://wafflesnatcha.github.com
  */
 
@@ -35,25 +35,6 @@ class Console
 	 * @var boolean
 	 */
 	private $enabled = false;
-
-	/**
-	 * Application root directory
-	 * Used when displaying errors and their corresponding source files
-	 * @var string
-	 */
-	private $path_root;
-
-	/**
-	 * Path to file to write output to
-	 * @var string
-	 */
-	private $path_log;
-
-	/**
-	 * Target output
-	 * @var int TARGET_SCREEN|TARGET_FILE
-	 */
-	private $target;
 
 	/**
 	 * Microtime at the point this Object was created
@@ -109,6 +90,11 @@ class Console
 	const WTF = 8;
 
 	/**
+	 * For failed assertions
+	 */
+	const ASSERT = 9;
+
+	/**
 	 * Display output to the screen/console
 	 */
 	const TARGET_SCREEN = 1;
@@ -119,12 +105,47 @@ class Console
 	const TARGET_FILE = 2;
 
 	/**
+	 * @var array Console settings
+	 */
+	private $_config = 	array(
+		/**
+		 * Path to application root directory.
+		 * Used when displaying errors and their corresponding source files.
+		 * @var string
+		 */
+		'path_root' => null,
+		/**
+		 * Path to file to write output to
+		 * @var string
+		 */
+		'path_log' => null,
+		/**
+		 * Decimal places for times
+		 * @var int
+		 */
+		'time_precision' => 4,
+		/**
+		 * Target output
+		 * @var int
+		 */
+		'target' => self::TARGET_SCREEN,
+		/**
+		 * @var string
+		 */
+		'indent' => "  ",
+		/**
+		 * @var int
+		 */
+		'error_reporting' => E_ALL,
+	);
+
+	/**
 	 * @return void
 	 */
 	protected function __construct()
 	{
 		$this->time_start = microtime(true);
-		$this->path_root = dirname(realpath($_SERVER['PHP_SELF']));
+		$this->_config['path_root'] = dirname(realpath($_SERVER['PHP_SELF']));
 	}
 
 	/**
@@ -168,11 +189,7 @@ class Console
 	public static function __callStatic($name, $arguments)
 	{
 		if ("{$name[0]}" === "_") {
-			$callback = array(
-				static::getInstance(),
-				substr($name,
-				1),
-			);
+			$callback = array(static::getInstance(), substr($name, 1));
 			if (method_exists($callback[0], $callback[1]))
 				return call_user_func_array($callback, $arguments);
 		}
@@ -186,17 +203,17 @@ class Console
 	 */
 	public function enable()
 	{
-		error_reporting(E_ALL| E_STRICT);
+		error_reporting($this->_config['error_reporting']);
 		ini_set("display_errors", 1);
-		set_error_handler(array($this, "phpErrorHandler"), E_ALL| E_STRICT);
+		set_error_handler(array($this, "phpErrorHandler"), $this->_config['error_reporting']);
 		set_exception_handler(array($this, "phpExceptionHandler"));
 
 		/*
-    	assert_options(ASSERT_ACTIVE, 1);
-    	assert_options(ASSERT_WARNING, 0);
-    	assert_options(ASSERT_QUIET_EVAL, 1);
-    	assert_options(ASSERT_CALLBACK, array($this, "assertCallback"));
-    	*/
+		assert_options(ASSERT_ACTIVE, 1);
+		assert_options(ASSERT_WARNING, 0);
+		assert_options(ASSERT_QUIET_EVAL, 1);
+		assert_options(ASSERT_CALLBACK, array($this, "assertCallback"));
+		*/
 		$this->enabled = true;
 	}
 
@@ -292,7 +309,7 @@ class Console
 	 */
 	public function time()
 	{
-		$t = round((float) microtime(true) - $this->time_start, 5);
+		$t = number_format(round((float) microtime(true) - $this->time_start, $this->_config['time_precision']), $this->_config['time_precision']);
 		$args = func_get_args();
 		array_unshift($args, $t);
 		$this->process(self::TIME, $args);
@@ -300,29 +317,27 @@ class Console
 	}
 
 	/**
-	 * Display the console
+	 * Output the console
 	 *
 	 * This will write the currently stored output to the target medium. If the
-	 * first parameter is empty, it will use the value in {self::$target};
+	 * first parameter is empty, it will use the value in {$this->_config['target']};
 	 * and if that is empty/invalid, defaults to {self::TARGET_SCREEN}
-	 * $target is supplied,
 	 *
-	 * @param  int  $target {TARGET_SCREEN}|{TARGET_FILE}
+	 * @param  int  $target {Console::TARGET_SCREEN}|{Console::TARGET_FILE}
 	 * @return void
 	 */
-	public function display($target = null)
+	public function output($target = null)
 	{
-		if (!$this->enabled)
-			return false;
-		$t = $this->target($target);
-		switch ($t) {
-			case self::TARGET_FILE:
-				$this->displayToFile();
-				break;
-			case self::TARGET_SCREEN:
-			default:
-				$this->displayToScreen();
-				break;
+		if ($this->enabled) {
+			switch ($this->target($target)) {
+				case self::TARGET_FILE:
+					$this->output_file();
+					break;
+				case self::TARGET_SCREEN:
+				default:
+					$this->output_screen();
+					break;
+			}
 		}
 	}
 
@@ -339,35 +354,35 @@ class Console
 	{
 		if ($path !== false) {
 			if ((file_exists($path) && is_writable($path)) || is_writable(dirname($path)))
-				$this->path_log = $path;
+				$this->_config['path_log'] = $path;
 		}
-		return $this->path_log;
+		return $this->_config['path_log'];
 	}
 
 	/**
 	 * Get/set the output target
 	 *
-	 * @param  boolean $new_target Parameter description (if any) ...
-	 * @return boolean Return description (if any) ...
+	 * @param  int $new_target
+	 * @return int The current target
 	 */
 	public function target($new_target = null)
 	{
 		if ($new_target)
-			$this->target = $new_target;
-		return $this->target;
+			$this->_config['target'] = $new_target;
+		return $this->_config['target'];
 	}
 
 	/**
-	 * Short description for function
+	 * Called on failed assertions
 	 *
-	 * @param  unknown $file Parameter description (if any) ...
-	 * @param  unknown $line Parameter description (if any) ...
-	 * @param  unknown $code Parameter description (if any) ...
+	 * @param  string $file
+	 * @param  int    $line Parameter description (if any) ...
+	 * @param  string $code
 	 * @return void
 	 */
 	public function assertCallback($file, $line, $code)
 	{
-		$this->process(self::DEBUG, "$file:$line:$code");
+		$this->process(self::ASSERT, "$file:$line $code");
 	}
 
 	/**
@@ -376,33 +391,29 @@ class Console
 	 */
 	public function phpErrorHandler($errno, $errstr, $errfile, $errline, $errcontext)
 	{
-		$exit_after = false;
+		$file = static::getRelativePath($errfile, $this->_config['path_root']);
+		$msg = "$file:$errline - $errstr";
 		switch ($errno) {
 			case E_ERROR:
 			case E_USER_ERROR:
-				$priority = self::ERROR;
-				$exit_after = true;
+				$this->process(self::ERROR, $msg);
+				exit(self::ERROR);
 				break;
 			case E_WARNING:
 			case E_USER_WARNING:
-				$priority = self::WARN;
+				$this->process(self::WARN, $msg);
 				break;
 			case E_NOTICE:
 			case E_USER_NOTICE:
-				$priority = self::NOTICE;
+				$this->process(self::NOTICE, $msg);
 				break;
 			case E_STRICT:
-				$priority = self::DEBUG;
+				$this->process(self::DEBUG, $msg);
 				break;
 			default:
-				$message = "UNKNOWN ERROR TYPE " . $message;
-				$priority = self::WTF;
+				$this->process(self::WTF, "UNKNOWN ERROR TYPE " . $msg);
 		}
-		$rel_file = static::getRelativePath($errfile, $this->path_root);
-		$message = "$rel_file:$errline - $errstr";
-		$this->process($priority, "$rel_file:$errline - $errstr");
-		if ($exit_after)
-			exit(2);
+		return false;
 	}
 
 	/**
@@ -412,16 +423,6 @@ class Console
 	public function phpExceptionHandler($exception)
 	{
 		$this->process(self::DEBUG, array($exception->getMessage(), @$exception->getTrace()));
-	}
-
-	/**
-	 * Are we being run in a color-supported terminal?
-	 *
-	 * @return boolean
-	 */
-	public function isColorTerm()
-	{
-		return(isset($_SERVER['TERM']) && ( $_SERVER['TERM'] == "xterm-color" || $_SERVER['TERM'] == "xterm-256color" || ( isset($_SERVER['CLICOLOR']) && $_SERVER['CLICOLOR'] != 0 )));
 	}
 
 	/**
@@ -442,18 +443,19 @@ class Console
 			self::TIME => "%cTIME",
 			self::WARN => "%yWARN",
 			self::WTF => "%y%bW%gT%rF%c",
+			self::ASSERT => "%rASSERT",
 		);
-		if ($prefixes[$priority])
+
+		if ($prefixes[$priority]) {
 			$prefix = $prefixes[$priority] . "%n ";
-		$args =(array) $args;
-		foreach ($args as &$a) {
-			if (is_array($a) || is_object($a))
-				$a = var_export($a, true);
-			elseif (is_bool($a))
-				$a = ($a === true) ? "TRUE" : "FALSE";
 		}
-		$str = implode(", ", $args);
-		$str = $this->cleanLogEntry($str);
+
+		$args = (array) $args;
+		foreach ($args as &$a) {
+			$a = $this->process_arg($a);
+		}
+
+		$str = implode(" ", $args);
 		$this->output[] = $prefix . $str;
 	}
 
@@ -463,50 +465,55 @@ class Console
 	 * @param  string $str A single console entry
 	 * @return string A cleaner looking version of $str
 	 */
-	private function cleanLogEntry($str)
+	private function process_arg($arg)
 	{
-		$clean_me = array(
-			// 'pattern' => 'replacement',
-			'/array \([\s]*\)/i' => "array (EMPTY)",
-		);
-		$preg = array(
-			"patterns" => array(),
-			"replacements" => array(),
-		);
-		foreach ($clean_me as $p => $r) {
-			$preg['patterns'][] = $p;
-			$preg['replacements'][] = $r;
+		if (is_array($arg)) {
+			$arg = var_export($arg, true);
+			$arg = preg_replace('/array \([\s]*\)/i', 'array ()', $arg);
+		} elseif (is_object($arg)) {
+			$arg = var_export($arg, true);
+		} elseif (is_bool($arg)) {
+			$arg = ($arg === true) ? "TRUE" : "FALSE";
+		} elseif (is_string($arg)) {
+			// $arg = '"' . $arg . '"';
 		}
-		return preg_replace($preg['patterns'], $preg['replacements'], $str);
+		$arg = str_replace("\n", "\n" . $this->_config['indent'], $arg);
+		return $arg;
 	}
 
 	/**
-	 * Outputs to file
+	 * Output to file.
 	 *
 	 * @return void
 	 */
-	private function displayToFile()
+	private function output_file()
 	{
-		if (!$this->path_log)
+		if (!$this->_config['path_log'])
 			return;
-		$fp = fopen($this->path_log, "a");
+
 		$out = $this->output;
 		array_unshift($out, "# " . date("r"));
 		$out = $this->colorConvert($out, false);
+
+		$fp = fopen($this->_config['path_log'], "a");
 		fwrite($fp, implode("\n", $out) . "\n");
 		fclose($fp);
 	}
 
 	/**
-	 * Outputs to screen
+	 * Output to screen. (stderr in cli)
 	 *
 	 * @return void
 	 */
-	private function displayToScreen()
+	private function output_screen()
 	{
-		$out = implode("\n", $this->output);
-		$out = $this->colorConvert($out);
-		print $out . "\n";
+		$out = $this->colorConvert(implode("\n", $this->output)) . "\n";
+		if(php_sapi_name() == "cli" && $h = fopen("php://stderr", "w")) {
+			fwrite($h, $out);
+			fclose($h);
+		} else {
+			echo $out;
+		}
 	}
 
 	/**
@@ -514,20 +521,20 @@ class Console
 	 *
 	 * The applies only Console_Color is installed, otherwise
 	 *
-	 * @param  unknown $string  String to format
+	 * @param  string  $string  String to format
 	 * @param  boolean $colored True to convert color codes, false to strip them. If Console_Color is not installed this will always be false
 	 * @return mixed   Return description (if any) ...
 	 */
 	private function colorConvert($string, $colored = true)
 	{
-		if (!$this->isColorTerm() || !$colored)
+		if (!$colored || !isset($_SERVER['TERM']) || !in_array($_SERVER['TERM'], array("xterm-color", "xterm-256color"))) {
 			return preg_replace("/([^%]?)(%[kK0rR1gG2yY3bB4mM5pPcC6wW7FU8_9n])/", "$1", $string);
+		}
 		$colors = $this->colorCode();
 		foreach ($colors as $k => $v) {
 			$string = str_replace($k, $v, $string);
 		}
 		return $string;
-		//return Console_Color::convert($string, $colored);
 	}
 
 	/**
