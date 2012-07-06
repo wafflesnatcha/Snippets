@@ -10,13 +10,13 @@ input[type='checkbox'] {
 	@include inline-block;
 	background-color: #eee;
 	border: 1px solid rgba(100,100,100,.5);
-	height: 14px;
+	height: 13px;
 	margin: 0 3px;
 	outline: none;
 	position: relative;
 	top: 2px;
 	vertical-align: baseline;
-	width: 14px;
+	width: 13px;
 }
 input[type='checkbox']:disabled {
 	opacity: .75;
@@ -30,9 +30,14 @@ input[type='checkbox']:not(:disabled):active {
 	border-color: rgba(100,100,100,.8);
 }
 input[type='checkbox']:checked::before {
+	-webkit-user-select: none;
+	background: {
+		image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wDBhYcG79aGIsAAACbSURBVBjTjdFBCkFhFAXgj4fp24PBy0SZ2ICRXRgYGb2xlKzBSEo2YgsiKWVoZgFKMjD5X/2Ux6lb99bpnNO5lKMR5i8MsEQHkhJiEzlS9HCqfiFWMUIt3AfsC3KKLCL30Qr7HfM4Ro4h6rhiEqmusIMKuphGqo+ogSPGcbYLzh91vdkXSHDDBk+0gxussS3rNcMCs+D6E18/9gLPPhbDshfzLgAAAABJRU5ErkJggg==");
+		position: center;
+	}
 	color: #000;
-	content: 'x';
-	left: 2px;
-	top: -1px;
+	content: '';
+	height: 100%;
 	position: absolute;
+	width: 100%;
 }

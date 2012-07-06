@@ -15,7 +15,7 @@
 	if (pattern) {
 		var i, links = document.links,
 			l = links.length,
-			re = new RegExp('\s*' + pattern + '\s*', 'i');
+			re = new RegExp('([^\w]|^)\s*(' + pattern + ')\s*([^\w]|$)', 'i');
 		for (i = 0; i < l; i++) {
 			if(re.test(links[i].innerText.replace(/[^\w\s]+/, '').replace(/^\s+|\s+$/g, '')) && links[i].href) {
 				document.location = links[i].href;
@@ -34,4 +34,5 @@
 		}
 		document.location = m[1] + x + m[3];
 	}
-})(1, 'next', 'next');
+})(-1, 'prev', '(prev|previous)(\s*page)?');
+// })(1, 'next', 'next(\s*page)?');
