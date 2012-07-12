@@ -1,0 +1,1 @@
+perl -pe 'BEGIN{undef $/;} s/START.*STOP/replace_string/smg'
