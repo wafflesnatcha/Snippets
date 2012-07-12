@@ -1,7 +1,7 @@
 /**
  * Create a string from a template.
  *
- * Returns a new string with all "{{variables}}" replaced with their corresponding
+ * Returns a new string with all "<%variables%>" replaced with their corresponding
  * properties from the given object argument.
  *
  * Example:
@@ -10,7 +10,7 @@
  *     name: 'Scott',
  *     description: 'Ante fermentum interdum porttitor rhoncus sem velit, aenean mus nulla porta volutpat.'
  * };
- * var str = '<div><b>{{name}}</b><p>{{description}}</p>{{will be removed}}</div>'
+ * var str = '<div><b><%name%></b><p><%description%></p><%will be removed%></div>'
  * console.log(str.template(data));
  * </code>
  *
@@ -25,7 +25,7 @@ if (!String.prototype.template) {
 		data = data || {};
 		for (prop in data) {
 			if(data.hasOwnProperty(prop)) {
-				result = result.replace('{{' + prop + '}}', data[prop]);
+				result = result.replace('<%' + prop + '%>', data[prop]);
 			}
 		}
 		return result.replace(/\{\{.+?\}\}/ig, '');

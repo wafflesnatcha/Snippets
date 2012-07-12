@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en-US"><head><meta charset="utf-8"><title>Convert Timestamp</title><style type="text/css">body{font:16px monospace}input{font:inherit;display:inline;min-width:440px;margin:0 2px 2px;border:1px solid #aaa}input[readonly]{border-color:#ccc;color:#666}label{float:left;padding:0 4px;clear:both;min-width:100px;text-align:right}</style>	</head><body>
+<label for="time_date">Date:</label><input id="time_date" type="text" onkeyup="time.fromDate(this)"><br>
+<label for="time_uts">UTS:</label><input id="time_uts" type="text" onkeyup="time.fromUTS(this)"><br>
+<label for="time_gmt">GMT:</label><input id="time_gmt" type="text" readonly><br>
+<label for="time_locale">Locale:</label><input id="time_locale" type="text" readonly><br>
+<label for="time_iso">ISO:</label><input id="time_iso" type="text" readonly>
+<script type="text/javascript">
+var time = {
+	el: {
+		'date': null,
+		'uts': null,
+		'gmt': null,
+		'locale': null,
+		'iso': null
+	},
+	fromDate: function (el) {
+		var d = new Date(el.value);
+		time.set(d);
+		time.el.uts.value = Math.round(d.getTime() / 1000);
+	},
+	fromUTS: function (el) {
+		var d = new Date(parseInt(el.value) * 1000)
+		time.set(d);
+		time.el.date.value = d.toString();
+	},
+	set: function (d) {
+		time.el.gmt.value = d.toGMTString();
+		time.el.locale.value = d.toLocaleString();
+		time.el.iso.value = d.toISOString();
+	}
+};
+for (var p in time.el) {
+	time.el[p] = document.getElementById('time_' + p);
+}
+var d = new Date();
+time.el.date.value = d.toString();
+time.fromDate(time.el.date);
+</script></body></html>

@@ -17,7 +17,7 @@
 			l = links.length,
 			re = new RegExp('([^\w]|^)\s*(' + pattern + ')\s*([^\w]|$)', 'i');
 		for (i = 0; i < l; i++) {
-			if(re.test(links[i].innerText.replace(/[^\w\s]+/, '').replace(/^\s+|\s+$/g, '')) && links[i].href) {
+			if(re.test(links[i].innerText.replace(/[^\w\s]+/, '').replace(/^\s+|\s+$/g, '').replace(/[\n\r]/g, ' ')) && links[i].href) {
 				document.location = links[i].href;
 				return;
 			}
