@@ -1,5 +1,11 @@
-<!DOCTYPE html><html lang="en-US"><head><meta charset="utf-8"><title>Convert Timestamp</title><style type="text/css">body{font:16px monospace}input{font:inherit;display:inline;min-width:440px;margin:0 2px 2px;border:1px solid #aaa}input[readonly]{border-color:#ccc;color:#666}label{float:left;padding:0 4px;clear:both;min-width:100px;text-align:right}</style>	</head><body>
-<label for="time_date">Date:</label><input id="time_date" type="text" onkeyup="time.fromDate(this)"><br>
+<!DOCTYPE html><html lang="en-US"><head><meta charset="utf-8"><title>Convert Timestamp</title><style type="text/css">
+body{font:16px/20px monospace;width:800px;margin:0 auto;padding:10px;}
+input{font:inherit;display:inline;margin:0 2px 2px;border:1px solid #aaa;padding:0 3px;float:left}
+input[type="text"]{min-width:440px}
+input[readonly]{border-color:#ccc;color:#666}
+label{float:left;padding:0 4px;clear:both;min-width:100px;text-align:right}
+</style></head><body>
+<label for="time_date">Date:</label><input id="time_date" type="text" onkeyup="time.fromDate(this)"><input type="button" value="Now" onclick="time.now()"><br>
 <label for="time_uts">UTS:</label><input id="time_uts" type="text" onkeyup="time.fromUTS(this)"><br>
 <label for="time_gmt">GMT:</label><input id="time_gmt" type="text" readonly><br>
 <label for="time_locale">Locale:</label><input id="time_locale" type="text" readonly><br>
@@ -22,6 +28,15 @@ var time = {
 		var d = new Date(parseInt(el.value) * 1000)
 		time.set(d);
 		time.el.date.value = d.toString();
+	},
+	now: function () {
+		var d = new Date();
+		time.setAll(d);
+	},
+	setAll: function (d) {
+		time.el.date.value = d.toString();
+		time.el.uts.value = Math.round(d.getTime() / 1000);
+		time.set(d);
 	},
 	set: function (d) {
 		time.el.gmt.value = d.toGMTString();

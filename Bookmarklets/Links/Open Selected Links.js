@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	if (!window.getSelection && !window.getSelection().containsNode) return;
 
 	var i, links = document.links,

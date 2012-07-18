@@ -11,22 +11,21 @@
 
 (function () {
 
-	if (typeof __DL_BOOKMARKLET !== "undefined") {
+	if (typeof window.__DL_BOOKMARKLET !== "undefined" && window.__DL_BOOKMARKLET.destroy) {
+		window.__DL_BOOKMARKLET.destroy();
 		return false;
 	}
 
-	if (!String.prototype.template) {
-		String.prototype.template = function (data) {
-			var prop, result = this;
+	String.prototype.template = function (data) {
+		var prop, result = this,
 			data = data || {};
-			for (prop in data) {
-				if (data.hasOwnProperty(prop)) {
-					result = result.replace('{{' + prop + '}}', data[prop]);
-				}
+		for (prop in data) {
+			if (data.hasOwnProperty(prop)) {
+				result = result.replace(new RegExp('\\$\{' + prop + '\}', 'gi'), data[prop]);
 			}
-			return result.replace(/\{\{.+?\}\}/ig, '');
-		};
-	}
+		}
+		return result.replace(/\$\{[^\s\{\}\$]+?\}/ig, '');
+	};
 
 	/**
 	 * DOM Element Helper
@@ -88,7 +87,7 @@
 		},
 
 		empty: function () {
-			while (this.element.hasChildNodes()) {
+			while (this.element.firstChild) {
 				this.element.removeChild(this.element.firstChild);
 			}
 		},
@@ -398,106 +397,56 @@
 		} catch (err) {
 			return;
 		}
-
 		// find frames
 		var frames = Array.prototype.slice.call(f.frames);
-		while (frames.length) {
-			try {
-				arguments.callee.call(this, frames.shift());
-			} catch (err) {}
-		}
-
+		while (frames.length) try {
+			arguments.callee.call(this, frames.shift());
+		} catch (err) {}
 		// find iframes
 		var frames = Array.prototype.slice.call(f.document.getElementsByTagName('iframe'));
-		while (frames.length) {
-			try {
-				arguments.callee.call(this, frames.shift().contentWindo);
-			} catch (err) {}
-		}
+		while (frames.length) try {
+			arguments.callee.call(this, frames.shift().contentWindo);
+		} catch (err) {}
 	}
 
 	function scanText(text, pattern) {
 		if (!pattern) {
 			var i, pl = patterns.length;
-			for (i = 0; i < pl; i++) {
-				arguments.callee.call(this, text, patterns[i]);
-			}
+			for (i = 0; i < pl; i++) arguments.callee.call(this, text, patterns[i]);
 			return;
 		}
-
 		var match, link;
 		while (pattern.test(text)) {
-			if (match && match.index >= 0 && match.length >= 0) {
-				text = text.substr(match.index + match.length);
-			}
+			if (match && match.index >= 0 && match.length >= 0) text = text.substr(match.index + match.length);
 			match = text.match(pattern);
-			if (!match) {
-				continue;
-			}
-
+			if (!match) continue;
 			if (Object.prototype.toString.call(match) === "[object Array]") {
-				if (match.length > 1) {
-					links.push({
-						'url': match[1],
-						'type': (match.length > 2) ? match[2].toUpperCase() : null
-					});
-				} else {
-					links.push(match[0]);
-				}
-			} else {
-				links.push(match);
-			}
-
+				if (match.length > 1) links.push({
+					'url': match[1],
+					'type': (match.length > 2) ? match[2].toUpperCase() : null
+				});
+				else links.push(match[0]);
+			} else links.push(match);
 		}
-	}
-
-	function itemExists(items, url) {
-		var i, l = items.length;
-		for (i = 0; i < l; i++) {
-			if (items[i].url == url) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	function makeResultList(links, list_class) {
-		var items = [],
-			item, i, ll = links.length,
+		var n, i, urls = [],
+			ll = links.length,
 			html = '';
-
 		for (i = 0; i < ll; i++) {
-			item = links[i];
-			if (typeof item === "string") {
-				item = {
-					'url': links[i]
-				};
-			} else if (Object.prototype.toString.call(item) === "[object Array]") {
-				item = {
-					'name': item[0],
-					'url': item.length > 1 ? item[1] : item[0],
-					'style': item.length > 2 ? item[2] : ''
-				};
-			}
-
-			item['href'] = document.location.href;
-			item['target'] = item['target'] || '_blank';
-			item['name'] = item['name'] || item['url'];
-
-			if (item.icon) {
-				item.style = (item.style ? item.style : '') + "background-image:url('" + item.icon + "')";
-			}
-
-			if (!itemExists(items, item.url)) {
-				items.push(item);
-				html += [
-					'<li>',
-					    '<a href="{{url}}" target="{{target}}"' + (item['style'] ? ' style="{{style}}"' : '') + '>',
-					    item['type'] ? '<span>{{type}}</span>' : '',
-					    '{{name}}</a>',
-					'</li>'
-					].join('').template(item);
-			}
+			n = links[i];
+			if (urls.indexOf((typeof n === "string") ? n : n['url']) > -1) continue;
+			urls.push(n['url']);
+			html += '<li><a href="${url}" target="${target}" style="${css}">${type}${name}</a></li>'.template((typeof n === "string") ? {
+				'url': n
+			} : {
+				'url': n['url'],
+				'target': n['target'] || '_blank',
+				'name': n['name'] || n['url'],
+				'css': (n['css'] ? n['css'] : '') + (n['icon'] ? ";background-image:url('" + n['icon'] + "');" : ''),
+				'type': n['type'] ? '<span>' + n['type'] + '</span>' : ''
+			});
 		}
 
 		return '<ol' + (list_class ? ' class="' + list_class + '"' : '') + '>' + html + '</ol>';
@@ -517,36 +466,38 @@
 
 	// Third party video download links
 	html += makeResultList([{
-		name: 'Keep Tube',
-		url: 'http://keep-tube.com/?url={{href}}',
-		icon: 'http://keep-tube.com/images/keep-tube.ico'
+		'name': 'Keep Tube',
+		'url': 'http://keep-tube.com/?url=' + document.location.href,
+		'icon': 'http://keep-tube.com/images/keep-tube.ico'
 	}, {
-		name: 'KeepVid',
-		url: 'http://keepvid.com/?url={{href}}',
-		icon: 'http://keepvid.com/favicon.ico'
+		'name': 'KeepVid',
+		'url': 'http://keepvid.com/?url=' + document.location.href,
+		'icon': 'http://keepvid.com/favicon.ico',
+		'css': 'opacity:.7'
 	}, {
-		name: 'SaveFrom.net',
-		url: 'http://savefrom.net/{{href}}',
-		icon: 'http://savefrom.net/favicon.ico'
-	}, {
-		name: 'WebVideoFetcher.com',
-		url: 'http://webvideofetcher.com/d?url={{href}}',
-		icon: 'http://webvideofetcher.com/favicon.ico'
+		'name': 'SaveFrom.net',
+		'url': 'http://savefrom.net/' + document.location.href,
+		'icon': 'http://savefrom.net/favicon.ico',
+		'css': 'opacity:.4'
 	}], 'third-party');
 
+	// {
+	// 	name: 'WebVideoFetcher.com',
+	// 	url: 'http://webvideofetcher.com/d?url=${href}',
+	// 	icon: 'http://webvideofetcher.com/favicon.ico'
+	// }
 	window.__DL_BOOKMARKLET = new Element.Frame(html);
 	window.__DL_BOOKMARKLET.addCSS([
-		'body{padding-bottom:36px;min-width:500px}',
+		'body{font-family:Arial,sans-serif;padding-bottom:38px;min-width:400px}',
 		'ol{list-style:none;padding:0;margin:0}',
 		'li{white-space:nowrap;clear:both}',
 		'li a span{font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
+		'li a:hover{opacity:1!important}',
 		'li a:hover span{color:#cef}',
-		'.links li{font-family:Arial,sans-serif}',
-		'.third-party {text-align:center;position:fixed;left:0;right:0;line-height:30px}',
+		'hr{margin: 6px -8px 0}',
+		'.third-party{font-size:110%;text-align:center;position:fixed;left:0;right:0;bottom:0;padding:0 0 8px;line-height:30px}',
 		'.third-party li{display:inline}',
-		'.third-party b{display:none}',
-		'.third-party a{color:#ff6669;padding:0 8px 0 20px;background-position:left center;background-repeat:no-repeat}',
-		'.splitter{margin: 6px -8px 0}'
+		'.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat}'
 		].join(''));
 	window.__DL_BOOKMARKLET.ondestroy = function () {
 		delete window.__DL_BOOKMARKLET;

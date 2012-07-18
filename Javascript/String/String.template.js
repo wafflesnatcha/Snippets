@@ -21,10 +21,10 @@
  */
 if (!String.prototype.template) {
 	String.prototype.template = function (data) {
-		var prop, result = this;
-		data = data || {};
+		var prop, result = this,
+			data = data || {};
 		for (prop in data) {
-			if(data.hasOwnProperty(prop)) {
+			if (data.hasOwnProperty(prop)) {
 				result = result.replace('<%' + prop + '%>', data[prop]);
 			}
 		}
