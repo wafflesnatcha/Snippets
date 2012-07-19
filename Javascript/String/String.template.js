@@ -28,6 +28,6 @@ if (!String.prototype.template) {
 				result = result.replace('<%' + prop + '%>', data[prop]);
 			}
 		}
-		return result.replace(/\{\{.+?\}\}/ig, '');
+		return result.replace(/<%.+?%>/ig, '');
 	};
 }
