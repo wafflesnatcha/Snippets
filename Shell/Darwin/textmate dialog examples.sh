@@ -2,7 +2,7 @@
 
 # "$DIALOG_1"; exit
 # "$DIALOG" help; exit
-# for c in prototype nib alert defaults popup help images menu tooltip; do "$DIALOG" help "$c"; done; exit
+for c in prototype nib alert defaults popup help images menu tooltip; do echo -e "$DIALOG help $c\n"; "$DIALOG" help "$c"; done; exit
 
 # "$DIALOG" alert --alertStyle warning --title 'Delete File?' --body 'You cannot undo this action.' --button1 Delete --button2 Cancel
 

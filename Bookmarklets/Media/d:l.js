@@ -1,5 +1,5 @@
 /**
- * Bookmarklet to find media files in the current page.
+ * Find media files in the current page.
  *
  * Search entire page source for anything that might be a media file. Including
  * links, embedded plugins, and even the plain text.
