@@ -22,5 +22,5 @@ On Mac you can copy it straight to your clipboard with:
     bookmarklet.sh "Source/View Styles.js" | pbcopy
     
 **Note:**
-The URL encoding is a Safari thing.
+The URL encoding is a Safari thing (it's picky about quotes).
 Most other browsers allow you to make a new bookmark with whatever URL you want.
