@@ -400,12 +400,12 @@
 		// find frames
 		var frames = Array.prototype.slice.call(f.frames);
 		while (frames.length) try {
-			arguments.callee.call(this, frames.shift());
+			addFrameContents(frames.shift());
 		} catch (err) {}
 		// find iframes
 		var frames = Array.prototype.slice.call(f.document.getElementsByTagName('iframe'));
 		while (frames.length) try {
-			arguments.callee.call(this, frames.shift().contentWindo);
+			addFrameContents(frames.shift().contentWindow);
 		} catch (err) {}
 	}
 
