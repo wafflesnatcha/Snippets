@@ -1,1 +1,3 @@
-Code snippets ┌( ಠ_ಠ)┘
+Code snippets
+
+┌( ಠ_ಠ)┘
