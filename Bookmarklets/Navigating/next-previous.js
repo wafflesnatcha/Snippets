@@ -5,7 +5,7 @@
 			l = links.length;
 		for (i = 0; i < l; i++) {
 			if (links[i].rel == rel && links[i].href) {
-				document.location = links[i].href;
+				window.location = links[i].href;
 				return;
 			}
 		}
@@ -18,21 +18,21 @@
 			re = new RegExp('([^\w]|^)\s*(' + pattern + ')\s*([^\w]|$)', 'i');
 		for (i = 0; i < l; i++) {
 			if (re.test(links[i].innerText.replace(/[^\w\s]+/, '').replace(/^\s+|\s+$/g, '').replace(/[\n\r]/g, ' ')) && links[i].href) {
-				document.location = links[i].href;
+				window.location = links[i].href;
 				return;
 			}
 		}
 	}
 
 	// increment the last numeric span in the URL
-	window._BMRK_NAV_INC = window._BMRK_NAV_INC || num;
-	var m = document.location.href.match(/^(.*?)(\d+)([^\d]*)$/);
+	window.__BMRK_NAV_INC = window.__BMRK_NAV_INC || num;
+	var m = window.location.href.match(/^(.*?)(\d+)([^\d]*)$/);
 	if (m) {
-		var x = "" + (parseInt(m[2], 10) + window._BMRK_NAV_INC);
+		var x = "" + (parseInt(m[2], 10) + window.__BMRK_NAV_INC);
 		while (x.length < m[2].length) {
 			x = "0" + x;
 		}
-		document.location = m[1] + x + m[3];
+		window.location = m[1] + x + m[3];
 	}
-})(-1, 'prev', '(prev|previous)(\s*page)?');
-// })(1, 'next', 'next(\s*page)?');
+// })(-1, 'prev', '(prev|previous)(\s*page)?');
+})(1, 'next', 'next(\s*page)?');
