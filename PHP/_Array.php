@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Array functions
  *
@@ -8,9 +9,9 @@
  * @version   r1 2012-08-07
  * @link      http://wafflesnatcha.github.com
  */
-
 abstract class _Array
 {
+
 	/**
 	 * Mimics in_array(), but will match single values in a needle array.
 	 *
@@ -21,7 +22,28 @@ abstract class _Array
 	 */
 	public static function in_array($needle, $haystack)
 	{
-		return((int) array_intersect((array) $needle,(array) $haystack)) ? true : false;
+		return ((int)array_intersect((array)$needle, (array)$haystack)) ? true : false;
+	}
+
+	/**
+	 * Returns an array stripped of blank (and whitespace) values.
+	 *
+	 * @param array   $array
+	 * @param boolean $recursive Recursively strip values
+	 * @return array
+	 */
+	public static function compact($array, $recursive = false)
+	{
+		$arr = array();
+		foreach ($array as $key => $value) {
+			if (is_array($value)) {
+				if ($recursive) $value = call_user_func(__METHOD__, $value, $recursive);
+				if (count($value) > 0) $arr[$key] = $value;
+			} else if (trim($value) != "") {
+				$arr[$key] = $value;
+			}
+		}
+		return $arr;
 	}
 
 	/**
@@ -35,9 +57,8 @@ abstract class _Array
 	public static function trim($array, $charlist = null)
 	{
 		$arr = $array;
-		foreach ($arr as &$value) {
-			if (is_string($value)) 
-				$value = is_string($charlist) ? trim($value, $charlist) : trim($value);
+		foreach ($arr as & $value) {
+			if (is_string($value)) $value = is_string($charlist) ? trim($value, $charlist) : trim($value);
 		}
 		return $arr;
 	}
