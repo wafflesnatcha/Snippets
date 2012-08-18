@@ -141,20 +141,12 @@ class dbTable
 			$this->_columns = $this->getColumns();
 	}
 
-	/*
+	/**
      * Returns a list of column names for the table name stored in {self::$_table}
      *
      * @return array
      * @access public
      */
-	/**
-	 * Short description for function
-	 * 
-	 * Long description (if any) ...
-	 * 
-	 * @return mixed  Return description (if any) ...
-	 * @access public
-	 */
 	function getColumns()
 	{
 		return $this->_db->listTableFields($this->_table);
