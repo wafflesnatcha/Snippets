@@ -1,47 +1,28 @@
 <?php
 /**
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * File system functions
  *
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @version   r1 2012-08-19
  * @link      http://wafflesnatcha.github.com
- */
-
-/**
- * File system functions
  */
 abstract class _File
 {
-	
 	/**
 	 * Search include_path for a file.
-	 * 
+	 *
 	 * @param  string  $file  File name to search for.
 	 * @return string|boolean If the file is found, return the path to it. Otherwise return false.
-	 * @access public 
+	 * @access public
 	 */
 	function searchIncludePath($file)
 	{
 		$paths = array_unique(explode(PATH_SEPARATOR, PATH_SEPARATOR . get_include_path()));
 		foreach ($paths as $p) {
-			$f = ($p ? rtrim($p, "/") . "/" : "") . "$file";
-			if (file_exists($f)) 
-				return $f;
+			$f = ($p ? rtrim($p, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR : "") . "$file";
+			if (file_exists($f)) return $f;
 		}
 		return false;
 	}
@@ -57,8 +38,7 @@ abstract class _File
 		$files = array();
 		if ($handle = opendir($directory)) {
 			while ($filename = readdir($handle)) {
-				if ($filename != "." && $filename != "..") 
-					$files[] = $filename;
+				if ($filename != "." && $filename != "..") $files[] = $filename;
 			}
 			closedir($handle);
 		}
@@ -80,7 +60,7 @@ abstract class _File
 		if ($handle = opendir($path)) {
 			while ($filename = readdir($handle)) {
 				$file = $path . "/" . $filename;
-				if (is_file($file) && (!$ext || $ext == substr(strrchr($file, "."), 1))) {
+				if (is_file($file) && (!$ext || $ext == substr(strrchr($file, ".") , 1))) {
 					$files[] = $filename;
 				}
 			}
@@ -97,8 +77,7 @@ abstract class _File
 	 */
 	public static function getIncludeContents($filename)
 	{
-		if (!is_file($filename)) 
-			return false;
+		if (!is_file($filename)) return false;
 		ob_start();
 		include $filename;
 		$contents = ob_get_contents();
@@ -126,13 +105,11 @@ abstract class _File
 		$pathParts = explode('/', $path);
 		$compareToParts = explode('/', $compareTo);
 		foreach ($compareToParts as $index => $part) {
-			if (isset($pathParts[$index]) && $pathParts[$index] == $part) 
-				continue;
+			if (isset($pathParts[$index]) && $pathParts[$index] == $part) continue;
 			$relative[] = '..';
 		}
 		foreach ($pathParts as $index => $part) {
-			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part) 
-				continue;
+			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part) continue;
 			$relative[] = $part;
 		}
 		return implode('/', $relative);
@@ -142,5 +119,5 @@ abstract class _File
 /**
  * TESTS
  */
-
 // var_dump(_File::searchIncludePath("pear.php"));
+// var_dump(_File::getRelativePath("/path/to/some/file.php", "/path/to/where/we/are"));
