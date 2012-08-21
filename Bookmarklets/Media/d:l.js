@@ -10,55 +10,32 @@
  */
 
 (function () {
-
 	if (typeof window.__DL_BOOKMARKLET !== "undefined" && window.__DL_BOOKMARKLET.destroy) {
 		window.__DL_BOOKMARKLET.destroy();
 		return false;
 	}
 
 	String.prototype.template = function (data) {
-		var prop, result = this,
-			data = data || {};
+		var prop, result = this;
+		data = data || {};
 		for (prop in data) {
 			if (data.hasOwnProperty(prop)) {
-				result = result.replace(new RegExp('\\$\{' + prop + '\}', 'gi'), data[prop]);
+				result = result.replace(new RegExp('\\$\\{' + prop + '\\}', 'gi'), data[prop]);
 			}
 		}
 		return result.replace(/\$\{[^\s\{\}\$]+?\}/ig, '');
 	};
-
-	/**
-	 * DOM Element Helper
-	 *
-	 * Example, using existing DOM elements:
-	 * <code>
-	 * var el1 = new Element(document.body);
-	 * var el2 = new Element("body > :first-child");
-	 * </code>
-	 *
-	 * Example, creating a new element:
-	 * <code>
-	 * var element = new Element({tag: 'div', class: 'some-div'});
-	 * </code>
-	 *
-	 * @author Scott Buchanan <buchanan.sc@gmail.com>
-	 * @link http://wafflesnatcha.github.com
-	 * @version r4 2012-06-24
-	 */
 
 	function Element() {
 		this.init.apply(this, arguments);
 	}
 
 	Element.prototype = {
-		/**
-		 * @constructor
-		 */
 		init: function (config) {
 			if (typeof config === "string") {
 				var res = [],
 					arr = document.querySelectorAll(config);
-				if (arr.length == 0) {
+				if (arr.length === 0) {
 					return undefined;
 				}
 				while (arr.length) {
@@ -120,9 +97,10 @@
 		},
 
 		attr: function (attr, val) {
+			var i, prop;
 			if (typeof attr === "string") {
 				if (!val) {
-					var i, l = this.element.attributes.length;
+					var l = this.element.attributes.length;
 					for (i = 0; i < l; i++) {
 						if (this.element.attributes[i].name == attr) {
 							return this.element.attributes[i].value;
@@ -137,13 +115,12 @@
 				}
 			}
 
-			var prop;
 			for (prop in attr) {
 				if (prop == "text") {
 					this.insert(attr[prop]);
 				} else if (prop == "children") {
 					this.children = [];
-					for (var i = 0; i < attr[prop].length; i++) {
+					for (i = 0; i < attr[prop].length; i++) {
 						this.children.push(this.insert(attr[prop][i]));
 					}
 				} else if (prop != "tag") {
@@ -200,38 +177,8 @@
 		}
 	};
 
-	/**
-	 * Shortcut method to
-	 *
-	 * Example:
-	 * <code>
-	 * $E(document.body).insert('<h1>New Content</h1>');
-	 * var element = new Element({tag: 'div', class: 'some-div'});
-	 * </code>
-	 */
-
-	if (!window.hasOwnProperty('$E')) {
-		window.$E = function (config) {
-			return new Element(config);
-		};
-	}
-
-	/**
-	 * A modal window using Element.js
-	 *
-	 * Example usage:
-	 * <code>
-	 * var el = new Element.Frame('<p>some text <b>bold text</b></p>')
-	 * </code>
-	 *
-	 * @requires Element.js
-	 * @author Scott Buchanan <buchanan.sc@gmail.com>
-	 * @link http://wafflesnatcha.github.com
-	 * @version r3 2012-06-11
-	 */
-
 	Element.Frame = function (content) {
-		var id = 'frame-' + (new Date).getTime();
+		var id = 'frame-' + (new Date()).getTime();
 		this.element_mask = new Element({
 			tag: 'div',
 			id: id,
@@ -360,14 +307,12 @@
 			});
 		};
 
-		// Close the frame when clicking on the modal background
 		element_mask.element.addEventListener("click", function (e) {
 			if (e.target == element_mask.element) {
 				me.destroy();
 			}
 		}, true);
 
-		// Frame body styles
 		this.addCSS([
 			'html,body{background:transparent;padding:0;margin:0}',
 			'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
@@ -417,7 +362,10 @@
 		}
 		var match, link;
 		while (pattern.test(text)) {
-			if (match && match.index >= 0 && match.length >= 0) text = text.substr(match.index + match.length);
+			console.log(text, match);
+			if (match && match.index >= 0 && match.length >= 0) {
+				text = text.substr(match.index + match.length);
+			}
 			match = text.match(pattern);
 			if (!match) continue;
 			if (Object.prototype.toString.call(match) === "[object Array]") {
@@ -452,11 +400,10 @@
 		return '<ol' + (list_class ? ' class="' + list_class + '"' : '') + '>' + html + '</ol>';
 	}
 
-	var html = '',
-		links = [];
+	var links = [];
 	// /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/i
 	var patterns = [
-		/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))/i
+		/((?:http|https|ftp)\:\/\/[^'"\?\&]*\.(aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;|http:\/\/)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))/i
 		];
 
 	addFrameContents(window);
@@ -465,7 +412,7 @@
 	}
 
 	// Third party video download links
-	html += makeResultList([{
+	var html = makeResultList(links, 'links') + makeResultList([{
 		'name': 'Keep Tube',
 		'url': 'http://keep-tube.com/?url=' + document.location.href,
 		'icon': 'http://keep-tube.com/images/keep-tube.ico'
@@ -480,7 +427,6 @@
 		'icon': 'http://savefrom.net/favicon.ico',
 		'css': 'opacity:.4'
 	}], 'third-party');
-
 	// {
 	// 	name: 'WebVideoFetcher.com',
 	// 	url: 'http://webvideofetcher.com/d?url=${href}',
@@ -494,13 +440,14 @@
 		'li a span{font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
 		'li a:hover{opacity:1!important}',
 		'li a:hover span{color:#cef}',
-		'hr{margin: 6px -8px 0}',
-		'.third-party{font-size:110%;text-align:center;position:fixed;left:0;right:0;bottom:0;padding:0 0 8px;line-height:30px}',
+		'.third-party{background:#222;font-size:110%;text-align:center;position:fixed;left:0;right:0;bottom:0;padding:0 0 8px;line-height:30px}',
 		'.third-party li{display:inline}',
-		'.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat}'
+		'.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat;background-size:16px;}',
+		'.links + .third-party{border-top:2px solid #444}',
+		'.links{padding-bottom:8px}'
 		].join(''));
 	window.__DL_BOOKMARKLET.ondestroy = function () {
 		delete window.__DL_BOOKMARKLET;
 	};
 	window.__DL_BOOKMARKLET.resize();
-})();
+}());
