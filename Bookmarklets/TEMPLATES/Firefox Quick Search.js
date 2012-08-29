@@ -13,4 +13,4 @@
  */
 
 javascript:location=''+('%s'?'':'')
-javascript:location=(('%s')?'https://developer.mozilla.org/search?q=%s':'http://www.mozilla.org/')
+javascript:location=(('%s')?'':'')
