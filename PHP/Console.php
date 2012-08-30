@@ -4,38 +4,19 @@
  *
  * Example:
  * <code>
- * Console::_logfile("path/to/file.log");
- * Console::_target(Console::TARGET_FILE);
- * Console::_enable();
+ * Console::logfile("path/to/file.log");
+ * Console::target(Console::TARGET_FILE);
+ * Console::enable();
  * </code>
  *
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   r3 2012-07-02
+ * @version   r4 2012-08-29
  * @link      http://wafflesnatcha.github.com
  */
-
 class Console
 {
-	/**
-	 * Console enabled or not
-	 * @var boolean
-	 */
-	private $enabled = false;
-
-	/**
-	 * Microtime at the point this Object was created
-	 * @var float
-	 */
-	private $time_start;
-
-	/**
-	 * Our output that is destined for display
-	 * @var array
-	 */
-	private $output;
-
 	/**
 	 * The default priority
 	 */
@@ -83,119 +64,99 @@ class Console
 	const ASSERT = 9;
 
 	/**
-	 * Display output to the screen/console
+	 * Microtime at the point this file was included
+	 * @var float
 	 */
-	const TARGET_SCREEN = 1;
+	public static $request_time = "";
 
 	/**
-	 * Write output to a file
+	 * Console enabled or not
+	 * @var boolean
 	 */
-	const TARGET_FILE = 2;
+	private $enabled = false;
 
 	/**
-	 * @var array Console settings
+	 * Our output that is destined for display
+	 * @var array
 	 */
-	private $_config = 	array(
+	private $output;
+
+	/**
+	 * ANSI color codes
+	 */
+	private $_ansi_colors = array(
+		"%n" => "\033[0m",
+		"%k" => "\033[30m",
+		"%r" => "\033[31m",
+		"%g" => "\033[32m",
+		"%y" => "\033[33m",
+		"%b" => "\033[34m",
+		"%m" => "\033[35m",
+		"%c" => "\033[36m",
+		"%w" => "\033[37m",
+		"%K" => "\033[40m",
+		"%R" => "\033[41m",
+		"%G" => "\033[42m",
+		"%Y" => "\033[43m",
+		"%B" => "\033[44m",
+		"%M" => "\033[45m",
+		"%C" => "\033[46m",
+		"%W" => "\033[47m",
+	);
+
+	/**
+	 * Console settings
+	 */
+	private $_config = array(
+
 		/**
 		 * Path to application root directory.
 		 * Used when displaying errors and their corresponding source files.
 		 * @var string
 		 */
 		'path_root' => null,
-		/**
-		 * Path to file to write output to
-		 * @var string
-		 */
-		'path_log' => null,
+
 		/**
 		 * Decimal places for times
 		 * @var int
 		 */
 		'time_precision' => 4,
+
 		/**
 		 * Target output
 		 * @var int
 		 */
-		'target' => self::TARGET_SCREEN,
+		'target' => 'php://stderr',
+
 		/**
+		 * String to use as default indentation for formatted output
 		 * @var string
 		 */
 		'indent' => "  ",
+
 		/**
-		 * @var int
+		 * Error level
 		 */
 		'error_reporting' => E_ALL,
 	);
-
-	/**
-	 * @return void
-	 */
-	protected function __construct()
-	{
-		$this->time_start = microtime(true);
-		$this->_config['path_root'] = dirname(realpath($_SERVER['PHP_SELF']));
-	}
-
-	/**
-	 * Prevent cloning the instance.
-	 *
-	 * @return void
-	 */
-	final private function __clone()
-	{
-		trigger_error('Clone is not allowed.', E_USER_ERROR);
-	}
-
-	/**
-	 * Retrieves the only object instance of this class
-	 *
-	 * Gets a single instance of the class the static method is called in. See the
-	 * {@link http://php.net/lsb Late Static Bindings} feature for more information.
-	 *
-	 * @return object Returns a single instance of the class.
-	 */
-	public static function getInstance()
-	{
-		static $instance = null;
-		return $instance ? : $instance = new static;
-	}
-
-	/**
-	 * Handles static calls to non-static methods in extending classes.
-	 *
-	 * For example, class Foo with non-static method bar() can be called statically
-	 * as <code>Foo::_bar()</code>. Simply prepend the method name with an underscore.
-	 *
-	 * Triggers an error of level E_USER_ERROR if the method can't be called statically,
-	 * or can't be found.
-	 *
-	 * @param  string $name
-	 * @param  mixed  $arguments
-	 * @return mixed
-	 * @link   http://php.net/manual/language.oop5.overloading.php#language.oop5.overloading.methods Method overloading
-	 */
-	public static function __callStatic($name, $arguments)
-	{
-		if ("{$name[0]}" === "_") {
-			$callback = array(static::getInstance(), substr($name, 1));
-			if (method_exists($callback[0], $callback[1]))
-				return call_user_func_array($callback, $arguments);
-		}
-		trigger_error("Cannot access method " . __CLASS__ . "->$name statically", E_USER_ERROR);
-	}
 
 	/**
 	 * Enable the debug console
 	 *
 	 * @return void
 	 */
-	public function enable()
+	public function _enable()
 	{
 		error_reporting($this->_config['error_reporting']);
-		ini_set("display_errors", 1);
+		
+		ini_set('display_errors', 'off');
+		if(ini_get('log_errors') && !ini_get('error_log')) {
+			ini_set('log_errors', 'off');
+		}
+		
 		set_error_handler(array($this, "phpErrorHandler"), $this->_config['error_reporting']);
 		set_exception_handler(array($this, "phpExceptionHandler"));
-
+		
 		/*
 		assert_options(ASSERT_ACTIVE, 1);
 		assert_options(ASSERT_WARNING, 0);
@@ -210,7 +171,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function debug()
+	public function _debug()
 	{
 		$this->process(self::DEBUG, func_get_args());
 	}
@@ -220,7 +181,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function error()
+	public function _error()
 	{
 		$this->process(self::ERROR, func_get_args());
 	}
@@ -230,7 +191,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function info()
+	public function _info()
 	{
 		$this->process(self::INFO, func_get_args());
 	}
@@ -240,7 +201,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function log()
+	public function _log()
 	{
 		$this->process(self::LOG, func_get_args());
 	}
@@ -250,7 +211,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function notice()
+	public function _notice()
 	{
 		$this->process(self::NOTICE, func_get_args());
 	}
@@ -260,7 +221,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function warn()
+	public function _warn()
 	{
 		$this->process(self::WARN, func_get_args());
 	}
@@ -270,7 +231,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function wtf()
+	public function _wtf()
 	{
 		$this->process(self::WTF, func_get_args());
 	}
@@ -280,7 +241,7 @@ class Console
 	 *
 	 * @return void
 	 */
-	public function backtrace()
+	public function _backtrace()
 	{
 		$backtrace = $this->get_debug_print_backtrace(2);
 		$this->process(self::DEBUG, $backtrace);
@@ -295,9 +256,9 @@ class Console
 	 *
 	 * @return float Seconds passed
 	 */
-	public function time()
+	public function _time()
 	{
-		$t = number_format(round((float) microtime(true) - $this->time_start, $this->_config['time_precision']), $this->_config['time_precision']);
+		$t = number_format(round((float)microtime(true) - $this->request_time, $this->_config['time_precision']) , $this->_config['time_precision']);
 		$args = func_get_args();
 		array_unshift($args, $t);
 		$this->process(self::TIME, $args);
@@ -314,49 +275,37 @@ class Console
 	 * @param  int  $target {Console::TARGET_SCREEN}|{Console::TARGET_FILE}
 	 * @return void
 	 */
-	public function output($target = null)
+	public function _display($target = null)
 	{
-		if ($this->enabled) {
-			switch ($this->target($target)) {
-				case self::TARGET_FILE:
-					$this->output_file();
-					break;
-				case self::TARGET_SCREEN:
-				default:
-					$this->output_screen();
-					break;
-			}
+		if (!$this->enabled) return false;
+		
+		$lines = $this->output;
+		$path = $this->_target($target);
+		
+		// When writing to a file, prepend a timestamp
+		if(!in_array($path, array("php://stdout", "php://stderr"))) {
+			array_unshift($lines, "# " . date("r"));
+			$lines = $this->colorConvert($lines, false);
+		} else {
+			$lines = $this->colorConvert($lines);
 		}
-	}
-
-	/**
-	 * Get/set the log file
-	 *
-	 * This will retrieve the path to the log file. If the first argument is not
-	 * empty, then it will be used as the new path to the log file.
-	 *
-	 * @param  string New path to use as the log file
-	 * @return string Path to the log file
-	 */
-	public function logfile($path = false)
-	{
-		if ($path !== false) {
-			if ((file_exists($path) && is_writable($path)) || is_writable(dirname($path)))
-				$this->_config['path_log'] = $path;
-		}
-		return $this->_config['path_log'];
+		
+		$fp = fopen($path, "a");
+		fwrite($fp, implode("\n", $lines) . "\n");
+		fclose($fp);
 	}
 
 	/**
 	 * Get/set the output target
 	 *
-	 * @param  int $new_target
-	 * @return int The current target
+	 * @param  string $target
+	 * @return string The current target
 	 */
-	public function target($new_target = null)
+	public function _target($target = null)
 	{
-		if ($new_target)
-			$this->_config['target'] = $new_target;
+		if ($target) {
+			$this->_config['target'] = $target;
+		}
 		return $this->_config['target'];
 	}
 
@@ -379,7 +328,7 @@ class Console
 	 */
 	public function phpErrorHandler($errno, $errstr, $errfile, $errline, $errcontext)
 	{
-		$file = static::getRelativePath($errfile, $this->_config['path_root']);
+		$file = static ::getRelativePath($errfile, $this->_config['path_root']);
 		$msg = "$file:$errline - $errstr";
 		switch ($errno) {
 			case E_ERROR:
@@ -387,17 +336,21 @@ class Console
 				$this->process(self::ERROR, $msg);
 				exit(self::ERROR);
 				break;
+
 			case E_WARNING:
 			case E_USER_WARNING:
 				$this->process(self::WARN, $msg);
 				break;
+
 			case E_NOTICE:
 			case E_USER_NOTICE:
 				$this->process(self::NOTICE, $msg);
 				break;
+
 			case E_STRICT:
 				$this->process(self::DEBUG, $msg);
 				break;
+
 			default:
 				$this->process(self::WTF, "UNKNOWN ERROR TYPE " . $msg);
 		}
@@ -410,7 +363,10 @@ class Console
 	 */
 	public function phpExceptionHandler($exception)
 	{
-		$this->process(self::DEBUG, array($exception->getMessage(), @$exception->getTrace()));
+		$this->process(self::DEBUG, array(
+			$exception->getMessage() ,
+			@$exception->getTrace()
+		));
 	}
 
 	/**
@@ -433,24 +389,21 @@ class Console
 			self::WTF => "%y%bW%gT%rF%c",
 			self::ASSERT => "%rASSERT",
 		);
-
 		if ($prefixes[$priority]) {
 			$prefix = $prefixes[$priority] . "%n ";
 		}
-
-		$args = (array) $args;
-		foreach ($args as &$a) {
+		$args = (array)$args;
+		foreach ($args as & $a) {
 			$a = $this->process_arg($a);
 		}
-
 		$str = implode(" ", $args);
 		$this->output[] = $prefix . $str;
 	}
 
 	/**
-	 * Clean up a log entry, make it SUPER KAWAII!!!!11 ^_^
+	 * Clean up a log entry
 	 *
-	 * @param  string $str A single console entry
+	 * @param  string $arg A single console entry
 	 * @return string A cleaner looking version of $str
 	 */
 	private function process_arg($arg)
@@ -458,50 +411,15 @@ class Console
 		if (is_array($arg)) {
 			$arg = var_export($arg, true);
 			$arg = preg_replace('/array \([\s]*\)/i', 'array ()', $arg);
-		} elseif (is_object($arg)) {
+		} else if (is_object($arg)) {
 			$arg = var_export($arg, true);
-		} elseif (is_bool($arg)) {
+		} else if (is_bool($arg)) {
 			$arg = ($arg === true) ? "TRUE" : "FALSE";
-		} elseif (is_string($arg)) {
+		} else if (is_string($arg)) {
 			// $arg = '"' . $arg . '"';
 		}
 		$arg = str_replace("\n", "\n" . $this->_config['indent'], $arg);
 		return $arg;
-	}
-
-	/**
-	 * Output to file.
-	 *
-	 * @return void
-	 */
-	private function output_file()
-	{
-		if (!$this->_config['path_log'])
-			return;
-
-		$out = $this->output;
-		array_unshift($out, "# " . date("r"));
-		$out = $this->colorConvert($out, false);
-
-		$fp = fopen($this->_config['path_log'], "a");
-		fwrite($fp, implode("\n", $out) . "\n");
-		fclose($fp);
-	}
-
-	/**
-	 * Output to screen. (stderr in cli)
-	 *
-	 * @return void
-	 */
-	private function output_screen()
-	{
-		$out = $this->colorConvert(implode("\n", $this->output)) . "\n";
-		if(php_sapi_name() == "cli" && $h = fopen("php://stderr", "w")) {
-			fwrite($h, $out);
-			fclose($h);
-		} else {
-			echo $out;
-		}
 	}
 
 	/**
@@ -515,46 +433,16 @@ class Console
 	 */
 	private function colorConvert($string, $colored = true)
 	{
-		if (!$colored || !isset($_SERVER['TERM']) || !in_array($_SERVER['TERM'], array("xterm-color", "xterm-256color"))) {
+		if (!$colored || !isset($_SERVER['TERM']) || !in_array($_SERVER['TERM'], array(
+			"xterm-color",
+			"xterm-256color"
+		))) {
 			return preg_replace("/([^%]?)(%[kK0rR1gG2yY3bB4mM5pPcC6wW7FU8_9n])/", "$1", $string);
 		}
-		$colors = $this->colorCode();
-		foreach ($colors as $k => $v) {
+		foreach ($this->_ansi_colors as $k => $v) {
 			$string = str_replace($k, $v, $string);
 		}
 		return $string;
-	}
-
-	/**
-	 * Return the ansi escape code for a color code
-	 *
-	 * @param  boolean      $code color code
-	 * @return string|array Returns an array all codes if no $code is specified
-	 */
-	private function colorCode($code = false)
-	{
-		static $codes_ansi = array(
-			"%n" => "\033[0m",
-			"%k" => "\033[30m",
-			"%r" => "\033[31m",
-			"%g" => "\033[32m",
-			"%y" => "\033[33m",
-			"%b" => "\033[34m",
-			"%m" => "\033[35m",
-			"%c" => "\033[36m",
-			"%w" => "\033[37m",
-			"%K" => "\033[40m",
-			"%R" => "\033[41m",
-			"%G" => "\033[42m",
-			"%Y" => "\033[43m",
-			"%B" => "\033[44m",
-			"%M" => "\033[45m",
-			"%C" => "\033[46m",
-			"%W" => "\033[47m",
-		);
-		if ($code !== false)
-			return $codes_ansi[$code];
-		return $codes_ansi;
 	}
 
 	/**
@@ -578,7 +466,7 @@ class Console
 			if (isset($call['class'])) {
 				$object = $call['class'] . $call['type'];
 				if (is_array($call['args'])) {
-					foreach ($call['args'] as &$arg) {
+					foreach ($call['args'] as & $arg) {
 						$this->get_arg($arg);
 					}
 				}
@@ -599,11 +487,10 @@ class Console
 	private function get_arg(&$arg)
 	{
 		if (is_object($arg)) {
-			$arr =(array) $arg;
+			$arr = (array)$arg;
 			$args = array();
 			foreach ($arr as $key => $value) {
-				if (strpos($key, chr(0)) !== false)
-					$key = '';
+				if (strpos($key, chr(0)) !== false) $key = '';
 				// $args[] = '[' . $key . '] => ' . $this->get_arg($value);
 				$args[] = '[' . $key . '] => ' . call_user_func(__METHOD__, $value);
 			}
@@ -619,7 +506,7 @@ class Console
 	 * @return string The $path relative to $compareTo
 	 * @link   http://us3.php.net/manual/en/function.realpath.php#97885
 	 */
-	private function getRelativePath($path, $compareTo)
+	private static function getRelativePath($path, $compareTo)
 	{
 		$path = trim($path, '/');
 		$compareTo = trim($compareTo, '/');
@@ -631,15 +518,109 @@ class Console
 		$pathParts = explode('/', $path);
 		$compareToParts = explode('/', $compareTo);
 		foreach ($compareToParts as $index => $part) {
-			if (isset($pathParts[$index]) && $pathParts[$index] == $part)
-				continue;
+			if (isset($pathParts[$index]) && $pathParts[$index] == $part) continue;
 			$relative[] = '..';
 		}
 		foreach ($pathParts as $index => $part) {
-			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part)
-				continue;
+			if (isset($compareToParts[$index]) && $compareToParts[$index] == $part) continue;
 			$relative[] = $part;
 		}
 		return implode('/', $relative);
+	}
+
+
+	/**
+	 * Prevent direct creation of object.
+	 *
+	 * @return void
+	 * @see    getInstance
+	 */
+	protected function __construct()
+	{
+		$this->request_time = microtime(true);
+		
+		// All file paths will be displayed as relative to the calling script
+		$this->_config['path_root'] = dirname(realpath($_SERVER["SCRIPT_NAME"] ? : $_SERVER["SCRIPT_FILENAME"] ? : $_SERVER["PHP_SELF"]));
+	}
+
+	/**
+	 * Prevent cloning the instance.
+	 *
+	 * @return void
+	 */
+	final private function __clone()
+	{
+		trigger_error('Clone is not allowed.', E_USER_ERROR);
+	}
+
+	/**
+	 * Handles static calls to non-static methods in extending classes.
+	 *
+	 * For example, class Foo with non-static method bar() can be called
+	 * statically as <code>Foo::_bar()</code>. Simply prepend the method name
+	 * with an underscore. If the method name already starts with an underscore,
+	 * then simply remove it.
+	 *
+	 * Triggers an error of level E_USER_ERROR if the method either cannot be
+	 * called statically, or cannot be found.
+	 *
+	 * @param  string $name
+	 * @param  mixed  $arguments
+	 * @return mixed
+	 * @link   http://php.net/manual/language.oop5.overloading.php#language.oop5.overloading.methods Method overloading
+	 */
+	public static function __callStatic($name, $arguments)
+	{
+		$object = static::getInstance();
+		$method = "{$name[0]}" === "_" ? substr($name, 1) : "_$name";
+		if (method_exists($object, $method))
+			return call_user_func_array(array($object, $method), $arguments);
+		trigger_error("Cannot access method " . __CLASS__ . "::$name from the object context", E_USER_ERROR);
+	}
+
+	/**
+	 * Handles non-static calls to static methods in extending classes.
+	 *
+	 * For example, class Foo with static method bar() can be called from the
+	 * object context by prepending the method name with an underscore.
+	 *
+	 * For example:
+	 * <code>
+	 * $fooObj = Foo::getInstance();
+	 * $fooObj->_bar();
+	 * </code>
+	 *
+	 * Triggers an error of level E_USER_ERROR if the method either cannot be
+	 * called statically, or cannot be found.
+	 *
+	 * @param  string $name
+	 * @param  mixed  $arguments
+	 * @return mixed
+	 * @see    __callStatic
+	 * @link   http://php.net/manual/language.oop5.overloading.php#language.oop5.overloading.methods Method overloading
+	 */
+	public function __call($name, $arguments)
+	{
+		$class = get_called_class();
+		if(!class_exists($class)) trigger_error("Class $class doesn't exist", E_USER_ERROR);
+
+		$method = $class . "::" . "{$name[0]}" === "_" ? substr($name, 1) : "_$name";
+		if (!is_callable($method)) trigger_error("$method cannot be called statically", E_USER_ERROR);
+
+		return call_user_func_array($method, $arguments);
+	}
+
+	/**
+	 * Returns (and creates if necessary) the only object instance of this class.
+	 *
+	 * Gets a single instance of the class the static method is called in. See the
+	 * {@link http://php.net/lsb Late Static Bindings} feature for more information.
+	 *
+	 * @return object Returns a single instance of the class.
+	 */
+	public static function getInstance()
+	{
+		static $instance = null;
+		return $instance ? : $instance = new static;
 	}
 }

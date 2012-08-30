@@ -5,7 +5,7 @@
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   r1 2012-08-19
+ * @version   r2 2012-08-29
  * @link      http://wafflesnatcha.github.com
  */
 abstract class _File
@@ -33,7 +33,7 @@ abstract class _File
 	 * @param  string $directory Directory to list files from.
 	 * @return array  List of file/folder names
 	 */
-	public static function listDirectory($directory = ".")
+	public static function directoryContents($directory = ".")
 	{
 		$files = array();
 		if ($handle = opendir($directory)) {
@@ -48,13 +48,13 @@ abstract class _File
 	/**
 	 * Get a list of files from a directory
 	 *
-	 * Same as {self::getDirectoryContents()} but returns only real files
+	 * Same as {self::directoryContents()} but returns only real files.
 	 *
 	 * @param  string $path Path to look in
 	 * @param  string $ext  Limit to files with this file extension
 	 * @return array  List of file names
 	 */
-	public static function getDirectoryFiles($path = ".", $ext = null)
+	public static function directoryFiles($path = ".", $ext = null)
 	{
 		$files = array();
 		if ($handle = opendir($path)) {

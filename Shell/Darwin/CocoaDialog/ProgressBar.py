@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """ProgressBar -- for use with CocoaDialog (http://cocoadialog.sourceforge.net/)"""
 
 __author__ = "Paul Bissex <pb@e-scribe.com>"
@@ -11,7 +10,7 @@ class ProgressBar:
     """Simple class for displaying progress bars using CocoaDialog"""
 
     # Change CD_BASE to reflect the location of Cocoadialog on your system
-    CD_BASE = "~/bin/Darwin"
+    CD_BASE = "~/lib"
     CD_PATH = os.path.join(CD_BASE, "CocoaDialog.app/Contents/MacOS/CocoaDialog")
     
     def __init__(self, title="Progress", message="", percent=0):
