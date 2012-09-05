@@ -4,9 +4,8 @@
 # Example:
 # fn() { echo "${@:-$(function_stdin)}"; }; fn "testing"; echo "testing" | fn
 function_stdin() {
-	local oldIFS=$IFS
-	IFS="$(printf "\n")"
-	local line
+	local line oldIFS=$IFS
+	IFS=$'\n'
 	while read -r line; do
 		echo -e "$line"
 	done
