@@ -15,7 +15,7 @@
 		return false;
 	}
 
-	String.prototype.template = function (data) {
+	String.prototype._template = function (data) {
 		var prop, result = this;
 		data = data || {};
 		for (prop in data) {
@@ -216,7 +216,7 @@
 					'margin: 0',
 					'max-height: 90%',
 					'max-width: 90%',
-					'min-height: 50px',
+					'min-height: 46px',
 					'min-width: 50px',
 					'padding: 0',
 					'position: absolute',
@@ -382,21 +382,24 @@
 		var n, i, urls = [],
 			ll = links.length,
 			html = '';
+		if (ll < 1) {
+			return "";
+		}
 		for (i = 0; i < ll; i++) {
 			n = links[i];
 			if (urls.indexOf((typeof n === "string") ? n : n['url']) > -1) continue;
 			urls.push(n['url']);
-			html += '<li><a href="${url}" target="${target}" style="${css}">${type}${name}</a></li>'.template((typeof n === "string") ? {
+			html += '<li><a href="${url}" target="${target}" style="${css}"${download}>${type}${name}</a></li>'._template((typeof n === "string") ? {
 				'url': n
 			} : {
 				'url': n['url'],
 				'target': n['target'] || '_blank',
 				'name': n['name'] || n['url'],
 				'css': (n['css'] ? n['css'] : '') + (n['icon'] ? ";background-image:url('" + n['icon'] + "');" : ''),
-				'type': n['type'] ? '<span>' + n['type'] + '</span>' : ''
+				'type': n['type'] ? '<span>' + n['type'] + '</span>' : '',
+				'download': n['type'] ? ' download="' + document.title + '.' + n['type'].toLowerCase() + '"': '',
 			});
 		}
-
 		return '<ol' + (list_class ? ' class="' + list_class + '"' : '') + '>' + html + '</ol>';
 	}
 
@@ -407,9 +410,6 @@
 		];
 
 	addFrameContents(window);
-	if (links.length > 0) {
-		html += makeResultList(links, 'links') + '<hr class="splitter">';
-	}
 
 	// Third party video download links
 	var html = makeResultList(links, 'links') + makeResultList([{
@@ -434,17 +434,17 @@
 	// }
 	window.__DL_BOOKMARKLET = new Element.Frame(html);
 	window.__DL_BOOKMARKLET.addCSS([
-		'body{font-family:Arial,sans-serif;padding-bottom:38px;min-width:400px}',
+		'body{font-family:Arial,sans-serif;min-width:400px}',
 		'ol{list-style:none;padding:0;margin:0}',
 		'li{white-space:nowrap;clear:both}',
 		'li a span{font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
 		'li a:hover{opacity:1!important}',
 		'li a:hover span{color:#cef}',
-		'.third-party{background:#222;font-size:110%;text-align:center;position:fixed;left:0;right:0;bottom:0;padding:0 0 8px;line-height:30px}',
+		'.third-party{font-size:110%;text-align:center;margin:0 -8px;padding:0 0 8px;line-height:30px}',
 		'.third-party li{display:inline}',
 		'.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat;background-size:16px;}',
 		'.links + .third-party{border-top:2px solid #444}',
-		'.links{padding-bottom:8px}'
+		'.links{padding:0 0 8px}'
 		].join(''));
 	window.__DL_BOOKMARKLET.ondestroy = function () {
 		delete window.__DL_BOOKMARKLET;

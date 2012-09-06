@@ -11,7 +11,7 @@
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   r1 2012-05-10
+ * @version   r2 2012-09-05
  * @link      http://wafflesnatcha.github.com
  */
 
@@ -62,13 +62,13 @@ class CSSColor
 	 * @var array
 	 */
 	protected $_patterns = array(
-		'hex' => '/#?([0-9a-f]{6}|[0-9a-f]{3})$/i',
-		'rgb' => '/rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i',
-		'rgb_p' => '/rgb\(\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*\)/i',
-		'rgba' => '/rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*((?:[0-9]?\.)?[0-9]+)\s*\)/i',
+		'hex'    => '/#?([0-9a-f]{6}|[0-9a-f]{3})/i',
+		'rgb'    => '/rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i',
+		'rgb_p'  => '/rgb\(\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*\)/i',
+		'rgba'   => '/rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*((?:[0-9]?\.)?[0-9]+)\s*\)/i',
 		'rgba_p' => '/rgba\(\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*,\s*((?:[0-9]?\.)?[0-9]+)\s*\)/i',
-		'hsl' => '/hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*\)/i',
-		'hsla' => '/hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*,\s*((?:[0-9]?\.)?[0-9]+)\s*\)/i',
+		'hsl'    => '/hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*\)/i',
+		'hsla'   => '/hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3}%)\s*,\s*(\d{1,3}%)\s*,\s*((?:[0-9]?\.)?[0-9]+)\s*\)/i',
 	);
 
 	/**
@@ -76,23 +76,24 @@ class CSSColor
 	 */
 	public function __construct($input = null)
 	{
-		if ($input !== null)
-			return $this->parse($input);
+		if ($input) {
+			$this->parse($input);
+		}
 	}
 
 	/**
-	 * Parse a color value from input.
+	 * Parse a color value from a string.
 	 *
 	 * @param string $input
-	 * @return string|boolean The formatted color value, or false on failure.
+	 * @return string|boolean The color pattern used {@link $_patterns}, or false on failure.
 	 */
 	public function parse($input)
 	{
 		foreach (array_keys($this->_patterns) as $f) {
-			if (method_exists($this, $f) && ($value = call_user_func(array($this, $f), $input)))
-				return $value;
+			if (method_exists($this, $f) && ($value = call_user_func(array($this, $f), $input))) {
+				return $f;
+			}
 		}
-
 		return false;
 	}
 
@@ -277,7 +278,6 @@ class CSSColor
 	 */
 	private function _hsl2rgb($hsl, $s = null, $l = null)
 	{
-
 		if (is_array($hsl) && sizeof($hsl) == 3)
 			list($h, $s, $l) = $hsl;
 		else
@@ -307,7 +307,6 @@ class CSSColor
 			$hue += 1;
 		elseif ($hue > 1)
 			$hue -= 1;
-
 		if (6 * $hue < 1)
 			$v = $m1 + ($m2 - $m1) * $hue * 6;
 		elseif (2 * $hue < 1)
@@ -316,7 +315,7 @@ class CSSColor
 			$v = $m1 + ($m2 - $m1) * (2 / 3 - $hue) * 6;
 		else
 			$v = $m1;
-
 		return round(255 * $v);
 	}
 }
+

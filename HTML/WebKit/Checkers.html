@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
+	<title>Checkered Background</title>
+	<style type="text/css" media="all">
+	body, html {
+		background: transparent;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+	}
+
+	body {
+		background-color: #fff;
+		background-image: -webkit-linear-gradient(top, #888, #888 50%, transparent 50%, transparent);
+		background-position: 0 0;
+		background-size: 50px 50px;
+		font-family: "Lucida Grande", "Lucida Sans", "Arial", "Helvetica", sans-serif;
+		font-size: 12px;
+	}
+
+	#background {
+		-webkit-mask-image: -webkit-linear-gradient(left, #000, #000 50%, transparent 50%, transparent);
+		-webkit-mask-position: 0 0;
+		-webkit-mask-repeat: repeat;
+		-webkit-mask-size: 50px 50px;
+		background-image: -webkit-linear-gradient(top, transparent, transparent 50%, #888 50%, #888), -webkit-linear-gradient(left, #fff, #fff 50%, transparent 50%, transparent);
+		background-position: 0 0;
+		background-size: 50px 50px;
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	</style>
+</head>
+<body>
+	<div id="background"></div>
+</body>
+</html>

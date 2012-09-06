@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	function fixFileUrl(u) {
 		var windows, u;
 		windows = (navigator.platform.indexOf("Win") != -1); /* chop off file:///, unescape each %hh, convert / to \ and | to : */
