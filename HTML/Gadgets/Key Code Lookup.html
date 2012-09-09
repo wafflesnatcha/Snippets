@@ -1,35 +1,96 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html>
 <head>
 	<title>Key Code Lookup</title>
-	<style type="text/css">textarea{font-family:Menlo, consolas, monospace;}</style>
+	<style type="text/css">
+	body {
+		background: #eee;
+	}
+	section, textarea, h2 {
+		border: 0;
+		font: 14px Menlo, consolas, "DejaVu Sans Mono", monospace;
+		margin: 0;
+		padding: 0;
+	}
+	div {
+		margin: 0 auto;
+		width: 780px;
+	}
+	section {
+		background: #fff;
+		border: 1px solid #ccc;
+		float: left;
+		margin: 5px;
+		width: 248px;
+	}
+	h2 {
+		background: #e6e8eb;
+		border-bottom: 1px solid #ccc;
+		font-size: 125%;
+		padding: 3px 4px;
+	}
+	textarea {
+		margin: 0;
+		padding: 2px 4px;
+		resize: none;
+		height: 180px;
+		width: 240px;
+	}
+	</style>
 </head>
 <body>
-	<textarea rows="11" cols="25" id="keydata"></textarea>
-	<script type="text/javascript">
-		document.addEventListener("keydown", function(e) {
-			if (e.target == document.getElementById("keydata")) return;
-			try {
-				e.preventDefault();
-				e.stopPropagation();
-			} catch (err) {}
-			var i, output = ["ASCII : " + String.fromCharCode(e.keyCode ? e.keyCode : e.which ? e.which : e.charCode)],
-				data = [
-					"altGraphKey",
-					"altKey",
-					"charCode",
-					"ctrlKey",
-					"keyCode",
-					"keyIdentifier",
-					"keyLocation",
-					"metaKey",
-					"shiftKey"
-					];
-			for (var i = 0; i < data.length; i++) {
-				output.push(data[i] + " : " + e[data[i]]);
+	<div>
+		<section><h2>keydown</h2><textarea id="keydown" readonly></textarea></section>
+		<section><h2>keyup</h2><textarea id="keyup" readonly></textarea></section>
+		<section><h2>keypress</h2><textarea id="keypress" readonly></textarea></section>
+	</div>
+<script type="text/javascript">
+(function () {
+	var data = [
+		"ASCII",
+		"altGraphKey",
+		"altKey",
+		"charCode",
+		"ctrlKey",
+		"keyCode",
+		"keyIdentifier",
+		"keyLocation",
+		"metaKey",
+		"shiftKey"
+		];
+
+	function logEvent(e, el) {
+		if (e.target == el) {
+			console.log(e.type, e.target, el);
+			return;
+		}
+		var label, i, l = 0,
+			output = [];
+
+		for (i = 0; i < data.length; i++) {
+			l = (data[i].length > l) ? data[i].length + 1 : l;
+		}
+		for (i = 0; i < data.length; i++) {
+			label = data[i] + new Array(l - data[i].length).join(" ") + " : ";
+			if (data[i].toLowerCase() == "ascii") {
+				output.push(label + String.fromCharCode(e.keyCode ? e.keyCode : e.which ? e.which : e.charCode));
+			} else if (e.hasOwnProperty(data[i])) {
+				output.push(label + e[data[i]]);
 			}
-			document.getElementById("keydata").value = output.join('\n');
-		}, false);
-	</script>
+		}
+		el.value = output.join('\n');
+	}
+
+	document.addEventListener("keydown", function (e) {
+		logEvent(e, document.getElementById("keydown"));
+	}, false);
+	document.addEventListener("keyup", function (e) {
+		logEvent(e, document.getElementById("keyup"));
+	}, false);
+	document.addEventListener("keypress", function (e) {
+		logEvent(e, document.getElementById("keypress"));
+	}, false);
+}());
+</script>
 </body>
 </html>
