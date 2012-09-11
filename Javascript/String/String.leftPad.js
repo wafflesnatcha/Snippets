@@ -2,7 +2,7 @@
  * Pad a string to a certain length with another string.
  *
  * @param {Number} size The resulting padded string length.
- * @param {Number} [str=" "] String to use as padding.
+ * @param {String} [str=" "] String to use as padding.
  * @returns {String} The padded string.
  */
 if (!String.prototype.leftPad) {
