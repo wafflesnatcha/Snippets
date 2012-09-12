@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# script.sh by Scott Buchanan <buchanan.sc@gmail.com> http://wafflesnatcha.github.com
+# `script.sh` by Scott Buchanan <buchanan.sc@gmail.com> http://wafflesnatcha.github.com
 SCRIPT_NAME="$(basename "$0")"
-SCRIPT_VERSION="r1 2012-02-28"
+SCRIPT_VERSION="r0 2012-02-28"
 
 usage() { cat <<EOF
 $SCRIPT_NAME $SCRIPT_VERSION
