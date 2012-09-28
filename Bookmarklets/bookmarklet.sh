@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+
 if [[ ! "$1" || "$1" = "--help" || "$1" = "-h" ]]; then
-	echo "Usage: ${0##*/} path/to/bookmarklet.js"
+	echo "Usage: ${0##*/} FILE"
 	exit
 fi
 

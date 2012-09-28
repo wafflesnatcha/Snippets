@@ -1,17 +1,18 @@
 /**
  * A modal window using Element.js
- * 
+ *
  * Example usage:
  * <code>
  * var el = new Element.Frame('<p>some text <b>bold text</b></p>')
  * </code>
- * 
+ *
  * @requires Element.js
  * @author Scott Buchanan <buchanan.sc@gmail.com>
  * @link http://wafflesnatcha.github.com
  * @version r3 2012-06-11
  */
-
+/*jshint browser:true*/
+/*global Element*/
 Element.Frame = function (content) {
 	var id = 'frame-' + (new Date).getTime();
 	this.element_mask = new Element({
@@ -83,14 +84,14 @@ Element.Frame = function (content) {
 					'visibility: visible',
 					'width: 100%',
 					'z-index: 1'
-					].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
+					].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1')
 			}]
 		}]
 	});
 
 	// document.body.appendChild(this.element_mask.element);
 	this.element_mask.appendTo(document.body);
-	
+
 	var me = this,
 		element_mask = this.element_mask,
 		element_content = element_mask.children[0],
@@ -113,7 +114,7 @@ Element.Frame = function (content) {
 	};
 	this.destroy = function () {
 		element_mask.destroy();
-		if(this.ondestroy && typeof this.ondestroy === "function") {
+		if (this.ondestroy && typeof this.ondestroy === "function") {
 			this.ondestroy.call(this);
 		}
 	};
@@ -207,4 +208,4 @@ Element.Frame = function (content) {
 	}, false);
 
 	return this;
-}
+};

@@ -8,8 +8,7 @@
  * @link http://wafflesnatcha.github.com
  * @version r2 2012-05-29
  */
-
-(function () {
+/*jshint browser:true, nonstandard:true*/ (function () {
 	if (typeof window.__DL_BOOKMARKLET !== "undefined" && window.__DL_BOOKMARKLET.destroy) {
 		window.__DL_BOOKMARKLET.destroy();
 		return false;
@@ -248,7 +247,7 @@
 						'visibility: visible',
 						'width: 100%',
 						'z-index: 1'
-						].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
+						].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1')
 				}]
 			}]
 		});
@@ -333,7 +332,7 @@
 		}, false);
 
 		return this;
-	}
+	};
 
 	function addFrameContents(f) {
 		try {
@@ -342,39 +341,54 @@
 		} catch (err) {
 			return;
 		}
+		var frames;
+
 		// find frames
-		var frames = Array.prototype.slice.call(f.frames);
-		while (frames.length) try {
-			addFrameContents(frames.shift());
-		} catch (err) {}
+		frames = Array.prototype.slice.call(f.frames);
+		while (frames.length) {
+			try {
+				addFrameContents(frames.shift());
+			} catch (err) {}
+		}
+
 		// find iframes
-		var frames = Array.prototype.slice.call(f.document.getElementsByTagName('iframe'));
-		while (frames.length) try {
-			addFrameContents(frames.shift().contentWindow);
-		} catch (err) {}
+		frames = Array.prototype.slice.call(f.document.getElementsByTagName('iframe'));
+		while (frames.length) {
+			try {
+				addFrameContents(frames.shift().contentWindow);
+			} catch (err) {}
+		}
 	}
 
 	function scanText(text, pattern) {
 		if (!pattern) {
 			var i, pl = patterns.length;
-			for (i = 0; i < pl; i++) arguments.callee.call(this, text, patterns[i]);
+			for (i = 0; i < pl; i++) {
+				scanText.call(this, text, patterns[i]);
+			}
 			return;
 		}
-		var match, link;
+		var match;
 		while (pattern.test(text)) {
-			console.log(text, match);
 			if (match && match.index >= 0 && match.length >= 0) {
 				text = text.substr(match.index + match.length);
 			}
 			match = text.match(pattern);
-			if (!match) continue;
+			if (!match) {
+				continue;
+			}
 			if (Object.prototype.toString.call(match) === "[object Array]") {
-				if (match.length > 1) links.push({
-					'url': match[1],
-					'type': (match.length > 2) ? match[2].toUpperCase() : null
-				});
-				else links.push(match[0]);
-			} else links.push(match);
+				if (match.length > 1) {
+					links.push({
+						'url': match[1],
+						'type': (match.length > 2) ? match[2].toUpperCase() : null
+					});
+				} else {
+					links.push(match[0]);
+				}
+			} else {
+				links.push(match);
+			}
 		}
 	}
 
@@ -387,17 +401,19 @@
 		}
 		for (i = 0; i < ll; i++) {
 			n = links[i];
-			if (urls.indexOf((typeof n === "string") ? n : n['url']) > -1) continue;
-			urls.push(n['url']);
+			if (urls.indexOf((typeof n === "string") ? n : n.url) > -1) {
+				continue;
+			}
+			urls.push(n.url);
 			html += '<li><a href="${url}" target="${target}" style="${css}"${download}>${type}${name}</a></li>'._template((typeof n === "string") ? {
 				'url': n
 			} : {
-				'url': n['url'],
-				'target': n['target'] || '_blank',
-				'name': n['name'] || n['url'],
-				'css': (n['css'] ? n['css'] : '') + (n['icon'] ? ";background-image:url('" + n['icon'] + "');" : ''),
-				'type': n['type'] ? '<span>' + n['type'] + '</span>' : '',
-				'download': n['type'] ? ' download="' + document.title + '.' + n['type'].toLowerCase() + '"': '',
+				'url': n.url,
+				'target': n.target || '_blank',
+				'name': n.name || n.url,
+				'css': (n.css ? n.css : '') + (n.icon ? ";background-image:url('" + n.icon + "');" : ''),
+				'type': n.type ? '<span>' + n.type + '</span>' : '',
+				'download': n.type ? ' download="' + document.title + '.' + n.type.toLowerCase() + '"' : ''
 			});
 		}
 		return '<ol' + (list_class ? ' class="' + list_class + '"' : '') + '>' + html + '</ol>';
@@ -412,35 +428,39 @@
 	addFrameContents(window);
 
 	// Third party video download links
-	var html = makeResultList(links, 'links') + makeResultList([{
+	// { name: 'WebVideoFetcher.com', url: 'http://webvideofetcher.com/d?url=${href}', icon: 'http://webvideofetcher.com/favicon.ico' }
+	var html = "", h = document.location.href;
+	html += makeResultList(links, 'links');
+	html += makeResultList([{
+		'name': 'Savevid.com',
+		'url': 'http://www.savevid.com/?url=' + h,
+		'icon': 'http://www.savevid.com/favicon.ico'
+	}, {
 		'name': 'Keep Tube',
 		'url': 'http://keep-tube.com/?url=' + document.location.href,
-		'icon': 'http://keep-tube.com/images/keep-tube.ico'
+		'icon': 'http://keep-tube.com/images/icon/16x16.png',
+		'css': 'opacity:.7'
 	}, {
 		'name': 'KeepVid',
-		'url': 'http://keepvid.com/?url=' + document.location.href,
+		'url': 'http://keepvid.com/?url=' + h,
 		'icon': 'http://keepvid.com/favicon.ico',
 		'css': 'opacity:.7'
 	}, {
 		'name': 'SaveFrom.net',
-		'url': 'http://savefrom.net/' + document.location.href,
+		'url': 'http://savefrom.net/' + h,
 		'icon': 'http://savefrom.net/favicon.ico',
 		'css': 'opacity:.4'
 	}], 'third-party');
-	// {
-	// 	name: 'WebVideoFetcher.com',
-	// 	url: 'http://webvideofetcher.com/d?url=${href}',
-	// 	icon: 'http://webvideofetcher.com/favicon.ico'
-	// }
+
 	window.__DL_BOOKMARKLET = new Element.Frame(html);
 	window.__DL_BOOKMARKLET.addCSS([
-		'body{font-family:Arial,sans-serif;min-width:400px}',
+		'body{font-family:Arial,sans-serif}',
 		'ol{list-style:none;padding:0;margin:0}',
 		'li{white-space:nowrap;clear:both}',
 		'li a span{font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
 		'li a:hover{opacity:1!important}',
 		'li a:hover span{color:#cef}',
-		'.third-party{font-size:110%;text-align:center;margin:0 -8px;padding:0 0 8px;line-height:30px}',
+		'.third-party{font-size:110%;text-align:center;margin:0 -8px;padding:4px 20px 4px;line-height:30px}',
 		'.third-party li{display:inline}',
 		'.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat;background-size:16px;}',
 		'.links + .third-party{border-top:2px solid #444}',
