@@ -27,7 +27,9 @@ while (($#)); do
         -v|--variable)
 			echo opt_variable=$2; shift ;;
 
-		--) shift; break ;; -*|--*) ERROR "unknown option ${1}" 1 ;; *) break ;;
+		--) shift; break ;;
+		-*|--*) ERROR "unknown option ${1}" 1 ;;
+		*) break ;;
 	esac
 	shift
 done
