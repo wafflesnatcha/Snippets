@@ -33,10 +33,9 @@
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   r2 2012-08-29
+ * @version   r3 2012-10-04
  * @link      http://wafflesnatcha.github.com
  */
-
 abstract class Singleton
 {
 	/**
@@ -45,9 +44,7 @@ abstract class Singleton
 	 * @return void
 	 * @see    getInstance
 	 */
-	protected function __construct()
-	{
-	}
+	protected function __construct() {}
 
 	/**
 	 * Prevent cloning the instance.
@@ -80,7 +77,6 @@ abstract class Singleton
 		$object = static::getInstance();
 		$method = "{$name[0]}" === "_" ? substr($name, 1) : "_$name";
 		if (!method_exists($object, $method)) trigger_error("Cannot access method " . get_class($object) . "->$name statically", E_USER_ERROR);
-
 		return call_user_func_array(array($object, $method), $args);
 	}
 
@@ -107,16 +103,10 @@ abstract class Singleton
 	 */
 	public function __call($name, $args)
 	{
-        // $a = $args;
-        // $a[1] = implode(",", $a[1])
-        // trigger_error(get_called_class() . "->$name(" . implode(",", $a) . ")");
-	    
 		$class = get_called_class();
-		if(!class_exists($class)) trigger_error("Class $class doesn't exist", E_USER_ERROR);
-
+		if (!class_exists($class)) trigger_error("Class $class doesn't exist", E_USER_ERROR);
 		$method = $class . "::" . ("{$name[0]}" === "_" ? substr($name, 1) : "_$name");
 		if (!is_callable($method)) trigger_error("$method cannot be called from the object context", E_USER_ERROR);
-
 		return call_user_func_array($method, $args);
 	}
 
