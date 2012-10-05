@@ -28,7 +28,7 @@
 	// increment the last numeric span in the URL
 	l = window.location.href.match(/^(.*?)(\d+)([^\d]*)$/);
 	if (l) {
-		i = parseInt(l[2], 10) + (window.__BMRK_NAV_INC = (window.__BMRK_NAV_INC || 0 ) + num);
+		i = String(parseInt(l[2], 10) + (window.__BMRK_NAV_INC = (window.__BMRK_NAV_INC || 0 ) + num));
 		while (i.length < l[2].length) {
 			i = "0" + i;
 		}
