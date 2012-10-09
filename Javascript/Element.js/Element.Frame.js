@@ -14,7 +14,7 @@
 /*jshint browser:true*/
 /*global Element*/
 Element.Frame = function (content) {
-	var id = 'frame-' + (new Date).getTime();
+	var id = 'frame-' + (new Date()).getTime();
 	this.element_mask = new Element({
 		tag: 'div',
 		id: id,
@@ -89,7 +89,6 @@ Element.Frame = function (content) {
 		}]
 	});
 
-	// document.body.appendChild(this.element_mask.element);
 	this.element_mask.appendTo(document.body);
 
 	var me = this,

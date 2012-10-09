@@ -1,6 +1,7 @@
+/*jshint browser:true*/
+/*global ZeroClipboard*/
 (function () {
-
-	var getSelectedLinks = function () {
+	function getSelectedLinks() {
 		if (!window.getSelection && !window.getSelection().containsNode) {
 			return;
 		}
@@ -14,9 +15,9 @@
 			}
 		}
 		return hrefs;
-	};
+	}
 
-	var insertScripts = function (urls, callback) {
+	function insertScripts(urls, callback) {
 		if (typeof urls == 'string') {
 			urls = [urls];
 		}
@@ -32,17 +33,14 @@
 			}
 		}, false);
 		document.getElementsByTagName('head')[0].appendChild(el);
-	};
+	}
 
-	var inlineWindow = function (content, alt) {
-		var element, mask = document.createElement('div'),
-			id = "frame-" + (new Date).getTime();
+	var InlineWindow = function (content, alt) {
+		var element, transition_duration = 250,
+			mask = document.createElement('div'),
+			id = "frame-" + (new Date()).getTime();
 		mask.setAttribute('id', id);
-		mask.setAttribute('style', 'opacity:0;' + [
-			'-webkit-transition: opacity .25s',
-			'-moz-transition: opacity .25s',
-			'-o-transition: opacity .25s',
-			'transition: opacity .25s',
+		mask.setAttribute('style', 'opacity:0;' + ([
 			'background:#000',
 			'background:rgba(0,0,0,.8)',
 			'border: 0',
@@ -60,51 +58,48 @@
 			'position: fixed',
 			'right: 0',
 			'top: 0',
+			'transition: opacity ' + (transition_duration / 1000) + 's',
 			'visibility: visible',
 			'width: auto',
-			'z-index: 999999',
-			].join('!important;') + ' !important');
+			'z-index: 999999'
+			].join(' !important; ') + ' !important;').replace(/\s*(transition:([^;]+);)/ig, '-moz-$1 -o-$1 -webkit-$1 $1'));
 		mask.innerHTML = [
 			'<style type="text/css">',
-			'#' + id + '-content{' + [
-			'background:#' + (alt ? 'c00' : '555'),
-			'color:#' + (alt ? 'fff' : '6cf'),
-			'border-radius:6px',
-			'box-shadow:0 1px 2px rgba(0,0,0,.5),inset 0 -30px 30px -30px rgba(0,0,0,.5)',
-			'font:700 20px sans-serif',
-			'padding:8px 12px',
-			'position:fixed',
-			'text-align:center',
-			'text-shadow:0 1px 3px rgba(0,0,0,.5)'
-			].join('!important;') + '!important}',
+			'#' + id + '-content{' + (['background:#' + (alt ? 'c00' : '555'), 'color:#' + (alt ? 'fff' : '6cf'), 'border-radius:6px', 'box-shadow:0 1px 2px rgba(0,0,0,.5),inset 0 -40px 40px -40px rgba(0,0,0,.5)', 'font:700 20px sans-serif', 'padding:8px 12px', 'position:fixed', 'text-align:center', 'text-shadow:0 1px 3px rgba(0,0,0,.5)'].join(' !important; ') + ' !important;') + '}',
 			'#' + id + '-content.hover{background:#6cf!important;color:#fff!important}',
 			'#' + id + '-content.finished{background:#80ff66!important;color:#222!important}',
-			'</style><div id="' + id + '-content">' + content + '</div>'
+			'</style>',
+			'<div id="' + id + '-content">' + content + '</div>'
 			].join('\n');
+
 		document.body.appendChild(mask);
-		var element = document.getElementById(id + '-content');
+		element = document.getElementById(id + '-content');
 		this.element = element;
 		this.mask = mask;
+
 		this.center = function (el) {
 			el = el || window;
 			element.style.left = Math.round(((el.innerWidth || el.clientWidth) - element.offsetWidth) / 2) + "px";
 			element.style.top = Math.round(((el.innerHeight || el.clientHeight) - element.offsetHeight) / 2) + "px";
 		};
+
 		this.destroy = function () {
 			mask.style.opacity = 0;
 			setTimeout(function () {
 				if (mask.parentNode) {
 					mask.parentNode.removeChild(mask);
 				}
-			}, 250);
+			}, transition_duration);
 		};
-		if (alt) {
-			var me = this;
-			mask.addEventListener("click", function () {
-				me.destroy();
-			}, true);
+
+		var me = this;
+		mask.addEventListener("click", function () {
+			me.destroy();
+		}, true);
+		if (window.getComputedStyle) {
+			element.style.width = window.getComputedStyle(element).width;
+			element.style.height = window.getComputedStyle(element).height;
 		}
-		if (window.getComputedStyle) element.style.width = window.getComputedStyle(element).width;
 		this.center();
 		mask.style.opacity = 1;
 		return this;
@@ -113,22 +108,19 @@
 	// var hrefs = ["http://www.google.com", "http://www.yahoo.com", "http://github.com"];
 	var hrefs = getSelectedLinks();
 	if (hrefs.length < 1) {
-		// alert("No links selected!");
-		var overlay = new inlineWindow('No links selected', true);
-		return;
+		return new InlineWindow('No links selected!', true);
 	}
 
-	var text = hrefs.join("\n");
-	var overlay = new inlineWindow('Copy');
+	var text = hrefs.join("\n"), title = String(hrefs.length + ' link' + (hrefs.length > 1? 's' : ''));
+	var overlay = new InlineWindow('Copy');
 
-	insertScripts('http://zeroclipboard.googlecode.com/svn/trunk/ZeroClipboard.js', function () {
+	var initZeroClipboard = function () {
 		ZeroClipboard.setMoviePath("http://zeroclipboard.googlecode.com/svn/trunk/ZeroClipboard.swf");
 		var clip = new ZeroClipboard.Client();
 		clip.setText(text);
 		clip.addEventListener('complete', function (client, text) {
 			ZeroClipboard.$(overlay.element).addClass("finished");
 			overlay.element.innerHTML = '&#x2714;';
-			overlay.center();
 			window.setTimeout(function () {
 				clip.destroy();
 				overlay.destroy();
@@ -138,5 +130,12 @@
 			clip.setText(text);
 		});
 		clip.glue(overlay.element, overlay.element.parentNode);
-	});
+		clip.div.setAttribute('title', title);
+	};
+
+	if (typeof ZeroClipboard !== "undefined") {
+		initZeroClipboard();
+	} else {
+		insertScripts('http://zeroclipboard.googlecode.com/svn/trunk/ZeroClipboard.js', initZeroClipboard);
+	}
 }());

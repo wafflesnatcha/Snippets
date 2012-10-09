@@ -13,16 +13,15 @@
 		window.__DL_BOOKMARKLET.destroy();
 		return false;
 	}
-
 	String.prototype._template = function (data) {
 		var prop, result = this;
 		data = data || {};
 		for (prop in data) {
 			if (data.hasOwnProperty(prop)) {
-				result = result.replace(new RegExp('\\$\\{' + prop + '\\}', 'gi'), data[prop]);
+				result = result.replace('<%' + prop + '%>', data[prop]);
 			}
 		}
-		return result.replace(/\$\{[^\s\{\}\$]+?\}/ig, '');
+		return result.replace(/<%.+?%>/ig, '');
 	};
 
 	function Element() {
@@ -252,7 +251,6 @@
 			}]
 		});
 
-		// document.body.appendChild(this.element_mask.element);
 		this.element_mask.appendTo(document.body);
 
 		var me = this,
@@ -405,7 +403,7 @@
 				continue;
 			}
 			urls.push(n.url);
-			html += '<li><a href="${url}" target="${target}" style="${css}"${download}>${type}${name}</a></li>'._template((typeof n === "string") ? {
+			html += '<li><a href="<%url%>" target="<%target%>" style="<%css%>" <%download%>><%type%><%name%></a></li>'._template((typeof n === "string") ? {
 				'url': n
 			} : {
 				'url': n.url,
@@ -413,7 +411,7 @@
 				'name': n.name || n.url,
 				'css': (n.css ? n.css : '') + (n.icon ? ";background-image:url('" + n.icon + "');" : ''),
 				'type': n.type ? '<span>' + n.type + '</span>' : '',
-				'download': n.type ? ' download="' + document.title + '.' + n.type.toLowerCase() + '"' : ''
+				'download': n.type ? 'download="' + document.title + '.' + n.type.toLowerCase() + '"' : ''
 			});
 		}
 		return '<ol' + (list_class ? ' class="' + list_class + '"' : '') + '>' + html + '</ol>';
@@ -427,8 +425,6 @@
 
 	addFrameContents(window);
 
-	// Third party video download links
-	// { name: 'WebVideoFetcher.com', url: 'http://webvideofetcher.com/d?url=${href}', icon: 'http://webvideofetcher.com/favicon.ico' }
 	var html = "", h = document.location.href;
 	html += makeResultList(links, 'links');
 	html += makeResultList([{
@@ -444,30 +440,32 @@
 		'name': 'KeepVid',
 		'url': 'http://keepvid.com/?url=' + h,
 		'icon': 'http://keepvid.com/favicon.ico',
-		'css': 'opacity:.7'
+		'css': 'opacity:.5'
 	}, {
 		'name': 'SaveFrom.net',
 		'url': 'http://savefrom.net/' + h,
 		'icon': 'http://savefrom.net/favicon.ico',
-		'css': 'opacity:.4'
+		'css': 'opacity:.25'
 	}], 'third-party');
 
-	window.__DL_BOOKMARKLET = new Element.Frame(html);
-	window.__DL_BOOKMARKLET.addCSS([
-		'body{font-family:Arial,sans-serif}',
+	var f = new Element.Frame(html);
+	f.addCSS([
+		'body{font-family:Arial,sans-serif;line-height:16px}',
 		'ol{list-style:none;padding:0;margin:0}',
 		'li{white-space:nowrap;clear:both}',
-		'li a span{font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
-		'li a:hover{opacity:1!important}',
-		'li a:hover span{color:#cef}',
+		'li a span:not(:empty){font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
+		'li a:hover,li a:focus{opacity:1!important}',
+		'li a:hover span,li a:focus span{color:#cef}',
 		'.third-party{font-size:110%;text-align:center;margin:0 -8px;padding:4px 20px 4px;line-height:30px}',
 		'.third-party li{display:inline}',
 		'.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat;background-size:16px;}',
 		'.links + .third-party{border-top:2px solid #444}',
 		'.links{padding:0 0 8px}'
 		].join(''));
-	window.__DL_BOOKMARKLET.ondestroy = function () {
+	f.ondestroy = function () {
 		delete window.__DL_BOOKMARKLET;
 	};
-	window.__DL_BOOKMARKLET.resize();
+	f.resize();
+	f.element.getElementsByTagName('a')[0].focus()
+	window.__DL_BOOKMARKLET = f;
 }());
