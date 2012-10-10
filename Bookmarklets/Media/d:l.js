@@ -8,7 +8,8 @@
  * @link http://wafflesnatcha.github.com
  * @version r2 2012-05-29
  */
-/*jshint browser:true, nonstandard:true*/ (function () {
+/*jshint browser:true, nonstandard:true*/
+(function () {
 	if (typeof window.__DL_BOOKMARKLET !== "undefined" && window.__DL_BOOKMARKLET.destroy) {
 		window.__DL_BOOKMARKLET.destroy();
 		return false;
@@ -425,7 +426,8 @@
 
 	addFrameContents(window);
 
-	var html = "", h = document.location.href;
+	var html = "",
+		h = document.location.href;
 	html += makeResultList(links, 'links');
 	html += makeResultList([{
 		'name': 'Savevid.com',
@@ -466,6 +468,6 @@
 		delete window.__DL_BOOKMARKLET;
 	};
 	f.resize();
-	f.element.getElementsByTagName('a')[0].focus()
+	f.element.getElementsByTagName('a')[0].focus();
 	window.__DL_BOOKMARKLET = f;
 }());
