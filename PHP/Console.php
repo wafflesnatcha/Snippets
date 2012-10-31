@@ -12,7 +12,7 @@
  * @author    Scott Buchanan <buchanan.sc@gmail.com>
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   r4 2012-08-29
+ * @version   r5 2012-10-30
  * @link      http://wafflesnatcha.github.com
  */
 class Console
@@ -67,7 +67,7 @@ class Console
 	 * Microtime at the point this file was included
 	 * @var float
 	 */
-	public static $request_time = "";
+	public static $request_time = null;
 
 	/**
 	 * Console enabled or not
@@ -133,13 +133,7 @@ class Console
 		 * @var string
 		 */
 		'indent' => "  ",
-
-		/**
-		 * Error level
-		 */
-		'error_reporting' => E_ALL,
 	);
-
 	/**
 	 * Enable the debug console
 	 *
@@ -147,16 +141,13 @@ class Console
 	 */
 	public function _enable()
 	{
-		error_reporting($this->_config['error_reporting']);
+		// error_reporting(E_ALL | E_STRICT | E_NOTICE);
 		
-		ini_set('display_errors', 'off');
-		if(ini_get('log_errors') && !ini_get('error_log')) {
-			ini_set('log_errors', 'off');
-		}
+		ini_set('display_errors', 'on');
 		
-		set_error_handler(array($this, "phpErrorHandler"), $this->_config['error_reporting']);
+		set_error_handler(array($this, "phpErrorHandler"), E_ALL | E_STRICT | E_NOTICE);
 		set_exception_handler(array($this, "phpExceptionHandler"));
-		
+		register_shutdown_function(array($this, "shutdownHandler"));
 		/*
 		assert_options(ASSERT_ACTIVE, 1);
 		assert_options(ASSERT_WARNING, 0);
@@ -258,7 +249,7 @@ class Console
 	 */
 	public function _time()
 	{
-		$t = number_format(round((float)microtime(true) - $this->request_time, $this->_config['time_precision']) , $this->_config['time_precision']);
+		$t = number_format(round((float)microtime(true) - self::$request_time, $this->_config['time_precision']) , $this->_config['time_precision']);
 		$args = func_get_args();
 		array_unshift($args, $t);
 		$this->process(self::TIME, $args);
@@ -266,14 +257,13 @@ class Console
 	}
 
 	/**
-	 * Output the console
+	 * Display the Console.
 	 *
-	 * This will write the currently stored output to the target medium. If the
-	 * first parameter is empty, it will use the value in {$this->_config['target']};
-	 * and if that is empty/invalid, defaults to {self::TARGET_SCREEN}
+	 * This will write the currently stored output to the target file.
 	 *
-	 * @param  int  $target {Console::TARGET_SCREEN}|{Console::TARGET_FILE}
+	 * @param  int  $target
 	 * @return void
+	 * @see    {_target}
 	 */
 	public function _display($target = null)
 	{
@@ -296,7 +286,7 @@ class Console
 	}
 
 	/**
-	 * Get/set the output target
+	 * Get/set the output target.
 	 *
 	 * @param  string $target
 	 * @return string The current target
@@ -326,9 +316,13 @@ class Console
 	 * @return void
 	 * @see    http://www.php.net/set-error-handler
 	 */
-	public function phpErrorHandler($errno, $errstr, $errfile, $errline, $errcontext)
+	public function phpErrorHandler($errno, $errstr, $errfile, $errline, $errcontext = null)
 	{
-		$file = static ::getRelativePath($errfile, $this->_config['path_root']);
+		if (!(error_reporting() & $errno)) {
+			return;
+		}
+		
+		$file = static::getRelativePath($errfile, $this->_config['path_root']);
 		$msg = "$file:$errline - $errstr";
 		switch ($errno) {
 			case E_ERROR:
@@ -344,19 +338,15 @@ class Console
 
 			case E_NOTICE:
 			case E_USER_NOTICE:
-				$this->process(self::NOTICE, $msg);
-				break;
-
 			case E_STRICT:
-				$this->process(self::DEBUG, $msg);
+				$this->process(self::NOTICE, $msg);
 				break;
 
 			default:
 				$this->process(self::WTF, "UNKNOWN ERROR TYPE " . $msg);
 		}
-		return false;
 	}
-
+	
 	/**
 	 * @return void
 	 * @see    http://www.php.net/set-exception-handler
@@ -368,6 +358,20 @@ class Console
 			@$exception->getTrace()
 		));
 	}
+
+	/**
+	 * @return void
+	 * @see    http://www.php.net/set-error-handler
+	 */
+	public function shutdownHandler()
+	{
+		if($err = error_get_last()) {
+			$this->phpErrorHandler($err['type'], $err['message'], $err['file'], $err['line']);
+		}
+		$this->_time('shutdown');
+		$this->_display();
+	}
+
 
 	/**
 	 * Process a console message
@@ -416,7 +420,7 @@ class Console
 		} else if (is_bool($arg)) {
 			$arg = ($arg === true) ? "TRUE" : "FALSE";
 		} else if (is_string($arg)) {
-			// $arg = '"' . $arg . '"';
+			$arg = '"' . $arg . '"';
 		}
 		$arg = str_replace("\n", "\n" . $this->_config['indent'], $arg);
 		return $arg;
@@ -537,8 +541,6 @@ class Console
 	 */
 	protected function __construct()
 	{
-		$this->request_time = microtime(true);
-		
 		// All file paths will be displayed as relative to the calling script
 		$this->_config['path_root'] = dirname(realpath($_SERVER["SCRIPT_NAME"] ? : $_SERVER["SCRIPT_FILENAME"] ? : $_SERVER["PHP_SELF"]));
 	}
@@ -623,4 +625,8 @@ class Console
 		static $instance = null;
 		return $instance ? : $instance = new static;
 	}
+}
+
+if(Console::$request_time === null) {
+	Console::$request_time = microtime(true);
 }
