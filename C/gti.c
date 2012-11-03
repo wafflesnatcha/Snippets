@@ -2,7 +2,7 @@
  * gti - a git launcher
  *
  * Copyright 2012 by Richard Wossal <richard@r-wos.org>
- *
+ *‰
  * Permission to use, copy, modify, distribute, and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
@@ -10,14 +10,19 @@
  * supporting documentation.  No representations are made about the
  * suitability of this software for any purpose.  It is provided "as
  * is" without express or implied warranty.
- *
+ * 
  * Edited: doesn't launch git anymore, vroom vroom
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <string.h>
+
+#ifndef GTI_SPEED
+#define GTI_SPEED 30
+#endif
 
 int  term_width(void);
 void init_space(void);
@@ -27,19 +32,22 @@ void draw_car(int x);
 void clear_car(int x);
 
 int TERM_WIDTH;
+int SLEEP_DELAY;
 
 int main(int argc, char **argv)
 {
     (void) argc;
     int i;
     TERM_WIDTH = term_width();
+    SLEEP_DELAY = 1000000 / GTI_SPEED;
+    
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_car(i);
-        usleep(20*1000);
+        usleep(SLEEP_DELAY);
         clear_car(i);
     }
-    return;
+    return 1;
 }
 
 int term_width(void)
@@ -56,7 +64,7 @@ void init_space(void)
 
 void move_to_top(void)
 {
-    printf("\033[%dA", 7);
+    printf("\033[7A");
 }
 
 void line_at(int start_x, const char *s)
@@ -101,4 +109,3 @@ void clear_car(int x)
     line_at(x, "  ");
     line_at(x, "  ");
 }
-

@@ -8,6 +8,6 @@
 		if (h && !h.match(/^(javascript|mailto):/i) && hrefs.indexOf(h) < 0) hrefs.push(h);
 	}
 
-	if (hrefs.length < 1 || (hrefs.length > 7 && !confirm('Open ' + hrefs.length + ' links?'))) return;
+	if (hrefs.length > 1 && !confirm('Open ' + hrefs.length + ' links?')) return;
 	for (i = 0; i < hrefs.length; i++) window.open(hrefs[i]);
 })();
