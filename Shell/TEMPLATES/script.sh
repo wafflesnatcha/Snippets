@@ -7,7 +7,7 @@ usage() { cat <<EOF
 $SCRIPT_NAME $SCRIPT_VERSION
 Description of this script.
 
-Usage: ${0##*/} [options]
+Usage: ${0##*/} [OPTION]...
 
 Options:
  -f, --flag            Some flag
