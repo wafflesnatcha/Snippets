@@ -19,7 +19,7 @@ abstract class _String
     {
         $str = "";
         for ($i = 1; $i <= $length; $i++) {
-            $str.= (rand(1, 30) % 2) ? chr(rand(65, 90)) : chr(rand(48, 57));
+            $str.= (rand(1, 2) === 1) ? chr(rand(65, 90)) : rand(0, 9);
         }
         return $str;
     }
