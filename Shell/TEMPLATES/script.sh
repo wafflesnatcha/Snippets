@@ -24,8 +24,8 @@ while (($#)); do
 			usage; exit 0 ;;
 		-f|--flag)
 			opt_flag=1 ;;
-		-v|--variable)
-			opt_variable=$2; shift ;;
+		-v*|--variable)
+			[[ $1 =~ ^\-[a-z].+$ ]] && opt_variable="${1:2}" || { opt_variable=$2; shift; } ;;
 
 		--) shift; break ;;
 		-*|--*) ERROR "unknown option ${1}" 1 ;;
