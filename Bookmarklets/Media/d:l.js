@@ -10,7 +10,7 @@
  */
 /*jshint browser:true, nonstandard:true*/
 (function () {
-	if (typeof window.__DL_BOOKMARKLET !== "undefined" && window.__DL_BOOKMARKLET.destroy) {
+	if (typeof window.__DL_BOOKMARKLET !== 'undefined' && window.__DL_BOOKMARKLET.destroy) {
 		window.__DL_BOOKMARKLET.destroy();
 		return false;
 	}
@@ -31,7 +31,7 @@
 
 	Element.prototype = {
 		init: function (config) {
-			if (typeof config === "string") {
+			if (typeof config === 'string') {
 				var res = [],
 					arr = document.querySelectorAll(config);
 				if (arr.length === 0) {
@@ -41,8 +41,8 @@
 					res.push(new Element(arr.pop()));
 				}
 				return (res.length == 1) ? res[0] : res;
-			} else if (typeof config === "object") {
-				if (config.toString() === "[object Object]") {
+			} else if (typeof config === 'object') {
+				if (config.toString() === '[object Object]') {
 					this.element = document.createElement(config.tag);
 					this.attr(config);
 				} else {
@@ -57,7 +57,7 @@
 			if (this.element.parentNode) {
 				this.element.parentNode.removeChild(this.element);
 			}
-			if (this.ondestroy && typeof this.ondestroy === "function") {
+			if (this.ondestroy && typeof this.ondestroy === 'function') {
 				this.ondestroy.call(this);
 			}
 		},
@@ -69,14 +69,14 @@
 		},
 
 		insert: function (content) {
-			if (typeof content === "string") {
+			if (typeof content === 'string') {
 				this.element.innerHTML += content;
 				return this;
-			} else if (typeof content === "object") {
+			} else if (typeof content === 'object') {
 				if (content instanceof Element) {
 					this.element.appendChild(content.element);
 					return content;
-				} else if (content.toString() === "[object Object]") {
+				} else if (content.toString() === '[object Object]') {
 					var d = new Element(content);
 					this.element.appendChild(d.element);
 					return d;
@@ -89,7 +89,7 @@
 		},
 
 		appendTo: function (parent) {
-			if (typeof parent !== "object" || !(parent instanceof Element)) {
+			if (typeof parent !== 'object' || !(parent instanceof Element)) {
 				parent = new Element(parent);
 			}
 			return parent.insert(this);
@@ -97,7 +97,7 @@
 
 		attr: function (attr, val) {
 			var i, prop;
-			if (typeof attr === "string") {
+			if (typeof attr === 'string') {
 				if (!val) {
 					var l = this.element.attributes.length;
 					for (i = 0; i < l; i++) {
@@ -113,16 +113,15 @@
 					};
 				}
 			}
-
 			for (prop in attr) {
-				if (prop == "text") {
+				if (prop == 'text') {
 					this.insert(attr[prop]);
-				} else if (prop == "children") {
+				} else if (prop == 'children') {
 					this.children = [];
 					for (i = 0; i < attr[prop].length; i++) {
 						this.children.push(this.insert(attr[prop][i]));
 					}
-				} else if (prop != "tag") {
+				} else if (prop != 'tag') {
 					if (attr.hasOwnProperty(prop)) {
 						this.element.setAttribute(prop, attr[prop]);
 					}
@@ -136,8 +135,8 @@
 			el = el || window;
 			this.width(this.width());
 			this.height(this.height());
-			this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + "px";
-			this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + "px";
+			this.element.style.left = Math.round(((el.innerWidth || el.clientWidth) - this.width()) / 2) + 'px';
+			this.element.style.top = Math.round(((el.innerHeight || el.clientHeight) - this.height()) / 2) + 'px';
 		},
 
 		offset: function () {
@@ -163,14 +162,14 @@
 
 		height: function (v) {
 			if (v) {
-				this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+				this.element.style.height = v + (v.toString().match(/^[0-9]+$/) ? 'px' : '');
 			}
 			return this.element.offsetHeight;
 		},
 
 		width: function (v) {
 			if (v) {
-				this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? "px" : "");
+				this.element.style.width = v + (v.toString().match(/^[0-9]+$/) ? 'px' : '');
 			}
 			return this.element.offsetWidth;
 		}
@@ -271,12 +270,12 @@
 		this.center = function () {
 			this.width(this.width());
 			this.height(this.height());
-			element_content.element.style.left = Math.round((element_mask.width() - element_content.width()) / 2) + "px";
-			element_content.element.style.top = Math.round((element_mask.height() - element_content.height()) / 2) + "px";
+			element_content.element.style.left = Math.round((element_mask.width() - element_content.width()) / 2) + 'px';
+			element_content.element.style.top = Math.round((element_mask.height() - element_content.height()) / 2) + 'px';
 		};
 		this.destroy = function () {
 			element_mask.destroy();
-			if (this.ondestroy && typeof this.ondestroy === "function") {
+			if (this.ondestroy && typeof this.ondestroy === 'function') {
 				this.ondestroy.call(this);
 			}
 		};
@@ -305,7 +304,7 @@
 			});
 		};
 
-		element_mask.element.addEventListener("click", function (e) {
+		element_mask.element.addEventListener('click', function (e) {
 			if (e.target == element_mask.element) {
 				me.destroy();
 			}
@@ -326,7 +325,7 @@
 		}
 
 		// Center frame after window resizes
-		window.addEventListener("resize", function (e) {
+		window.addEventListener('resize', function () {
 			me.center();
 		}, false);
 
@@ -376,7 +375,7 @@
 			if (!match) {
 				continue;
 			}
-			if (Object.prototype.toString.call(match) === "[object Array]") {
+			if (Object.prototype.toString.call(match) === '[object Array]') {
 				if (match.length > 1) {
 					links.push({
 						'url': match[1],
@@ -396,21 +395,21 @@
 			ll = links.length,
 			html = '';
 		if (ll < 1) {
-			return "";
+			return '';
 		}
 		for (i = 0; i < ll; i++) {
 			n = links[i];
-			if (urls.indexOf((typeof n === "string") ? n : n.url) > -1) {
+			if (urls.indexOf((typeof n === 'string') ? n : n.url) > -1) {
 				continue;
 			}
 			urls.push(n.url);
-			html += '<li><a href="<%url%>" target="<%target%>" style="<%css%>" <%download%>><%type%><%name%></a></li>'._template((typeof n === "string") ? {
+			html += '<li><a href="<%url%>" target="<%target%>" style="<%css%>" <%download%>><%type%><%name%></a></li>'._template((typeof n === 'string') ? {
 				'url': n
 			} : {
 				'url': n.url,
 				'target': n.target || '_blank',
 				'name': n.name || n.url,
-				'css': (n.css ? n.css : '') + (n.icon ? ";background-image:url('" + n.icon + "');" : ''),
+				'css': (n.css ? n.css : '') + (n.icon ? ';background-image:url(\'' + n.icon + '\');' : ''),
 				'type': n.type ? '<span>' + n.type + '</span>' : '',
 				'download': n.type ? 'download="' + document.title + '.' + n.type.toLowerCase() + '"' : ''
 			});
@@ -426,10 +425,10 @@
 
 	addFrameContents(window);
 	try {
-		scanText(Array.prototype.slice.call(document.links).join("\n"));
+		scanText(Array.prototype.slice.call(document.links).join('\n'));
 	} catch (e) {}
 
-	var html = "",
+	var html = '',
 		h = document.location.href;
 	html += makeResultList(links, 'links');
 	html += makeResultList([{

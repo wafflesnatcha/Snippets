@@ -118,7 +118,7 @@
 		ZeroClipboard.setMoviePath("http://zeroclipboard.googlecode.com/svn/trunk/ZeroClipboard.swf");
 		var clip = new ZeroClipboard.Client();
 		clip.setText(text);
-		clip.addEventListener('complete', function (client, text) {
+		clip.addEventListener('complete', function () {
 			ZeroClipboard.$(overlay.element).addClass("finished");
 			overlay.element.innerHTML = '&#x2714;';
 			window.setTimeout(function () {
