@@ -420,7 +420,7 @@
 	var links = [];
 	// /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/i
 	var patterns = [
-		/((?:http|https|ftp)\:\/\/[^'"\?\&\s]*\.(aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;|http:\/\/)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))/i
+		/((?:http|https|ftp)\:\/\/[^'"\?\&\s]*\.(3gp|aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;|http:\/\/)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))/i
 		];
 
 	addFrameContents(window);
