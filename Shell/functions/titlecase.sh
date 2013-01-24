@@ -1,8 +1,9 @@
-# titlecase STRING ...
+#!/usr/bin/env bash
+# Usage: titlecase STRING ...
 # 
 # Example: 
 # $ titlecase "Lorem ipsum-dolor   sit, amet."
-# Lorem Ipsum-dolor   Sit, Amet.   
+# > Lorem Ipsum-dolor   Sit, Amet.   
 titlecase() {
 	[[ ${#@} < 1 ]] && return 1
 	local text="$@"

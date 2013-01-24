@@ -1,8 +1,10 @@
-# function_stdin
+#!/usr/bin/env bash
+# Usage: function_stdin
+#
 # Allows you to accept STDIN to a function call.
-# 
+#
 # Example:
-# fn() { echo "${@:-$(function_stdin)}"; }; fn "testing"; echo "testing" | fn
+# $ fn() { echo "${@:-$(function_stdin)}"; }; fn "testing"; echo "testing" | fn
 function_stdin() {
 	local line oldIFS=$IFS
 	IFS=$'\n'
@@ -11,4 +13,3 @@ function_stdin() {
 	done
 	IFS=$oldIFS
 }
-export -f function_stdin

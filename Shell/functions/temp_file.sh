@@ -1,10 +1,11 @@
-# temp_file NAME...
+#!/usr/bin/env bash
+# Usage: temp_file NAME...
 #
 # Generate a temporary file, saving its path in variable NAME. Automatically
 # deletes the file when the current script/program ends.
 #
 # Example:
-# ```
+# ```bash
 #     temp_file temp1 temp2 temp3
 #     echo "temp1=$temp1"
 #     echo "temp2=$temp2"
