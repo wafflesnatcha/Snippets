@@ -7,7 +7,7 @@
  * 2. Selected text
  * 3. The current page
  *
- * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @author Scott Buchanan
  * @link http://wafflesnatcha.github.com
  */
 

@@ -16,7 +16,7 @@
  *
  * @param   {Object} data The object containing replacement data for the template variables.
  * @returns {String}
- * @author  Scott Buchanan <buchanan.sc@gmail.com>
+ * @author  Scott Buchanan
  * @link    http://wafflesnatcha.github.com
  */
 String.prototype._template = function (data) {

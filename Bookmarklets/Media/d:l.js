@@ -4,7 +4,7 @@
  * Search entire page source for anything that might be a media file. Including
  * links, embedded plugins, and even the plain text.
  *
- * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @author Scott Buchanan
  * @link http://wafflesnatcha.github.com
  * @version r2 2012-05-29
  */

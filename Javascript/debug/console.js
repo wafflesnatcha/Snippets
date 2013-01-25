@@ -4,7 +4,7 @@
  * Add this code to prevent errors when using functions like console.log() in
  * browsers that don't support console.
  * 
- * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @author Scott Buchanan
  * @link http://wafflesnatcha.github.com
  */
 

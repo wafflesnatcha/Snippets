@@ -7,7 +7,7 @@
  * </code>
  *
  * @requires Element.js
- * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @author Scott Buchanan
  * @link http://wafflesnatcha.github.com
  * @version r3 2012-06-11
  */

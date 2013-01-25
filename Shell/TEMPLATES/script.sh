@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# `script.sh` by Scott Buchanan <buchanan.sc@gmail.com> http://wafflesnatcha.github.com
+# `script.sh` by Scott Buchanan <http://wafflesnatcha.github.com>
 SCRIPT_NAME="$(basename "$0")"
-SCRIPT_VERSION="r0 2012-02-28"
+SCRIPT_VERSION="r0 2013-01-01"
 
 usage() { cat <<EOF
 $SCRIPT_NAME $SCRIPT_VERSION
@@ -25,7 +25,8 @@ while (($#)); do
 		-f|--flag)
 			opt_flag=1 ;;
 		-v*|--variable)
-			[[ $1 =~ ^\-[a-z].+$ ]] && opt_variable="${1:2}" || { opt_variable=$2; shift; } ;;
+			[[ $1 =~ ^\-[a-z].+$ ]] && opt_variable="${1:2}" || { opt_variable=$2; shift; }
+			;;
 
 		--) shift; break ;;
 		-*|--*) ERROR "unknown option ${1}" 1 ;;

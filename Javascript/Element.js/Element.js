@@ -12,7 +12,7 @@
  * var element = new Element({tag: 'div', class: 'some-div'});
  * </code>
  *
- * @author Scott Buchanan <buchanan.sc@gmail.com>
+ * @author Scott Buchanan
  * @link http://wafflesnatcha.github.com
  * @version r4 2012-06-24
  */

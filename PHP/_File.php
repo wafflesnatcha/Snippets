@@ -2,7 +2,7 @@
 /**
  * File system functions
  *
- * @author    Scott Buchanan <buchanan.sc@gmail.com>
+ * @author    Scott Buchanan
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  * @version   r2 2012-08-29

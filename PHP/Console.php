@@ -4,15 +4,14 @@
  *
  * Example:
  * <code>
- * Console::logfile("path/to/file.log");
- * Console::target(Console::TARGET_FILE);
+ * Console::target("path/to/file.log");
  * Console::enable();
  * </code>
  *
- * @author    Scott Buchanan <buchanan.sc@gmail.com>
+ * @author    Scott Buchanan
  * @copyright 2012 Scott Buchanan
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- * @version   r5 2012-10-30
+ * @version   r6 2013-01-24
  * @link      http://wafflesnatcha.github.com
  */
 class Console
