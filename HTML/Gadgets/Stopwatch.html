@@ -7,228 +7,265 @@
 	<style type="text/css">
 	html, body {
 		background: #fafafa;
-		font: 12px "Lucida Grande", Arial, sans-serif;
+		font: 14px "Lucida Grande", Arial, sans-serif;
 		margin: 0;
 		padding: 0;
 	}
 	body {
-		overflow-y: scroll;
-	}
-	#stopwatch {
-		margin: 6px;
-		min-width: 300px;
-		padding: 0;
-		text-align: center;
-	}
-	#stopwatch .controls {
-		top: 0;
-		left: 0;
+		color: #000;
 		margin: 0 auto;
+		max-width: 440px;
+		overflow-y: scroll;
+		padding: 6px;
 		text-align: center;
-		width: 300px;
 	}
-	#stopwatch .controls input {
-		-moz-appearance: none;
-		-webkit-appearance: none;
+	.controls {
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		display: inline-block;
+		padding: 0 100px;
+		position: relative;
+	}
+	button, input {
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		border: 1px solid rgba(0,0,0,.4);
-		color: #000;
-		float: left;
-		font-size: 14px;
-		font-weight: bold;
-		height: 28px;
-		line-height: 22px;
-		margin: 0;
-		outline: 0;
-	}
-	#stopwatch .controls .timer {
-		border-width: 1px 0;
-		-moz-box-shadow: inset 0 0px 2px 0 rgba(0,0,0,0.3);
-		-webkit-box-shadow: inset 0 0px 2px 0 rgba(0,0,0,0.3);
-		box-shadow: inset 0 0px 2px 0 rgba(0,0,0,0.3);
-		display: block;
+		box-sizing: border-box;
+		color: inherit;
+		display: inline-block;
 		font-size: 16px;
+		font-weight: bold;
+		height: 44px;
 		margin: 0;
+		padding: 0;
+		position: relative;
 		text-align: center;
-		width: 144px;
 	}
-	#stopwatch .controls .button {
-		background-color: #666;
-		background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), to(rgba(90,90,90,.2)));
+	input {
+		-moz-box-shadow: inset 0 0 2px 0 rgba(0,0,0,0.3);
+		-o-box-shadow: inset 0 0 2px 0 rgba(0,0,0,0.3);
+		-webkit-box-shadow: inset 0 0 2px 0 rgba(0,0,0,0.3);
+		border-width: 1px 0;
+		box-shadow: inset 0 0 2px 0 rgba(0,0,0,0.3);
+		font-size: 26px;
+		text-shadow: 0 1px 2px #e6e6e6;
+		width: 100%;
+	}
+	button {
+		background-color: #777;
 		background-image: -moz-linear-gradient(rgba(255,255,255,.2),rgba(90,90,90,.2));
+		background-image: -o-linear-gradient(top,rgba(255,255,255,.2),rgba(90,90,90,.2));
+		background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(rgba(255,255,255,.2)),to(rgba(90,90,90,.2)));
+		background-image: -webkit-linear-gradient(top,rgba(255,255,255,.2),rgba(90,90,90,.2));
 		background-origin: border-box;
 		border-color: rgba(0,0,0,.15);
 		color: #fff;
-		padding-bottom: 4px;
-		text-shadow: 0 -1px rgba(0,0,0,.4);
-		width: 75px;
+		cursor: pointer;
+		text-shadow: 0 -1px 1px #555;
+		width: 100px;
+		position: absolute;
+		top: 0px;
+		z-index: 100;
 	}
-	#stopwatch .controls .button[value="Start"] {
+	button:focus, button:hover {
+		background-color: #8e8e8e;
+		outline-color: #8e8e8e;
+	}
+	button#start {
 		background-color: #11aa11;
+		border-radius: 3px 0 0 3px;
+		left: 0;
 	}
-	#stopwatch .controls .button[value="Stop"] {
+	button#start.stop {
 		background-color: #aa1111;
 	}
-	#stopwatch .controls .button:focus,
-	#stopwatch .controls .button:hover {
-		background-color: #7a7a7a;
-	}
-	#stopwatch .controls .button[value="Start"]:focus,
-	#stopwatch .controls .button[value="Start"]:hover {
-		background-color: #22bb22;
-	}
-	#stopwatch .controls .button[value="Stop"]:focus,
-	#stopwatch .controls .button[value="Stop"]:hover {
-		background-color: #bb2222;
-	}
-	#stopwatch .controls .button:active:focus,
-	#stopwatch .controls .button:active:hover {
-		background-image: none;
-		-moz-box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.3);
-		-webkit-box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.3);
-		box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.3);
-	}
-	#stopwatch .controls .button:first-child {
-		-moz-border-radius: 3px 0 0 3px;
-		-webkit-border-radius: 3px 0 0 3px;
-		border-radius: 3px 0 0 3px;
-	}
-	#stopwatch .controls .button:last-child {
-		-moz-border-radius: 0 3px 3px 0;
-		-webkit-border-radius: 0 3px 3px 0;
+	button#reset {
 		border-radius: 0 3px 3px 0;
+		right: 0;
 	}
-	#stopwatch .results {
-		clear: both;
+	button#start:focus, button#start:hover {
+		background-color: #2cc52c;
+		outline-color: #2cc52c;
+	}
+	button#start.stop:focus, button#start.stop:hover {
+		background-color: #c52c2c;
+		outline-color: #c52c2c;
+	}
+	button:active:focus,
+	button:active:hover {
+		-moz-box-shadow: 0 2px 6px rgba(0,0,0,.4) inset;
+		-o-box-shadow: 0 2px 6px rgba(0,0,0,.4) inset;
+		-webkit-box-shadow: 0 2px 6px rgba(0,0,0,.4) inset;
+		background-image: none;
+		box-shadow: 0 2px 6px rgba(0,0,0,.4) inset;
+	}
+	.results {
 		margin: 0;
 		padding: 6px 2px;
 	}
-	#stopwatch .results-table {
+	table {
 		border-collapse: separate;
-		border-spacing: 0px;
-		border: 1px solid #ccc;
+		border-spacing: 0;
+		border: 1px solid #dadada;
 		empty-cells: show;
-		margin: 0 auto;
+		margin: 0;
 		padding: 0;
 		table-layout: fixed;
 		width: 100%;
 	}
-	#stopwatch .results-table th,
-	#stopwatch .results-table td {
+	th,	td {
 		background-color: #fff;
+		border-bottom: 1px solid #eeeeee;
 		margin: 0;
-		padding: 1px 4px;
+		padding: 2px 8px;
 		text-align: left;
 	}
-	#stopwatch .results-table th {
+	th {
 		background-color: #f4f4f4;
-		border-bottom: 1px solid #ccc;
-		color: #666;
-		padding: 2px 4px;
+		border-bottom-color: #dadada;
 	}
-	#stopwatch .results-table td {
-		color: #555;
-		padding: 2px 4px;
+	th:first-child {
+		width: 15%;
 	}
-	#stopwatch .results-table th:first-child,
-	#stopwatch .results-table td:first-child {
-		background-color: #dadada;
-		border-right: 1px solid #d1d1d1;
-		width: 20%;
+	td:first-child {
+		font-size: 90%;
+		font-weight: bold;
+		padding-right: 12px;
+		text-align: right;
+	}
+	tr:nth-child(odd) > td {
+		background-color: #f8f9fa;
+	}
+	td:first-child,
+	tr:nth-child(odd) > td:first-child {
+		background-color: #eee;
 	}
 	</style>
-</head>
-<body>
-	<div id="stopwatch">
-		<div class="controls">
-			<input type="button" class="button" id="start-button" value="Start" onclick="ss()" tabindex="1">
-			<input type="text" class="timer" id="disp" disabled>
-			<input type="button" class="button" value="Reset" onclick="r()" tabindex="2">
-		</div>
-		<div class="results">
-			<table class="results-table">
-				<thead>
-					<tr>
-						<th>Lap #</th>
-						<th>This Lap</th>
-						<th>Running Total</th>
-					</tr>
-				</thead>
-				<tbody id="lap"></tbody>
-			</table>
-		</div>
-	</div>
-	
+
 <script type="text/javascript">
-// 0/1 = start/end
-// 2 = state
-// 3 = length, ms
-// 4 = timer
-// 5 = epoch
-// 6 = disp el
-// 7 = lap count
-var t = [0, 0, 0, 0, 0, 0, 0, 1];
+var Stopwatch = (function () {
+	var interval, elements = {},
+		time_start = 0,
+		time_now = 0,
+		elapsed = 0,
+		running = false,
+		laps = 1,
+		epoch = new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
 
-function ss(buttonEl) {
-	t[t[2]] = (new Date()).valueOf();
-	t[2] = 1 - t[2];
+	function start() {
+		if (!running) {
+			time_start = (new Date()).valueOf();
+		} else {
+			time_now = (new Date()).valueOf();
+		}
 
-	if (0 == t[2]) {
-		document.getElementById("start-button").value = "Start";
-		clearInterval(t[4]);
-		t[3] += t[1] - t[0];
-		var row = document.createElement('tr');
-		var td = document.createElement('td');
-		td.innerHTML = (t[7]++);
-		row.appendChild(td);
-		td = document.createElement('td');
-		td.innerHTML = format(t[1] - t[0]);
-		row.appendChild(td);
-		td = document.createElement('td');
-		td.innerHTML = format(t[3]);
-		row.appendChild(td);
-		document.getElementById('lap').appendChild(row);
-		t[4] = t[1] = t[0] = 0;
-		disp();
-	} else {
-		document.getElementById("start-button").value = "Stop";
-		t[4] = setInterval(disp, 43);
+		running = !running;
+		if (!running) {
+			clearInterval(interval);
+			elements['start'].className = "start";
+			elements['start'].innerText = "Start";
+			elapsed += time_now - time_start;
+			var row = document.createElement('tr');
+			var td = document.createElement('td');
+			td.innerHTML = (laps++);
+			row.appendChild(td);
+			td = document.createElement('td');
+			td.innerHTML = format(time_now - time_start);
+			row.appendChild(td);
+			td = document.createElement('td');
+			td.innerHTML = format(elapsed);
+			row.appendChild(td);
+			elements['lap'].appendChild(row);
+			time_start = time_now = 0;
+			update();
+		} else {
+			elements['start'].className = "stop";
+			elements['start'].innerText = "Stop";
+			interval = setInterval(update, 20);
+		}
+	}
+
+	function reset() {
+		if (running) {
+			start();
+		}
+		update();
+		elements['lap'].innerHTML = '';
+		laps = 1;
+	}
+
+	function update() {
+		if (running) {
+			time_now = (new Date()).valueOf();
+		}
+		elements['clock'].value = format(elapsed + time_now - time_start);
+	}
+
+	function format(ms) {
+		var x = String(ms % 1000),
+			d = new Date(ms + epoch).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, '$1');
+		while (x.length < 3) {
+			x = '0' + x;
+		}
+		d += '.' + x;
+		return d;
+	}
+
+	return {
+		init: function () {
+			elements = {
+				'start': document.getElementById('start'),
+				'reset': document.getElementById('reset'),
+				'clock': document.getElementById('clock'),
+				'lap': document.getElementById('lap')
+			};
+
+			elements['start'].addEventListener('click', start);
+			elements['reset'].addEventListener('click', reset);
+
+			// Press spacebar to start/stop
+			window.addEventListener('keypress', function (e) {
+				if (e.charCode == 32 && !e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+					start();
+				}
+			});
+
+			update();
+		}
+	};
+}());
+
+if (document.body) Stopwatch.init();
+else {
+	try {
+		window.addEventListener("load", Stopwatch.init, false);
+	} catch (e) {
+		try {
+			window.onload = Stopwatch.init;
+		} catch (e) {}
 	}
 }
-
-function r() {
-	if (t[2]) ss();
-	t[4] = t[3] = t[2] = t[1] = t[0] = 0;
-	disp();
-	document.getElementById('lap').innerHTML = '';
-	t[7] = 1;
-}
-
-function disp() {
-	if (t[2]) t[1] = (new Date()).valueOf();
-	t[6].value = format(t[3] + t[1] - t[0]);
-}
-
-function format(ms) {
-	// used to do a substr, but whoops, different browsers, different formats
-	// so now, this ugly regex finds the time-of-day bit alone
-	var d = new Date(ms + t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, '$1');
-	var x = String(ms % 1000);
-	while (x.length < 3) x = '0' + x;
-	d += '.' + x;
-	return d;
-}
-
-function remote() {
-	window.open(document.location, '_blank', 'width=700,height=350');
-	return false;
-}
-
-t[5] = new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
-t[6] = document.getElementById('disp');
-disp();
 </script>
 
+</head>
+<body>
+	<div class="controls">
+		<button id="start" tabindex="1">Start</button>
+		<input type="text" id="clock" readonly>
+		<button id="reset" tabindex="2">Reset</button>
+	</div>
+	<div class="results">
+		<table class="results-table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Lap</th>
+					<th>Elapsed</th>
+				</tr>
+			</thead>
+			<tbody id="lap"></tbody>
+		</table>
+	</div>
 </body>
 </html>
