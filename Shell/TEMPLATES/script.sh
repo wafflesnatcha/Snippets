@@ -20,14 +20,13 @@ ERROR() { [[ $1 ]] && echo "$SCRIPT_NAME: $1" 1>&2; [[ $2 > -1 ]] && exit $2; }
 
 while (($#)); do
 	case $1 in
-		-h|--help)
-			usage; exit 0 ;;
 		-f|--flag)
 			opt_flag=1 ;;
 		-v*|--variable)
 			[[ $1 =~ ^\-[a-z].+$ ]] && opt_variable="${1:2}" || { opt_variable=$2; shift; }
 			;;
 
+		-h|--help) usage; exit 0 ;;
 		--) shift; break ;;
 		-*|--*) ERROR "unknown option ${1}" 1 ;;
 		*) break ;;
