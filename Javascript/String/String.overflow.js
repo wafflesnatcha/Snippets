@@ -1,14 +1,13 @@
 /**
- * Compact a string in the center (with ellipsis).
+ * Clip the character length of string at the middle.
  *
- * @returns {String}
+ * @param {Number} limit Maximum character length of the returned string.
+ * @param {String} [separator="..."] String to be placed in the middle of the returned string.
+ * @returns {String} The shortened string.
  */
-String.prototype.overflow = function (max) {
-	if (max < 4 || max >= this.length) {
+String.prototype.overflow = function (limit, separator) {
+	if (limit < 4 || limit >= this.length) {
 		return this;
 	}
-	var l = this.length,
-		m = Math.floor(l / 2),
-		b = Math.floor((l - max) / 2);
-	return this.substring(0, m - b) + '...' + this.substring(m + l - max - b);
+	return this.substring(0, Math.ceil(limit / 2)) + (separator || '...') + this.substring(this.length - Math.floor(limit / 2));
 };

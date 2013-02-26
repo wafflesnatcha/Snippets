@@ -6,14 +6,21 @@
  *
  * @author Scott Buchanan
  * @link http://wafflesnatcha.github.com
- * @version r2 2012-05-29
+ * @version r3 2013-02-22
  */
 /*jshint browser:true, nonstandard:true*/
+
 (function () {
 	if (typeof window.__DL_BOOKMARKLET !== 'undefined' && window.__DL_BOOKMARKLET.destroy) {
 		window.__DL_BOOKMARKLET.destroy();
 		return false;
 	}
+	String.prototype.overflow = function (limit, separator) {
+		if (limit < 4 || limit >= this.length) {
+			return this;
+		}
+		return this.substring(0, Math.ceil(limit / 2)) + (separator || '...') + this.substring(this.length - Math.floor(limit / 2));
+	};
 	String.prototype._template = function (data) {
 		var prop, result = this;
 		data = data || {};
@@ -181,72 +188,72 @@
 			tag: 'div',
 			id: id,
 			style: [
-				'background: #000',
-				'background: rgba(0,0,0,.8)',
-				'border: 0',
-				'bottom: 0',
-				'display: block',
-				'float: none',
-				'height: auto',
-				'left: 0',
-				'margin: 0',
-				'max-height: none',
-				'max-width: none',
-				'min-height: 150px',
-				'min-width: 0',
-				'padding: 0',
-				'position: fixed',
-				'right: 0',
-				'top: 0',
-				'visibility: visible',
-				'width: auto',
-				'z-index: 999999'
-				].join(' !important;') + ' !important;',
+                'background: #000',
+                'background: rgba(0,0,0,.8)',
+                'border: 0',
+                'bottom: 0',
+                'display: block',
+                'float: none',
+                'height: auto',
+                'left: 0',
+                'margin: 0',
+                'max-height: none',
+                'max-width: none',
+                'min-height: 150px',
+                'min-width: 0',
+                'padding: 0',
+                'position: fixed',
+                'right: 0',
+                'top: 0',
+                'visibility: visible',
+                'width: auto',
+                'z-index: 999999'
+                ].join(' !important;') + ' !important;',
 			children: [{
 				tag: 'div',
 				style: ([
-					'border-radius: 8px',
-					'box-shadow: 0 1px 2px rgba(0,0,0,.5)',
-					'background: #222',
-					'border: 4px solid #eee',
-					'display: block',
-					'float: none',
-					'margin: 0',
-					'max-height: 90%',
-					'max-width: 90%',
-					'min-height: 46px',
-					'min-width: 50px',
-					'padding: 0',
-					'position: absolute',
-					'visibility: visible',
-					'z-index: 1'
-					].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+);)/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
+                    'border-radius: 8px',
+                    'box-shadow: 0 1px 2px rgba(0,0,0,.5)',
+                    'background: #222',
+                    'border: 4px solid #eee',
+                    'display: block',
+                    'float: none',
+                    'margin: 0',
+                    'max-height: 90%',
+                    'max-width: 90%',
+                    'min-height: 46px',
+                    'min-width: 50px',
+                    'padding: 0',
+                    'position: absolute',
+                    'visibility: visible',
+                    'z-index: 1'
+                    ].join(' !important; ') + ' !important;').replace(/\s*(box-shadow:([^;]+);)/ig, '-moz-$1 -webkit-$1 $1').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1'),
 				children: [{
 					tag: 'iframe',
 					id: id + '-frame',
 					src: 'about:blank',
 					style: ([
-						'border-radius: 8px',
-						'background: transparent',
-						'border: 0',
-						'bottom: auto',
-						'display: block',
-						'float: none',
-						'height: 100%',
-						'left: 0',
-						'margin: 0',
-						'max-height: none',
-						'max-width: none',
-						'min-height: 0',
-						'min-width: 0',
-						'padding: 0',
-						'position: absolute',
-						'right: auto',
-						'top: 0',
-						'visibility: visible',
-						'width: 100%',
-						'z-index: 1'
-						].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1')
+                        'border-radius: 8px',
+                        'background: transparent',
+                        'border: 0',
+                        'bottom: auto',
+                        'display: block',
+                        'float: none',
+                        'height: 100%',
+                        'left: 0',
+                        'margin: 0',
+                        'max-height: none',
+                        'max-width: none',
+                        'min-height: 0',
+                        'min-width: 0',
+                        'padding: 0',
+                        'position: absolute',
+                        'right: auto',
+                        'top: 0',
+                        'visibility: visible',
+                        'width: 100%',
+                        'z-index: 1'
+                        ].join('!important;') + '!important;').replace(/\s*(border-radius:([^;]+);)/ig, '-o-$1 -ms-$1 -moz-$1 -webkit-$1 $1')
 				}]
 			}]
 		});
@@ -311,13 +318,13 @@
 		}, true);
 
 		this.addCSS([
-			'html,body{background:transparent;padding:0;margin:0}',
-			'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
-			'a{color:#6cf;text-decoration:none}',
-			'a:hover{text-decoration:underline}',
-			'a:visited{color:#ba66ff}',
-			'hr{height:2px;border:0;background:#444}'
-			].join(''));
+            'html,body{background:transparent;padding:0;margin:0}',
+            'body{color:#fff;display:inline-block;font:message-box;overflow:auto;padding:8px}',
+            'a{color:#6cf;text-decoration:none}',
+            'a:hover{text-decoration:underline}',
+            'a:visited{color:#ba66ff}',
+            'hr{height:2px;border:0;background:#444}'
+            ].join(''));
 
 		if (content) {
 			this.insert(content);
@@ -403,15 +410,16 @@
 				continue;
 			}
 			urls.push(n.url);
-			html += '<li><a href="<%url%>" target="<%target%>" style="<%css%>" <%download%>><%type%><%name%></a></li>'._template((typeof n === 'string') ? {
+			html += '<li><a href="<%url%>" target="<%target%>" title="<%title%>" style="<%css%>" <%download%>><span><%type%></span><%name%></a></li>'._template((typeof n === 'string') ? {
 				'url': n
 			} : {
-				'url': n.url,
-				'target': n.target || '_blank',
-				'name': n.name || n.url,
 				'css': (n.css ? n.css : '') + (n.icon ? ';background-image:url(\'' + n.icon + '\');' : ''),
-				'type': n.type ? '<span>' + n.type + '</span>' : '',
-				'download': n.type ? 'download="' + document.title + '.' + n.type.toLowerCase() + '"' : ''
+				'download': n.type ? 'download="' + document.title.replace(/[^\w \-_]/g, '').replace(/ (?= +)/g, '') + '.' + n.type.toLowerCase() + '"' : '',
+				'name': String(n.name || n.url).overflow(120),
+				'target': n.target || '_blank',
+				'title': n.url,
+				'type': n.type || '',
+				'url': n.url
 			});
 		}
 		return '<ol' + (list_class ? ' class="' + list_class + '"' : '') + '>' + html + '</ol>';
@@ -420,8 +428,8 @@
 	var links = [];
 	// /(?:<param[^>]*?)((?:(?:http|https|ftp)\:\/\/[^'"\?\&]*\.(?:[a-z]+)(?:\?[^\s'"]*)?(?=[^a-zA-Z0-9\-\_]|$)))/i
 	var patterns = [
-		/((?:http|https|ftp)\:\/\/[^'"\?\&\s]*\.(3gp|aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;|http:\/\/)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))/i
-		];
+        /((?:http|https|ftp)\:\/\/[^'"\?\&\s]*\.(3gp|aac|ac3|asf|avi|flac|flv|m2v|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mp4v|mpeg|mpg|ogg|ogm|qt|ra|rmvb|wav|wma|wmv)(?:\?(?:(?!&amp;|http:\/\/)[^\s'"])*)?(?=[^a-z0-9\-\_]|$))/i
+        ];
 
 	addFrameContents(window);
 	try {
@@ -436,15 +444,15 @@
 		'url': 'http://www.savevid.com/?url=' + h,
 		'icon': 'http://www.savevid.com/favicon.ico'
 	}, {
-		'name': 'Keep Tube',
-		'url': 'http://keep-tube.com/?url=' + document.location.href,
-		'icon': 'http://keep-tube.com/images/icon/16x16.png',
-		'css': 'opacity:.7'
-	}, {
 		'name': 'KeepVid',
 		'url': 'http://keepvid.com/?url=' + h,
 		'icon': 'http://keepvid.com/favicon.ico',
 		'css': 'opacity:.5'
+	}, {
+		'name': 'Keep Tube',
+		'url': 'http://keep-tube.com/?url=' + document.location.href,
+		'icon': 'http://keep-tube.com/images/icon/16x16.png',
+		'css': 'opacity:.7'
 	}, {
 		'name': 'SaveFrom.net',
 		'url': 'http://savefrom.net/' + h,
@@ -454,18 +462,19 @@
 
 	var f = new Element.Frame(html);
 	f.addCSS([
-		'body{font-family:Arial,sans-serif;line-height:16px}',
-		'ol{list-style:none;padding:0;margin:0}',
-		'li{white-space:nowrap;clear:both}',
-		'li a span:not(:empty){font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
-		'li a:hover,li a:focus{opacity:1!important}',
-		'li a:hover span,li a:focus span{color:#cef}',
-		'.third-party{font-size:110%;text-align:center;margin:0 -8px;padding:4px 20px 4px;line-height:30px}',
-		'.third-party li{display:inline}',
-		'.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat;background-size:16px;}',
-		'.links + .third-party{border-top:2px solid #444}',
-		'.links{padding:0 0 8px}'
-		].join(''));
+        'body{font-family:Arial,sans-serif;line-height:16px}',
+        'ol{list-style:none;padding:0;margin:0}',
+        'li{white-space:nowrap;clear:both}',
+        'a{display:inline-block}',
+        'li a span:not(:empty){font:bold 11px/16px "Arial Narrow",sans-serif;color:#999;padding:0 4px;min-width:30px;float:left;text-align:right}',
+        'li a:hover,li a:focus{opacity:1!important}',
+        'li a:hover span,li a:focus span{color:#cef}',
+        '.third-party{font-size:110%;margin:0 -8px;padding:4px 20px 4px;line-height:30px}',
+        '.third-party li{display:inline}',
+        '.third-party a{color:#f66;padding:2px 2px 2px 22px;margin:0 3px;background-position:2px center;background-repeat:no-repeat;background-size:16px;}',
+        '.links + .third-party{border-top:2px solid #444}',
+        '.links{padding:0 0 8px}'
+        ].join(''));
 	f.ondestroy = function () {
 		delete window.__DL_BOOKMARKLET;
 	};

@@ -1,13 +1,17 @@
-(function() {
-	var url = location.href,
-		term = '%s';
-	if (term && term != unescape('%25%73')) {
-		url = term;
-		if (!term.match(/^[a-z]*\:/i)) url = 'http://' + url
-	}
+/**
+ * Open the current page in a popup window.
+ *
+ * @author Scott Buchanan
+ * @link http://wafflesnatcha.github.com
+ */
+/*jshint browser:true, devel:true*/
+
+(function () {
 	try {
-		window.open(url, null, "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no");
+		window.open(location.href, null, 'location=no,menubar=no,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=' + window.innerWidth + ',height=' + window.outerHeight);
 	} catch (e) {
-		alert(e);
+		if (console) {
+			console.error(e);
+		}
 	}
-})()
+}());
