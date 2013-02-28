@@ -131,8 +131,27 @@ input, textarea, button, select {
 	font-size: inherit;
 }
 
+legend {
+	-webkit-box-shadow: -6px 0 10px 0 #fff, 6px 0 10px 0 #fff;
+	-moz-box-shadow: -6px 0 10px 0 #fff, 6px 0 10px 0 #fff;
+	box-shadow: -6px 0 10px 0 #fff, 6px 0 10px 0 #fff;
+	background: #fff;
+	font-size: 1.2em;
+	font-weight: 400;
+	margin: 0 0 0 10px;
+	padding: 0;
+	text-shadow: 0 1px 0 rgba(0,0,0,.1);
+}
+
 fieldset {
-	border-style: solid;
-	border-width: 1px;
-	margin: 4px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-ms-border-radius: 8px;
+	-o-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0 0 6px #eeeeee inset;
+	-moz-box-shadow: 0 0 6px #eeeeee inset;
+	box-shadow: 0 0 6px #eeeeee inset;
+	border: 1px solid #e3e3e3;
+	padding: 0 15px;
 }
