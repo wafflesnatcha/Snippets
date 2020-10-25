@@ -13,7 +13,7 @@ type ruby php &>/dev/null || ERROR "ruby or php required to URL encode output" 4
 input="${1:--}"
 [[ ! $input = "-" && ! -e "$input" ]] && ERROR "$input: file not found" 2
 
-output=$(uglifyjs "$input" --compress --mangle | {
+output=$(uglifyjs "$input" | {
 	if type ruby &>/dev/null; then
 		ruby -pe '$_.gsub!(/([^a-zA-Z0-9_\.\-]+)/n){"%"+$1.unpack("H2"*$1.size).join("%").upcase}'
 	elif type php &>/dev/null; then
