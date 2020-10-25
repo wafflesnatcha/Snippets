@@ -74,10 +74,12 @@
 			label = data[i] + new Array(l - data[i].length).join(" ") + " : ";
 			if (data[i].toLowerCase() == "ascii") {
 				output.push(label + String.fromCharCode(e.keyCode ? e.keyCode : e.which ? e.which : e.charCode));
-			} else if (e.hasOwnProperty(data[i])) {
+			} else {
+				// if (e.hasOwnProperty(data[i])) {
 				output.push(label + e[data[i]]);
 			}
 		}
+		console.log(output, e);
 		el.value = output.join('\n');
 	}
 
